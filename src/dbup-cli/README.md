@@ -1,0 +1,15 @@
+- read options from yml file
+- file can be in the current folder, can be specified in command line or load from std input
+- substitute environment variables in options' values
+- use any dbup provider
+- read options from environment variables or command line options
+- options order:
+    - file
+    - env var
+    - command line options
+- can be installed as a dotnet global tool
+- can use .env files
+    - current folder
+    - folder where the config file located
+    - file, specified in command line
+- task for TFS
