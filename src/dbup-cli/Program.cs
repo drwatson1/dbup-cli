@@ -1,6 +1,4 @@
-﻿using DbUp;
-using DbUp.Builder;
-using System;
+﻿using System;
 
 namespace DbUp.Cli
 {
@@ -19,7 +17,7 @@ namespace DbUp.Cli
 
             var config = ConfigurationHelper
                 .SelectDbProvider(migration.Provider, migration.ConnectionString)
-                .Journal(migration.JournalTo);
+                .SelectJournal(migration.JournalTo);
 
             config.Match(
                 some: x => x.Build(),

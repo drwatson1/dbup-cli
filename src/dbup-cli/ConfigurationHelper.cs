@@ -18,7 +18,7 @@ namespace DbUp.Cli
             return Option.None<UpgradeEngineBuilder>();
         }
 
-        public static Option<UpgradeEngineBuilder> Journal(this Option<UpgradeEngineBuilder> builderOrNone, Option<Journal> journalOrNone)
+        public static Option<UpgradeEngineBuilder> SelectJournal(this Option<UpgradeEngineBuilder> builderOrNone, Option<Journal> journalOrNone)
         {
             builderOrNone.MatchSome(builder =>
             {
