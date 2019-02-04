@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Optional;
 
 namespace dbup_cli
 {
@@ -12,6 +10,6 @@ namespace dbup_cli
         public Transaction Transaction { get; private set; }
         public bool LogScriptOutput { get; private set; }
         public bool LogToConsole { get; private set; }
-        public Journal JournalTo { get; private set; }
+        public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
     }
 }

@@ -18,7 +18,8 @@ namespace dbup_cli
             var migration = new Migration();
 
             var config = ConfigurationHelper
-                .SelectDbProvider(migration.Provider, migration.ConnectionString);
+                .SelectDbProvider(migration.Provider, migration.ConnectionString)
+                .Journal(migration.JournalTo);
 
             config.Match(
                 some: x => x.Build(),
