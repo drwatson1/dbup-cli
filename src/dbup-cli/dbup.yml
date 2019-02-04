@@ -1,0 +1,12 @@
+dbup:
+  version: 1
+  provider: sqlserver
+  connectionstring: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  transaction: PerScript
+  logScriptOutput: Yes  # ??
+  logtoconsole: Yes   # ??
+  scripts:
+    - Upgrades\\.*\.sql
+      
+
+  vars:

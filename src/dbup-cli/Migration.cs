@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace dbup_cli
+{
+    public class Migration
+    {
+        public string Version { get; private set; }
+        public Provider Provider { get; private set; }
+        public string ConnectionString { get; private set; }
+        public Transaction Transaction { get; private set; }
+        public bool LogScriptOutput { get; private set; }
+        public bool LogToConsole { get; private set; }
+        public Journal JournalTo { get; private set; }
+    }
+}
