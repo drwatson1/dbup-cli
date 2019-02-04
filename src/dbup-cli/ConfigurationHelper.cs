@@ -1,12 +1,8 @@
-﻿using DbUp;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Helpers;
 using Optional;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace dbup_cli
+namespace DbUp.Cli
 {
     public static class ConfigurationHelper
     {
@@ -30,7 +26,7 @@ namespace dbup_cli
                 (
                     some: journal =>
                     {
-                        if (!dbup_cli.Journal.IsDefault(journal))
+                        if (!DbUp.Cli.Journal.IsDefault(journal))
                         {
                             builder.JournalToSqlTable(journal.Schema, journal.Table);
                         }

@@ -2,7 +2,7 @@
 using DbUp.Builder;
 using System;
 
-namespace dbup_cli
+namespace DbUp.Cli
 {
     class Program
     {

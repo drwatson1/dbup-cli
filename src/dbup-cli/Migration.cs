@@ -1,6 +1,6 @@
 ﻿using Optional;
 
-namespace dbup_cli
+namespace DbUp.Cli
 {
     public class Migration
     {

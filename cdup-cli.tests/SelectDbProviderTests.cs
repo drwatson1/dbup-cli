@@ -1,10 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using dbup_cli;
+using DbUp.Cli;
 using FluentAssertions;
 using System.Linq;
 using System;
 
-namespace cdup_cli.tests
+namespace DbUp.Cli.Tests
 {
     [TestClass]
     public class SelectDbProviderTests
