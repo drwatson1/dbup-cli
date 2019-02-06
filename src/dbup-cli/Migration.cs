@@ -1,4 +1,5 @@
 ﻿using Optional;
+using System.Collections.Generic;
 
 namespace DbUp.Cli
 {
@@ -11,5 +12,7 @@ namespace DbUp.Cli
         public bool LogScriptOutput { get; private set; }
         public bool LogToConsole { get; private set; }
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
+
+        public IReadOnlyList<ScriptBatch> Scripts { get; private set; } = new List<ScriptBatch>();
     }
 }

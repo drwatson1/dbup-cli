@@ -3,10 +3,12 @@ dbup:
   provider: sqlserver
   connectionstring: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
   transaction: PerScript
-  logScriptOutput: Yes  # ??
-  logtoconsole: Yes   # ??
+  logScriptOutput: yes  # ??
+  logtoconsole: yes   # ??
   scripts:
-    - Upgrades\\.*\.sql
-      
-
+    -   folder: upgrades # default - current?
+        subFolders: yes # default no
+        order: 1 # default 0
+        runAlways: yes # default no
+        encoding: utf8 # default ?
   vars:

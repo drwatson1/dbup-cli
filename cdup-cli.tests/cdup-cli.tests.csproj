@@ -5,6 +5,8 @@
     <RootNamespace>DbUp.Cli.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,24 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\dbup-cli\dbup-cli.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\Default\001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Default\002.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Default\SubFolder1\003.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Default\SubFolder1\004.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Default\SubFolder2\005.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
