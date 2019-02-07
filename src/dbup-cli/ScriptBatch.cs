@@ -15,7 +15,7 @@
             Encoding = encoding;
         }
 
-        public string Folder { get; private set; }
+        public string Folder { get; set; }
         public bool RunAlways { get; private set; }
         public bool SubFolders { get; private set; }
         public int Order { get; private set; } = 100;   // Default value in DbUp

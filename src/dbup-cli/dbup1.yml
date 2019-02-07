@@ -1,14 +1,13 @@
-DbUp:
+dbUp:
   version: 1
   provider: sqlserver
-  connectionstring: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
-  transaction: PerScript
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  transaction: Single
   logScriptOutput: yes  # ??
-  logtoconsole: yes   # ??
+  logToConsole: yes   # ??
   scripts:
     -   folder: upgrades # default - current?
         subFolders: yes # default no
         order: 1 # default 0
         runAlways: yes # default no
         encoding: utf8 # default ?
-  vars:

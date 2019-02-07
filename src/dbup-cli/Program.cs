@@ -1,6 +1,10 @@
 ﻿using DbUp.Engine;
 using DbUp.ScriptProviders;
 using System;
+using System.IO;
+using System.Text;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace DbUp.Cli
 {
@@ -19,7 +23,16 @@ namespace DbUp.Cli
              * Use minimatch or regex as a file pattern
              */
 
-            var migration = new Migration();
+            var input = new StringReader(File.ReadAllText(@"D:\GitHub\dbup-cli\src\dbup-cli\dbup1.yml", Encoding.UTF8));
+
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(new CamelCaseNamingConvention())
+                .Build();
+
+            var migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
+
+            //var migration = new Migration();
+            //migration.Transaction = Transaction.Single
 
             var config = ConfigurationHelper
                 .SelectDbProvider(migration.Provider, migration.ConnectionString)

@@ -34,33 +34,37 @@ namespace DbUp.Cli
                 IncludeSubDirectories = batch.SubFolders
             };
 
-        public static Option<UpgradeEngineBuilder> SelectScripts(this Option<UpgradeEngineBuilder> builderOrNone, string basePath, IReadOnlyList<ScriptBatch> scripts)
+        public static Option<UpgradeEngineBuilder> SelectScripts(this Option<UpgradeEngineBuilder> builderOrNone, IReadOnlyList<ScriptBatch> scripts)
         {
             if (scripts == null)
                 throw new ArgumentNullException(nameof(scripts));
 
-            builderOrNone.MatchSome(builder =>
+            if(scripts.Count == 0)
             {
-                if (scripts.Count > 0)
+                // At least one script must be present
+                // TODO: An error description
+                return Option.None<UpgradeEngineBuilder>();
+            }
+
+            foreach(var script in scripts)
+            {
+                if( !Directory.Exists(script.Folder) )
                 {
+                    // TODO: An error description
+                    return Option.None<UpgradeEngineBuilder>();
+                }
+            }
+
+            builderOrNone.MatchSome(builder =>
                     scripts.ToList()
                         .ForEach(script =>
                             builder.WithScripts(
                                 new FileSystemScriptProvider(
-                                    GetFolder(basePath, script.Folder), 
-                                    GetFileSystemScriptOptions(script), 
-                                    GetSqlScriptOptions(script))));
-                }
-                else
-                {
-                    builder.WithScripts(
-                        new FileSystemScriptProvider(
-                            GetFolder(basePath, ScriptBatch.Default.Folder),
-                            GetFileSystemScriptOptions(ScriptBatch.Default),
-                            GetSqlScriptOptions(ScriptBatch.Default)));
-                }
-            });
-
+                                    script.Folder,
+                                    GetFileSystemScriptOptions(script),
+                                    GetSqlScriptOptions(script))))
+            );
+            
             return builderOrNone;
         }
     }

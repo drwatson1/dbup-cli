@@ -108,15 +108,15 @@ namespace DbUp.Cli.Tests
         {
             var scripts = new List<ScriptBatch>()
             {
-                new ScriptBatch("SubFolder1", false, false, 0, null),
-                new ScriptBatch("SubFolder2", false, false, 0, null),
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder1"), false, false, 0, null),
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder2"), false, false, 0, null),
             };
 
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
                 .OverrideConnectionFactory(testConnectionFactory)
                 .LogTo(Logger).Some()
-                .SelectScripts(GetBasePath(), scripts);
+                .SelectScripts(scripts);
 
             upgradeEngineBuilder.MatchSome(x =>
             {
@@ -132,7 +132,7 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
-        public void ConfigurationHelper_SelectJournal_ShouldSelectScriptWithDefaultOptions_IfTheListOfScriptsIsEmpty()
+        public void ConfigurationHelper_SelectJournal_ShouldReturnNone_IfTheListOfScriptsIsEmpty()
         {
             var scripts = new List<ScriptBatch>();
 
@@ -140,18 +140,9 @@ namespace DbUp.Cli.Tests
                 .SqlDatabase("testconn")
                 .OverrideConnectionFactory(testConnectionFactory)
                 .LogTo(Logger).Some()
-                .SelectScripts(GetBasePath(), scripts);
+                .SelectScripts(scripts);
 
-            upgradeEngineBuilder.MatchSome(x =>
-            {
-                x.Build().PerformUpgrade();
-            });
-
-            var excutedScripts = Logger.GetExecutedScripts();
-
-            excutedScripts.Should().HaveCount(2);
-            excutedScripts[0].Should().Be("001.sql");
-            excutedScripts[1].Should().Be("002.sql");
+            upgradeEngineBuilder.HasValue.Should().BeFalse();
         }
 
         string GetBasePath() =>
