@@ -7,9 +7,24 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <LangVersion>latest</LangVersion>
+    <Product>DbUp Command Line</Product>
+    <Authors>Sergey Tregub</Authors>
+    <Version>0.1.0-alpha1</Version>
+    <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
+    <Company />
+    <Copyright>Copyright (c) 2019 Sergey Tregub</Copyright>
+    <PackageLicenseUrl>https://github.com/drwatson1/dbup-cli/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
+    <RepositoryType>GitHub</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="dbup-core" Version="4.2.0" />
     <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
     <PackageReference Include="Optional" Version="4.0.0" />

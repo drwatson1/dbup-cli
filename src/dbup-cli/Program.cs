@@ -1,16 +1,8 @@
-﻿using DbUp.Engine;
-using DbUp.ScriptProviders;
-using System;
-using System.IO;
-using System.Text;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
-
-namespace DbUp.Cli
+﻿namespace DbUp.Cli
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             // Commands: 
             // - upgrade
@@ -23,6 +15,9 @@ namespace DbUp.Cli
              * Use minimatch or regex as a file pattern
              */
 
+            return CommandLineOptions.CommandLine.Run(args);
+
+/*
             var input = new StringReader(File.ReadAllText(@"D:\GitHub\dbup-cli\src\dbup-cli\dbup1.yml", Encoding.UTF8));
 
             var deserializer = new DeserializerBuilder()
@@ -60,8 +55,7 @@ namespace DbUp.Cli
 
                 //.JournalToSqlTable("MySchema", "MyTable")
                 //.Build();
-
-            Console.WriteLine("Hello World!");
+                */
         }
     }
 }

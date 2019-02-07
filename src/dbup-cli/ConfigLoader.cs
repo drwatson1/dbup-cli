@@ -10,6 +10,20 @@ namespace DbUp.Cli
 {
     public static class ConfigLoader
     {
+        public static string GetConfigFilePath(string configFilePath)
+        {
+            if (string.IsNullOrWhiteSpace(configFilePath))
+                throw new ArgumentException("Parameter can't be null or white space", nameof(configFilePath));
+
+            // TODO: Check whether the file exists
+            // TODO: unit test
+
+            return new FileInfo(Path.IsPathFullyQualified(configFilePath)
+                ? configFilePath
+                : Path.Combine(Directory.GetCurrentDirectory(), configFilePath)
+            ).FullName;
+        }
+
         public static Option<Migration> LoadMigration(string configFilePath)
         {
             // TODO: Use Option<Migration, TException>
