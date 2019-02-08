@@ -10,7 +10,7 @@ namespace DbUp.Cli
 {
     public static class ConfigLoader
     {
-        public static string GetConfigFilePath(string configFilePath)
+        public static Option<string> GetConfigFilePath(IEnvironment environment, string configFilePath)
         {
             if (string.IsNullOrWhiteSpace(configFilePath))
                 throw new ArgumentException("Parameter can't be null or white space", nameof(configFilePath));
@@ -20,32 +20,36 @@ namespace DbUp.Cli
 
             return new FileInfo(Path.IsPathFullyQualified(configFilePath)
                 ? configFilePath
-                : Path.Combine(Directory.GetCurrentDirectory(), configFilePath)
-            ).FullName;
+                : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
+            ).FullName.Some();
         }
 
-        public static Option<Migration> LoadMigration(string configFilePath)
-        {
-            // TODO: Use Option<Migration, TException>
-            // TODO: Exception handling
-            // TODO: configFilePath must exist and be absolute
+        public static Option<Migration> LoadMigration(Option<string> configFilePath) =>
+            configFilePath.Match(
+                some: path =>
+                {
+                    // TODO: Use Option<Migration, TException>
+                    // TODO: Exception handling
+                    // TODO: configFilePath must exist and be absolute
 
-            var input = new StringReader(File.ReadAllText(configFilePath, Encoding.UTF8));
+                    var input = new StringReader(File.ReadAllText(path, Encoding.UTF8));
 
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(new CamelCaseNamingConvention())
-                .Build();
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(new CamelCaseNamingConvention())
+                        .Build();
 
-            var migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
-            if(migration.Scripts.Count == 0)
-            {
-                migration.Scripts.Add(ScriptBatch.Default);
-            }
+                    var migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
+                    if (migration.Scripts.Count == 0)
+                    {
+                        migration.Scripts.Add(ScriptBatch.Default);
+                    }
 
-            NormalizeScriptFolders(configFilePath, migration.Scripts);
+                    // TODO: all script folders should exist
+                    NormalizeScriptFolders(path, migration.Scripts);
 
-            return migration.Some();
-        }
+                    return migration.Some();
+                },
+                none: () => Option.None<Migration>());
 
         private static void NormalizeScriptFolders(string configFilePath, IList<ScriptBatch> scripts)
         {

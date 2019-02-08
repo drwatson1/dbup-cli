@@ -34,7 +34,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_MinVersionOfYml_ShouldSetTheValidDefaultParameters()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml"));
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
 
             migration.MatchSome(x =>
             {
@@ -54,7 +54,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_MinVersionOfYml_ShouldSetValidProviderAndConnectionString()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml"));
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
 
             migration.MatchSome(x => x.Provider.Should().Be(Provider.SqlServer));
             migration.MatchSome(x => x.ConnectionString.Should().Be(@"(localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True"));

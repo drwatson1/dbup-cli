@@ -34,7 +34,7 @@ namespace DbUp.Cli
                 IncludeSubDirectories = batch.SubFolders
             };
 
-        public static Option<UpgradeEngineBuilder> SelectScripts(this Option<UpgradeEngineBuilder> builderOrNone, IReadOnlyList<ScriptBatch> scripts)
+        public static Option<UpgradeEngineBuilder> SelectScripts(this Option<UpgradeEngineBuilder> builderOrNone, IList<ScriptBatch> scripts)
         {
             if (scripts == null)
                 throw new ArgumentNullException(nameof(scripts));

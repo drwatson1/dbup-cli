@@ -15,7 +15,7 @@
              * Use minimatch or regex as a file pattern
              */
 
-            return CommandLineOptions.CommandLine.Run(args);
+            return new ToolEngine(new CliEnvironment()).Run(args);
 
 /*
             var input = new StringReader(File.ReadAllText(@"D:\GitHub\dbup-cli\src\dbup-cli\dbup1.yml", Encoding.UTF8));
