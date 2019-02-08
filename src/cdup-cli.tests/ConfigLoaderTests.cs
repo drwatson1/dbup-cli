@@ -7,6 +7,7 @@ using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
 using Optional;
 using System.Reflection;
+using FakeItEasy;
 
 namespace DbUp.Cli.Tests
 {
@@ -58,6 +59,43 @@ namespace DbUp.Cli.Tests
 
             migration.MatchSome(x => x.Provider.Should().Be(Provider.SqlServer));
             migration.MatchSome(x => x.ConnectionString.Should().Be(@"(localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True"));
+        }
+
+        [TestMethod]
+        public void GetConfigFilePath_ShouldReturnFileFromTheCurrentDirectory_IfOnlyAFilenameSpecified()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
+
+            var configPath = ConfigLoader.GetConfigFilePath(env, "dbup.yml");
+            configPath.HasValue.Should().BeTrue();
+
+            configPath.MatchSome(x => x.Should().Be(@"c:\test\dbup.yml"));
+        }
+
+        [TestMethod]
+        public void GetConfigFilePath_ShouldReturnNone_IfAFileNotExists()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(false);
+
+            var configPath = ConfigLoader.GetConfigFilePath(env, "dbup.yml");
+            configPath.HasValue.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void GetConfigFilePath_ShouldReturnAValidFileName_IfARelativePathSpecified()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test\scripts");
+            A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
+
+            var configPath = ConfigLoader.GetConfigFilePath(env, @"..\dbup.yml");
+            configPath.HasValue.Should().BeTrue();
+
+            configPath.MatchSome(x => x.Should().Be(@"c:\test\dbup.yml"));
         }
     }
 }

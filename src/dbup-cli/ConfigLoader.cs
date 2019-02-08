@@ -12,16 +12,15 @@ namespace DbUp.Cli
     {
         public static Option<string> GetConfigFilePath(IEnvironment environment, string configFilePath)
         {
+            if (environment == null)
+                throw new ArgumentNullException(nameof(environment));
             if (string.IsNullOrWhiteSpace(configFilePath))
                 throw new ArgumentException("Parameter can't be null or white space", nameof(configFilePath));
 
-            // TODO: Check whether the file exists
-            // TODO: unit test
-
-            return new FileInfo(Path.IsPathFullyQualified(configFilePath)
+            return  new FileInfo(Path.IsPathFullyQualified(configFilePath)
                 ? configFilePath
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
-            ).FullName.Some();
+            ).FullName.SomeWhen(environment.FileExists);
         }
 
         public static Option<Migration> LoadMigration(Option<string> configFilePath) =>
