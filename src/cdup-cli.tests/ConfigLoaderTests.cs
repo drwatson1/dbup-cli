@@ -97,5 +97,18 @@ namespace DbUp.Cli.Tests
 
             configPath.MatchSome(x => x.Should().Be(@"c:\test\dbup.yml"));
         }
+
+        [TestMethod]
+        public void GetConfigFilePath_ShouldReturnAValidFileName_IfAnAbsolutePathSpecified()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(@"d:\temp\scripts\dbup.yml")).Returns(true);
+
+            var configPath = ConfigLoader.GetConfigFilePath(env, @"d:\temp\scripts\dbup.yml");
+            configPath.HasValue.Should().BeTrue();
+
+            configPath.MatchSome(x => x.Should().Be(@"d:\temp\scripts\dbup.yml"));
+        }
     }
 }
