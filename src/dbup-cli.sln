@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-cli", "dbup-cli\dbup-cli.csproj", "{97DCD633-B24A-459E-B781-56D4E49F9879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdup-cli.tests", "..\cdup-cli.tests\cdup-cli.tests.csproj", "{5399225B-D4EB-4F38-BA99-16A2AB875F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cdup-cli.tests", "cdup-cli.tests\cdup-cli.tests.csproj", "{BB39F97F-A482-49E4-851E-FAC670561CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{97DCD633-B24A-459E-B781-56D4E49F9879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97DCD633-B24A-459E-B781-56D4E49F9879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97DCD633-B24A-459E-B781-56D4E49F9879}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5399225B-D4EB-4F38-BA99-16A2AB875F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5399225B-D4EB-4F38-BA99-16A2AB875F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5399225B-D4EB-4F38-BA99-16A2AB875F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5399225B-D4EB-4F38-BA99-16A2AB875F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

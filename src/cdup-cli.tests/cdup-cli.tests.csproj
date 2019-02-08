@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\dbup-cli\dbup-cli.csproj" />
+    <ProjectReference Include="..\dbup-cli\dbup-cli.csproj" />
   </ItemGroup>
 
   <ItemGroup>
