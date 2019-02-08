@@ -8,5 +8,6 @@
         string GetCurrentDirectory();
         bool FileExists(string path);
         bool DirectoryExists(string path);
+        bool WriteFile(string path, string content);
     }
 }

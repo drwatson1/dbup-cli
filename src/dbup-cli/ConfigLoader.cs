@@ -10,7 +10,7 @@ namespace DbUp.Cli
 {
     public static class ConfigLoader
     {
-        public static Option<string> GetConfigFilePath(IEnvironment environment, string configFilePath)
+        public static Option<string> GetConfigFilePath(IEnvironment environment, string configFilePath, bool fileShouldExist = true)
         {
             if (environment == null)
                 throw new ArgumentNullException(nameof(environment));
@@ -20,7 +20,9 @@ namespace DbUp.Cli
             return  new FileInfo(Path.IsPathFullyQualified(configFilePath)
                 ? configFilePath
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
-            ).FullName.SomeWhen(environment.FileExists);
+            ).FullName.SomeWhen(x => 
+                !fileShouldExist || (fileShouldExist && environment.FileExists(x))
+            );
         }
 
         public static Option<Migration> LoadMigration(Option<string> configFilePath) =>

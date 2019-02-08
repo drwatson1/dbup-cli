@@ -24,6 +24,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="DefaultOptions\dbup.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultOptions\dbup.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="dbup-core" Version="4.2.0" />
     <PackageReference Include="dbup-sqlserver" Version="4.2.0" />

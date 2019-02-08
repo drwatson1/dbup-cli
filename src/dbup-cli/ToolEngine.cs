@@ -1,6 +1,9 @@
 ﻿using CommandLine;
 using DbUp.Cli.CommandLineOptions;
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DbUp.Cli
 {
@@ -13,7 +16,7 @@ namespace DbUp.Cli
             Environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }
 
-        public int Run(string[] args) =>
+        public int Run(params string[] args) =>
             Parser.Default
                 .ParseArguments<InitOptions, UpgradeOptions, StatusOptions>(args)
                 .MapResult(
@@ -55,8 +58,14 @@ namespace DbUp.Cli
 
         private int RunInitCommand(InitOptions opts)
         {
-            Console.WriteLine("RunInitCommand");
-            return 0;
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.DefaultConfigFileResourceName)))
+            {
+                return ConfigLoader.GetConfigFilePath(Environment, opts.File, false)
+                    .Match(
+                        some: path => Environment.WriteFile(path, reader.ReadToEnd()) ? 0 : 1,
+                        none: () => 1
+                    );
+            }
         }
     }
 }
