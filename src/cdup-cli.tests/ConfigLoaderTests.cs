@@ -62,6 +62,24 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
+        public void LoadMigration_ShouldSetValidLogOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("log.yml").Some());
+
+            migration.MatchSome(x => x.LogScriptOutput.Should().BeTrue());
+            migration.MatchSome(x => x.LogToConsole.Should().BeFalse());
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldSetValidDefaultLogOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
+
+            migration.MatchSome(x => x.LogScriptOutput.Should().BeFalse());
+            migration.MatchSome(x => x.LogToConsole.Should().BeTrue());
+        }
+
+        [TestMethod]
         public void GetConfigFilePath_ShouldReturnFileFromTheCurrentDirectory_IfOnlyAFilenameSpecified()
         {
             var env = A.Fake<IEnvironment>();
