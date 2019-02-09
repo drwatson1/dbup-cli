@@ -62,7 +62,11 @@ namespace DbUp.Cli
             {
                 return ConfigLoader.GetConfigFilePath(Environment, opts.File, false)
                     .Match(
-                        some: path => Environment.WriteFile(path, reader.ReadToEnd()) ? 0 : 1,
+                        some: path => Environment.FileExists(path)
+                            ? 1
+                            : Environment.WriteFile(path, reader.ReadToEnd()) 
+                                ? 0 
+                                : 1,
                         none: () => 1
                     );
             }

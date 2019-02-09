@@ -33,17 +33,29 @@ namespace DbUp.Cli.Tests
 
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists(@"d:\temp\dbup.yml")).Returns(false);
-            A.CallTo(() => env.WriteFile(@"d:\temp\dbup.yml", "")).Returns(true);
-
-                //.WhenArgumentsMatch(c => (string)c[0] == @"d:\temp\dbup.yml")
-                //.ReturnsLazily(x => { saved = true; return true; });
+            A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(false);
+            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true;});
 
             var engine = new ToolEngine(env);
 
             engine.Run("init").Should().Be(0);
+            saved.Should().BeTrue();
+        }
 
-            //saved.Should().BeTrue();
+        [TestMethod]
+        public void InitCommand_ShouldReturn1AndNotCreateConfig_IfItIsPresent()
+        {
+            var saved = false;
+
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
+            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true;});
+
+            var engine = new ToolEngine(env);
+
+            engine.Run("init").Should().Be(1);
+            saved.Should().BeFalse();
         }
 
         /*
