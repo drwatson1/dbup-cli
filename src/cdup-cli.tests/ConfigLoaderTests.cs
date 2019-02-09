@@ -71,12 +71,11 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
-        public void LoadMigration_ShouldSetValidDefaultLogOptions()
+        public void LoadMigration_ShouldSetValidTransactionOptions()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("tran.yml").Some());
 
-            migration.MatchSome(x => x.LogScriptOutput.Should().BeFalse());
-            migration.MatchSome(x => x.LogToConsole.Should().BeTrue());
+            migration.MatchSome(x => x.Transaction.Should().Be(Transaction.PerScript));
         }
 
         [TestMethod]
