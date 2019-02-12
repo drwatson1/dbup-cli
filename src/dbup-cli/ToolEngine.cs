@@ -39,15 +39,12 @@ namespace DbUp.Cli
                         ConfigurationHelper
                             .SelectDbProvider(x.Provider, x.ConnectionString)
                             .SelectJournal(x.JournalTo)
+                            .SelectTransaction(x.Transaction)
+                            .SelectLogOptions(x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
                         .Match(
                             some: builder =>
                             {
-                                // TODO: use options from migration
-                                builder
-                                    .LogToConsole()
-                                    .LogScriptOutput();
-
                                 var engine = builder.Build();
                                 var result = engine.PerformUpgrade();
 
