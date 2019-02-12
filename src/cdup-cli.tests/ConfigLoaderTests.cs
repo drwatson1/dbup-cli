@@ -35,7 +35,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_MinVersionOfYml_ShouldSetTheValidDefaultParameters()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some<string, Error>());
 
             migration.MatchSome(x =>
             {
@@ -55,7 +55,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_MinVersionOfYml_ShouldSetValidProviderAndConnectionString()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("min.yml").Some<string, Error>());
 
             migration.MatchSome(x => x.Provider.Should().Be(Provider.SqlServer));
             migration.MatchSome(x => x.ConnectionString.Should().Be(@"(localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True"));
@@ -64,7 +64,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_ShouldSetValidLogOptions()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("log.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("log.yml").Some<string, Error>());
 
             migration.MatchSome(x => x.LogScriptOutput.Should().BeTrue());
             migration.MatchSome(x => x.LogToConsole.Should().BeFalse());
@@ -73,7 +73,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_ShouldSetValidTransactionOptions()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("tran.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("tran.yml").Some<string, Error>());
 
             migration.MatchSome(x => x.Transaction.Should().Be(Transaction.PerScript));
         }
@@ -81,7 +81,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void LoadMigration_ShouldSetValidScriptOptions()
         {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("script.yml").Some());
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("script.yml").Some<string, Error>());
 
             migration.MatchSome(x =>
             {

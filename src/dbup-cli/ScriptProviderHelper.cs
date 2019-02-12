@@ -34,24 +34,21 @@ namespace DbUp.Cli
                 IncludeSubDirectories = batch.SubFolders
             };
 
-        public static Option<UpgradeEngineBuilder> SelectScripts(this Option<UpgradeEngineBuilder> builderOrNone, IList<ScriptBatch> scripts)
+        public static Option<UpgradeEngineBuilder, Error> SelectScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, IList<ScriptBatch> scripts)
         {
             if (scripts == null)
                 throw new ArgumentNullException(nameof(scripts));
 
             if(scripts.Count == 0)
             {
-                // At least one script must be present
-                // TODO: An error description
-                return Option.None<UpgradeEngineBuilder>();
+                return Option.None<UpgradeEngineBuilder, Error>(Error.Create("At least one script must be present"));
             }
 
             foreach(var script in scripts)
             {
                 if( !Directory.Exists(script.Folder) )
                 {
-                    // TODO: An error description
-                    return Option.None<UpgradeEngineBuilder>();
+                    return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Folder not exists: {script.Folder}"));
                 }
             }
 

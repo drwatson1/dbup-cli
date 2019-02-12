@@ -68,7 +68,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void PerformUpgrade_ShouldUseCustomVersionsTable_IfCustomJournalIsPassed()
         {
-            upgradeEngineBuilder.Some()
+            upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
                 .SelectJournal(
                     new Journal("test_scheme", "test_SchemaVersion").Some()
                 );
@@ -81,7 +81,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void PerformUpgrade_ShouldUseDefaultVersionsTable_IfDefaultJournalIsPassed()
         {
-            upgradeEngineBuilder.Some()
+            upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
                 .SelectJournal(Journal.Default.Some());
 
             upgradeEngineBuilder.Build().PerformUpgrade();
@@ -92,7 +92,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void SelectJournal_ShouldSelectNullJournal_IfNoneValueIsPassed()
         {
-            upgradeEngineBuilder.Some()
+            upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
                 .SelectJournal(Option.None<Journal>());
 
             upgradeEngineBuilder.Build().PerformUpgrade();

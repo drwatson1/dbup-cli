@@ -7,6 +7,7 @@ using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
 using Optional;
 using System.Reflection;
+using DbUp.Builder;
 
 namespace DbUp.Cli.Tests
 {
@@ -115,7 +116,7 @@ namespace DbUp.Cli.Tests
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
                 .OverrideConnectionFactory(testConnectionFactory)
-                .LogTo(Logger).Some()
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
                 .SelectScripts(scripts);
 
             upgradeEngineBuilder.MatchSome(x =>
@@ -139,7 +140,7 @@ namespace DbUp.Cli.Tests
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
                 .OverrideConnectionFactory(testConnectionFactory)
-                .LogTo(Logger).Some()
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
                 .SelectScripts(scripts);
 
             upgradeEngineBuilder.HasValue.Should().BeFalse();

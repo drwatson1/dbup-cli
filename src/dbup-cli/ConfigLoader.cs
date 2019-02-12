@@ -10,7 +10,7 @@ namespace DbUp.Cli
 {
     public static class ConfigLoader
     {
-        public static Option<string> GetConfigFilePath(IEnvironment environment, string configFilePath, bool fileShouldExist = true)
+        public static Option<string, Error> GetConfigFilePath(IEnvironment environment, string configFilePath, bool fileShouldExist = true)
         {
             if (environment == null)
                 throw new ArgumentNullException(nameof(environment));
@@ -20,12 +20,13 @@ namespace DbUp.Cli
             return  new FileInfo(Path.IsPathFullyQualified(configFilePath)
                 ? configFilePath
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
-            ).FullName.SomeWhen(x => 
-                !fileShouldExist || (fileShouldExist && environment.FileExists(x))
+            ).FullName.SomeWhen<string, Error>(x => 
+                !fileShouldExist || (fileShouldExist && environment.FileExists(x)),
+                Error.Create($"Configuration file not exists ({configFilePath})")
             );
         }
 
-        public static Option<Migration> LoadMigration(Option<string> configFilePath) =>
+        public static Option<Migration, Error> LoadMigration(Option<string, Error> configFilePath) =>
             configFilePath.Match(
                 some: path =>
                 {
@@ -48,9 +49,9 @@ namespace DbUp.Cli
                     // TODO: all script folders should exist
                     NormalizeScriptFolders(path, migration.Scripts);
 
-                    return migration.Some();
+                    return migration.Some<Migration, Error>();
                 },
-                none: () => Option.None<Migration>());
+                none: error => Option.None<Migration, Error>(error));
 
         private static void NormalizeScriptFolders(string configFilePath, IList<ScriptBatch> scripts)
         {

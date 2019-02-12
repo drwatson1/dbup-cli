@@ -6,52 +6,51 @@ namespace DbUp.Cli
 {
     public static class ConfigurationHelper
     {
-        public static Option<UpgradeEngineBuilder> SelectDbProvider(Provider provider, string connectionString)
+        public static Option<UpgradeEngineBuilder, Error> SelectDbProvider(Provider provider, string connectionString)
         {
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return DeployChanges.To.SqlDatabase(connectionString).Some();
+                    return DeployChanges.To.SqlDatabase(connectionString).Some<UpgradeEngineBuilder, Error>();
             }
 
-            // TODO: Use Option<UpgradeEngineBuilder, TException>
-            return Option.None<UpgradeEngineBuilder>();
+            return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Unsupported provider '{provider}'"));
         }
 
-        public static Option<UpgradeEngineBuilder> SelectJournal(this Option<UpgradeEngineBuilder> builderOrNone, Option<Journal> journalOrNone) =>
+        public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<Journal> journalOrNone) =>
             builderOrNone.Match(
                 some: builder =>
                     journalOrNone.Match(
                         some: journal =>
                             DbUp.Cli.Journal.IsDefault(journal) == false
-                                ? builder.JournalToSqlTable(journal.Schema, journal.Table).Some()
+                                ? builder.JournalToSqlTable(journal.Schema, journal.Table).Some<UpgradeEngineBuilder, Error>()
                                 : builderOrNone,
-                        none: () => builder.JournalTo(new NullJournal()).Some()),
-                none: () => Option.None<UpgradeEngineBuilder>());
+                        none: () => builder.JournalTo(new NullJournal()).Some<UpgradeEngineBuilder, Error>()),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
-        public static Option<UpgradeEngineBuilder> SelectTransaction(this Option<UpgradeEngineBuilder> builderOrNone, Transaction tran) =>
+        public static Option<UpgradeEngineBuilder, Error> SelectTransaction(this Option<UpgradeEngineBuilder, Error> builderOrNone, Transaction tran) =>
             builderOrNone.Match(
                 some: builder =>
                         tran == Transaction.None
-                            ? builder.WithoutTransaction().Some()
+                            ? builder.WithoutTransaction().Some<UpgradeEngineBuilder, Error>()
                             : tran == Transaction.PerScript
-                                ?   builder.WithTransactionPerScript().Some()
+                                ?   builder.WithTransactionPerScript().Some<UpgradeEngineBuilder, Error>()
                                 : tran == Transaction.Single
-                                    ? builder.WithTransaction().Some()
-                                    : Option.None<UpgradeEngineBuilder>(),
-                none: () => Option.None<UpgradeEngineBuilder>());
+                                    ? builder.WithTransaction().Some<UpgradeEngineBuilder, Error>()
+                                    : Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Invalid transaction value '{tran}'")),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
-        public static Option<UpgradeEngineBuilder> SelectLogOptions(this Option<UpgradeEngineBuilder> builderOrNone, bool logToConsole, bool logScriptOutput) =>
+        public static Option<UpgradeEngineBuilder, Error> SelectLogOptions(this Option<UpgradeEngineBuilder, Error> builderOrNone, bool logToConsole, bool logScriptOutput) =>
             builderOrNone
                 .Match(
                     some: builder => logToConsole == true
-                            ? builder.LogToConsole().Some()
-                            : builder.LogToNowhere().Some(),
-                    none: () => Option.None<UpgradeEngineBuilder>())
+                            ? builder.LogToConsole().Some<UpgradeEngineBuilder, Error>()
+                            : builder.LogToNowhere().Some<UpgradeEngineBuilder, Error>(),
+                    none: error => Option.None<UpgradeEngineBuilder, Error>(error))
                 .Match(
                     some: builder => logScriptOutput == true
-                            ? builder.LogScriptOutput().Some()
+                            ? builder.LogScriptOutput().Some<UpgradeEngineBuilder, Error>()
                             : builderOrNone,
-                    none: () => Option.None<UpgradeEngineBuilder>());
+                    none: error => Option.None<UpgradeEngineBuilder, Error>(error));
     }
 }

@@ -1,8 +1,8 @@
 ﻿using CommandLine;
 using DbUp.Cli.CommandLineOptions;
+using Optional;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace DbUp.Cli
@@ -23,16 +23,18 @@ namespace DbUp.Cli
                     (InitOptions opts) => RunInitCommand(opts),
                     (UpgradeOptions opts) => RunUpgradeCommand(opts),
                     (StatusOptions opts) => RunStatusCommand(opts),
-                    (parserErrors) => 1
-                );
+                    (parserErrors) => Option.None<int, Error>(Error.Create("")))
+            .Match(
+                some: x => 0,
+                none: error => { Console.WriteLine(error.Message); return 1; });
 
-        private int RunStatusCommand(StatusOptions opts)
+        private Option<int, Error> RunStatusCommand(StatusOptions opts)
         {
             Console.WriteLine("RunStatusCommand");
-            return 0;
+            return 0.Some<int, Error>();
         }
 
-        private int RunUpgradeCommand(UpgradeOptions opts) =>
+        private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
             ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
                 .Match(
                     some: x =>
@@ -48,24 +50,28 @@ namespace DbUp.Cli
                                 var engine = builder.Build();
                                 var result = engine.PerformUpgrade();
 
-                                return result.Successful ? 0 : 1;
-                            },
-                            none: () => 1),
-                    none: () => 1);
+                                if (result.Successful)
+                                {
+                                    return Option.Some<int, Error>(0);
+                                }
 
-        private int RunInitCommand(InitOptions opts)
+                                return Option.None<int, Error>(Error.Create(result.Error.Message));
+                            },
+                            none: error => Option.None<int, Error>(error)),
+                    none: error => Option.None<int, Error>(error));
+
+        private Option<int, Error> RunInitCommand(InitOptions opts)
         {
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.DefaultConfigFileResourceName)))
             {
                 return ConfigLoader.GetConfigFilePath(Environment, opts.File, false)
                     .Match(
                         some: path => Environment.FileExists(path)
-                            ? 1
-                            : Environment.WriteFile(path, reader.ReadToEnd()) 
-                                ? 0 
-                                : 1,
-                        none: () => 1
-                    );
+                            ? Option.None<int, Error>(Error.Create($"File already exists: {path}"))
+                            : Environment.WriteFile(path, reader.ReadToEnd())   // TODO: get an error description
+                                ? 0.Some<int, Error>()
+                                : Option.None<int, Error>(Error.Create($"Can't write file: {path}")),
+                        none: error => Option.None<int, Error>(error));
             }
         }
     }
