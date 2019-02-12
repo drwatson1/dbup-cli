@@ -1,0 +1,13 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  scripts:
+    -   folder: upgrades
+        subFolders: yes
+        order: 1
+        runAlways: no
+    -   folder: views
+        subFolders: yes
+        order: 2
+        runAlways: yes

@@ -79,6 +79,28 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
+        public void LoadMigration_ShouldSetValidScriptOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("script.yml").Some());
+
+            migration.MatchSome(x =>
+            {
+                x.Scripts.Should().HaveCount(2);
+                x.Scripts[0].Folder.Should().Be($@"{new FileInfo(GetConfigPath("script.yml")).Directory.FullName}\upgrades");
+                x.Scripts[1].Folder.Should().Be($@"{new FileInfo(GetConfigPath("script.yml")).Directory.FullName}\views");
+
+                x.Scripts[0].SubFolders.Should().BeTrue();
+                x.Scripts[1].SubFolders.Should().BeTrue();
+
+                x.Scripts[0].Order.Should().Be(1);
+                x.Scripts[1].Order.Should().Be(2);
+
+                x.Scripts[0].RunAlways.Should().BeFalse();
+                x.Scripts[1].RunAlways.Should().BeTrue();
+            });
+        }
+
+        [TestMethod]
         public void GetConfigFilePath_ShouldReturnFileFromTheCurrentDirectory_IfOnlyAFilenameSpecified()
         {
             var env = A.Fake<IEnvironment>();
