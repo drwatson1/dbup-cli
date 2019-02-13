@@ -14,7 +14,7 @@ namespace DbUp.Cli
                     return DeployChanges.To.SqlDatabase(connectionString).Some<UpgradeEngineBuilder, Error>();
             }
 
-            return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Unsupported provider '{provider}'"));
+            return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
         public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<Journal> journalOrNone) =>
@@ -37,7 +37,7 @@ namespace DbUp.Cli
                                 ?   builder.WithTransactionPerScript().Some<UpgradeEngineBuilder, Error>()
                                 : tran == Transaction.Single
                                     ? builder.WithTransaction().Some<UpgradeEngineBuilder, Error>()
-                                    : Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Invalid transaction value '{tran}'")),
+                                    : Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.InvalidTransaction, tran)),
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
         public static Option<UpgradeEngineBuilder, Error> SelectLogOptions(this Option<UpgradeEngineBuilder, Error> builderOrNone, bool logToConsole, bool logScriptOutput) =>

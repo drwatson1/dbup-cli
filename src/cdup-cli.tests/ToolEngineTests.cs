@@ -3,6 +3,7 @@ using FluentAssertions;
 using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
 using FakeItEasy;
+using Optional;
 
 namespace DbUp.Cli.Tests
 {
@@ -28,7 +29,7 @@ namespace DbUp.Cli.Tests
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(false);
-            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true;});
+            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true.Some<bool, Error>(); });
 
             var engine = new ToolEngine(env);
 
@@ -44,7 +45,7 @@ namespace DbUp.Cli.Tests
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
-            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true;});
+            A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true.Some<bool, Error>(); });
 
             var engine = new ToolEngine(env);
 

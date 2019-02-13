@@ -22,7 +22,7 @@ namespace DbUp.Cli
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
             ).FullName.SomeWhen<string, Error>(x => 
                 !fileShouldExist || (fileShouldExist && environment.FileExists(x)),
-                Error.Create($"Configuration file not exists ({configFilePath})")
+                Error.Create(Constants.ConsoleMessages.FileNotFound, configFilePath)
             );
         }
 
@@ -30,9 +30,7 @@ namespace DbUp.Cli
             configFilePath.Match(
                 some: path =>
                 {
-                    // TODO: Use Option<Migration, TException>
                     // TODO: Exception handling
-                    // TODO: configFilePath must exist and be absolute
 
                     var input = new StringReader(File.ReadAllText(path, Encoding.UTF8));
 

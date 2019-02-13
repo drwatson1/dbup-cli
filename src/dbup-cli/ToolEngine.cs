@@ -67,10 +67,10 @@ namespace DbUp.Cli
                 return ConfigLoader.GetConfigFilePath(Environment, opts.File, false)
                     .Match(
                         some: path => Environment.FileExists(path)
-                            ? Option.None<int, Error>(Error.Create($"File already exists: {path}"))
-                            : Environment.WriteFile(path, reader.ReadToEnd())   // TODO: get an error description
-                                ? 0.Some<int, Error>()
-                                : Option.None<int, Error>(Error.Create($"Can't write file: {path}")),
+                            ? Option.None<int, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path))
+                            : Environment.WriteFile(path, reader.ReadToEnd()).Match(
+                                some: x => 0.Some<int, Error>(),
+                                none: error => Option.None<int, Error>(error)),
                         none: error => Option.None<int, Error>(error));
             }
         }

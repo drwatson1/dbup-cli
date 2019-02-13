@@ -1,4 +1,6 @@
-﻿namespace DbUp.Cli
+﻿using Optional;
+
+namespace DbUp.Cli
 {
     /// <summary>
     /// Interface of an environment to mock it in tests
@@ -8,6 +10,6 @@
         string GetCurrentDirectory();
         bool FileExists(string path);
         bool DirectoryExists(string path);
-        bool WriteFile(string path, string content);
+        Option<bool, Error> WriteFile(string path, string content);
     }
 }

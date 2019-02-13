@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Optional;
+using System;
+using System.IO;
 using System.Text;
 
 namespace DbUp.Cli
@@ -11,11 +13,16 @@ namespace DbUp.Cli
         public bool DirectoryExists(string path) => Directory.Exists(path);
         public bool FileExists(string path) => File.Exists(path);
         public string GetCurrentDirectory() => Directory.GetCurrentDirectory();
-        public bool WriteFile(string path, string content)
+        public Option<bool, Error> WriteFile(string path, string content)
         {
-            if( File.Exists(path) )
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            if ( File.Exists(path) )
             {
-                return false;
+                return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path));
             }
 
             // TODO: Wrap errors to Option
@@ -23,11 +30,11 @@ namespace DbUp.Cli
             try
             {
                 File.WriteAllText(path, content, Encoding.UTF8);
-                return true;
+                return true.Some<bool, Error>();
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                return Option.None<bool, Error>(Error.Create(ex.Message));
             }
         }
     }

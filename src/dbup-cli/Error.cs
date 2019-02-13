@@ -8,6 +8,6 @@
 
         public string Message { get; private set; }
 
-        public static Error Create(string message) => new Error(message);
+        public static Error Create(string template, params object[] args) => new Error(string.Format(template, args));
     }
 }

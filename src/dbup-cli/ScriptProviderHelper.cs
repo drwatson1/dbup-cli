@@ -41,14 +41,14 @@ namespace DbUp.Cli
 
             if(scripts.Count == 0)
             {
-                return Option.None<UpgradeEngineBuilder, Error>(Error.Create("At least one script must be present"));
+                return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.ScriptShouldPresent));
             }
 
             foreach(var script in scripts)
             {
                 if( !Directory.Exists(script.Folder) )
                 {
-                    return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"Folder not exists: {script.Folder}"));
+                    return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.FolderNotFound, script.Folder));
                 }
             }
 
