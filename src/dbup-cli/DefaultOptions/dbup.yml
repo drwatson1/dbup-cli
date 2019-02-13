@@ -1,13 +1,13 @@
 dbUp:
-  version: 1
-  provider: sqlserver
-  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
-  transaction: Single
-  logScriptOutput: yes  # ??
-  logToConsole: yes   # ??
+  version: 1            # should be 1
+  provider: sqlserver   # DB provider: sqlserver
+  connectionString: %CONNSTR% # Connection string to DB. For example, (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True for sqlserver
+  transaction: Single   # Single (default) / PerScript / None
+  logScriptOutput: no   # yes / no (default)
+  logToConsole: yes     # yes (default) / no
   scripts:
-    -   folder: upgrades # default - current?
-        subFolders: yes # default no
-        order: 1 # default 0
-        runAlways: yes # default no
-        encoding: utf8 # default ?
+    -   folder:         # absolute or relative (to this file) path to a folder with *.sql files
+        subFolders: no  # yes / no (default)
+        order: 1        # script group order, default 0
+        runAlways: yes  # yes / no (default)
+        encoding: utf8  # scripts' encoding, default utf8
