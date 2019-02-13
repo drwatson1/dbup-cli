@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using DbUp.Cli.CommandLineOptions;
+using DbUp.Engine.Output;
 using Optional;
 using System;
 using System.IO;
@@ -10,9 +11,11 @@ namespace DbUp.Cli
     public class ToolEngine
     {
         IEnvironment Environment { get; }
+        IUpgradeLog Logger { get; }
 
-        public ToolEngine(IEnvironment environment)
+        public ToolEngine(IEnvironment environment, IUpgradeLog logger)
         {
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }
 
@@ -36,7 +39,7 @@ namespace DbUp.Cli
                             .SelectDbProvider(x.Provider, x.ConnectionString)
                             .SelectJournal(x.JournalTo)
                             .SelectTransaction(x.Transaction)
-                            .SelectLogOptions(x.LogToConsole, x.LogScriptOutput)
+                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
                         .Match(
                             some: builder =>
@@ -93,7 +96,7 @@ namespace DbUp.Cli
                             .SelectDbProvider(x.Provider, x.ConnectionString)
                             .SelectJournal(x.JournalTo)
                             .SelectTransaction(x.Transaction)
-                            .SelectLogOptions(x.LogToConsole, x.LogScriptOutput)
+                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
                         .Match(
                             some: builder =>

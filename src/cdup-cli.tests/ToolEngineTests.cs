@@ -4,6 +4,7 @@ using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
 using FakeItEasy;
 using Optional;
+using DbUp.Engine.Output;
 
 namespace DbUp.Cli.Tests
 {
@@ -31,7 +32,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(false);
             A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true.Some<bool, Error>(); });
 
-            var engine = new ToolEngine(env);
+            var engine = new ToolEngine(env, A.Fake<IUpgradeLog>());
 
             engine.Run("init").Should().Be(0);
             saved.Should().BeTrue();
@@ -47,7 +48,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
             A.CallTo(() => env.WriteFile("", "")).WithAnyArguments().ReturnsLazily(x => {saved = true; return true.Some<bool, Error>(); });
 
-            var engine = new ToolEngine(env);
+            var engine = new ToolEngine(env, A.Fake<IUpgradeLog>());
 
             engine.Run("init").Should().Be(1);
             saved.Should().BeFalse();
