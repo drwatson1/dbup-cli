@@ -8,6 +8,6 @@ dbUp:
   scripts:
     -   folder:         # absolute or relative (to this file) path to a folder with *.sql files
         subFolders: no  # yes / no (default)
-        order: 1        # script group order, default 0
-        runAlways: yes  # yes / no (default)
+        order: 0        # script group order, default 0
+        runAlways: no   # yes / no (default)
         encoding: utf8  # scripts' encoding, default utf8
