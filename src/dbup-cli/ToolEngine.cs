@@ -46,46 +46,62 @@ namespace DbUp.Cli
                             {
                                 var engine = builder.Build();
 
-                                var upgradeRequired = engine.IsUpgradeRequired();
-                                if (upgradeRequired)
+                                if (engine.IsUpgradeRequired())
                                 {
-                                    var scriptsToExecute = engine.GetScriptsToExecute();
-
-                                    Console.WriteLine("Database upgrade is required.");
-                                    Console.WriteLine($"You have {scriptsToExecute.Count} more scripts to execute.");
+                                    PrintGeneralUpgradeInformation(engine);
 
                                     if (opts.NotExecuted)
                                     {
-                                        Console.WriteLine();
-                                        Console.WriteLine("These scripts will be executed:");
-                                        scriptsToExecute.ForEach(s => Console.WriteLine($"    {s.Name}"));
+                                        Logger.WriteInformation("");
+                                        PrintScriptsToExecute(engine);
                                     }
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Database is up-to-date. Upgrade is not required.");
+                                    Logger.WriteInformation("Database is up-to-date. Upgrade is not required.");
                                 }
 
-                                if ( opts.Executed )
+                                if (opts.Executed)
                                 {
-                                    Console.WriteLine();
-                                    var executed = engine.GetExecutedScripts();
-                                    if (executed.Count == 0)
-                                    {
-                                        Console.WriteLine("It seems you have no scripts executed yet.");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine();
-                                        Console.WriteLine("Already executed scripts:");
-                                        executed.ForEach(s => Console.WriteLine($"    {s}"));
-                                    }
+                                    Logger.WriteInformation("");
+                                    PrintExecutedScripts(engine);
                                 }
 
                                 return 0.Some<int, Error>();
                             },
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
+
+        private void PrintGeneralUpgradeInformation(Engine.UpgradeEngine engine)
+        {
+            var scriptsToExecute = engine.GetScriptsToExecute();
+
+            Logger.WriteInformation("Database upgrade is required.");
+            Logger.WriteInformation($"You have {scriptsToExecute.Count} more scripts to execute.");
+        }
+
+        private void PrintScriptsToExecute(Engine.UpgradeEngine engine)
+        {
+            Logger.WriteInformation("These scripts will be executed:");
+
+            var scriptsToExecute = engine.GetScriptsToExecute();
+            scriptsToExecute.ForEach(s => Logger.WriteInformation($"    {s.Name}"));
+        }
+
+        private void PrintExecutedScripts(Engine.UpgradeEngine engine)
+        {
+            var executed = engine.GetExecutedScripts();
+            if (executed.Count == 0)
+            {
+                Logger.WriteInformation("It seems you have no scripts executed yet.");
+            }
+            else
+            {
+                Logger.WriteInformation("");
+                Logger.WriteInformation("Already executed scripts:");
+                executed.ForEach(s => Logger.WriteInformation($"    {s}"));
+            }
+        }
 
         // TODO: engine.MarkAsExecuted("")
         private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
