@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 using Optional;
 
@@ -53,5 +54,18 @@ namespace DbUp.Cli
                             ? builder.LogScriptOutput().Some<UpgradeEngineBuilder, Error>()
                             : builderOrNone,
                     none: error => Option.None<UpgradeEngineBuilder, Error>(error));
+
+        public static Option<UpgradeEngineBuilder, Error> OverrideConnectionFactory(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<IConnectionFactory> connectionFactory) =>
+            builderOrNone.Match(
+                some: builder => connectionFactory.Match(
+                    some: factory =>
+                    {
+                        builder.Configure(c => ((DatabaseConnectionManager)c.ConnectionManager).OverrideFactoryForTest(factory));
+                        return builder.Some<UpgradeEngineBuilder, Error>();
+                    },
+                    none: () => builderOrNone),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error)
+                );
+
     }
 }

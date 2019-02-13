@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using DbUp.Cli.CommandLineOptions;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using Optional;
 using System;
 using System.IO;
@@ -12,11 +13,19 @@ namespace DbUp.Cli
     {
         IEnvironment Environment { get; }
         IUpgradeLog Logger { get; }
+        Option<IConnectionFactory> ConnectionFactory { get; }
 
-        public ToolEngine(IEnvironment environment, IUpgradeLog logger)
+        public ToolEngine(IEnvironment environment, IUpgradeLog logger, Option<IConnectionFactory> connectionFactory)
         {
+            // ConnectionFactory to override the default. Mostly used for mocking
+            ConnectionFactory = connectionFactory;
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Environment = environment ?? throw new ArgumentNullException(nameof(environment));
+        }
+
+        public ToolEngine(IEnvironment environment, IUpgradeLog logger)
+            :   this(environment, logger, Option.None<IConnectionFactory>())
+        {
         }
 
         public int Run(params string[] args) =>
@@ -41,6 +50,7 @@ namespace DbUp.Cli
                             .SelectTransaction(x.Transaction)
                             .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
+                            .OverrideConnectionFactory(ConnectionFactory)
                         .Match(
                             some: builder =>
                             {
@@ -116,6 +126,7 @@ namespace DbUp.Cli
                             .SelectTransaction(x.Transaction)
                             .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
+                            .OverrideConnectionFactory(ConnectionFactory)
                         .Match(
                             some: builder =>
                             {
