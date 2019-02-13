@@ -11,6 +11,9 @@ using FakeItEasy;
 
 namespace DbUp.Cli.Tests
 {
+
+    // TODO: Create test for default dbup.yml file
+
     [TestClass]
     public class ConfigLoaderTests
     {
@@ -98,6 +101,24 @@ namespace DbUp.Cli.Tests
                 x.Scripts[0].RunAlways.Should().BeFalse();
                 x.Scripts[1].RunAlways.Should().BeTrue();
             });
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldNotThrow_InCaseOfSyntacticError()
+        {
+            Action a = () => ConfigLoader.LoadMigration(GetConfigPath("syntax-error.yml").Some<string, Error>());
+
+            a.Should().NotThrow();
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldReturnNoneWithError_InCaseOfSyntacticError()
+        {
+            var migrationOrNone = ConfigLoader.LoadMigration(GetConfigPath("syntax-error.yml").Some<string, Error>());
+
+            migrationOrNone.Match(
+                some: m => Assert.Fail("Migration should not be loaded in case of syntactic error"),
+                none: e => e.Should().NotBeNull());
         }
 
         [TestMethod]

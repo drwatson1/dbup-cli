@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -38,7 +39,18 @@ namespace DbUp.Cli
                         .WithNamingConvention(new CamelCaseNamingConvention())
                         .Build();
 
-                    var migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
+
+                    Migration migration = null;
+
+                    try
+                    {
+                        migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
+                    }
+                    catch(SyntaxErrorException ex)
+                    {
+                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, ex.Message));
+                    }
+
                     if (migration.Scripts.Count == 0)
                     {
                         migration.Scripts.Add(ScriptBatch.Default);

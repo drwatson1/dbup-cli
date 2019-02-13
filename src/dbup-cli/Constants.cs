@@ -13,6 +13,7 @@
             public static string UnsupportedProvider => "Unsupported provider: {0}";
             public static string InvalidTransaction => "Unsupported transaction value: {0}";
             public static string ScriptShouldPresent => "At least one script should be present";
+            public static string ParsingError => "Parsing error: {0}";
         }
     }
 }

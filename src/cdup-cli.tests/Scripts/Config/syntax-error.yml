@@ -1,0 +1,4 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: %ERR%
