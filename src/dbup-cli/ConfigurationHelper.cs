@@ -36,7 +36,7 @@ namespace DbUp.Cli
                         tran == Transaction.None
                             ? builder.WithoutTransaction().Some<UpgradeEngineBuilder, Error>()
                             : tran == Transaction.PerScript
-                                ?   builder.WithTransactionPerScript().Some<UpgradeEngineBuilder, Error>()
+                                ? builder.WithTransactionPerScript().Some<UpgradeEngineBuilder, Error>()
                                 : tran == Transaction.Single
                                     ? builder.WithTransaction().Some<UpgradeEngineBuilder, Error>()
                                     : Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.InvalidTransaction, tran)),

@@ -24,7 +24,7 @@ namespace DbUp.Cli
         }
 
         public ToolEngine(IEnvironment environment, IUpgradeLog logger)
-            :   this(environment, logger, Option.None<IConnectionFactory>())
+            : this(environment, logger, Option.None<IConnectionFactory>())
         {
         }
 

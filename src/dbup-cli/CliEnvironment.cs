@@ -20,7 +20,7 @@ namespace DbUp.Cli
             if (content == null)
                 throw new ArgumentNullException(nameof(content));
 
-            if ( File.Exists(path) )
+            if (File.Exists(path))
             {
                 return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path));
             }
@@ -32,7 +32,7 @@ namespace DbUp.Cli
                 File.WriteAllText(path, content, Encoding.UTF8);
                 return true.Some<bool, Error>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Option.None<bool, Error>(Error.Create(ex.Message));
             }

@@ -17,10 +17,10 @@ namespace DbUp.Cli
             if (string.IsNullOrWhiteSpace(configFilePath))
                 throw new ArgumentException("Parameter can't be null or white space", nameof(configFilePath));
 
-            return  new FileInfo(Path.IsPathFullyQualified(configFilePath)
+            return new FileInfo(Path.IsPathFullyQualified(configFilePath)
                 ? configFilePath
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
-            ).FullName.SomeWhen<string, Error>(x => 
+            ).FullName.SomeWhen<string, Error>(x =>
                 !fileShouldExist || (fileShouldExist && environment.FileExists(x)),
                 Error.Create(Constants.ConsoleMessages.FileNotFound, configFilePath)
             );
@@ -54,7 +54,7 @@ namespace DbUp.Cli
         private static void NormalizeScriptFolders(string configFilePath, IList<ScriptBatch> scripts)
         {
             // TODO: Check whether the folder exists
-            foreach(var script in scripts)
+            foreach (var script in scripts)
             {
                 var folder = ScriptProviderHelper.GetFolder(Path.Combine(configFilePath, ".."), script.Folder);
                 var dir = new DirectoryInfo(folder);

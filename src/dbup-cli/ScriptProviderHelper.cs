@@ -39,14 +39,14 @@ namespace DbUp.Cli
             if (scripts == null)
                 throw new ArgumentNullException(nameof(scripts));
 
-            if(scripts.Count == 0)
+            if (scripts.Count == 0)
             {
                 return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.ScriptShouldPresent));
             }
 
-            foreach(var script in scripts)
+            foreach (var script in scripts)
             {
-                if( !Directory.Exists(script.Folder) )
+                if (!Directory.Exists(script.Folder))
                 {
                     return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.FolderNotFound, script.Folder));
                 }
@@ -61,7 +61,7 @@ namespace DbUp.Cli
                                     GetFileSystemScriptOptions(script),
                                     GetSqlScriptOptions(script))))
             );
-            
+
             return builderOrNone;
         }
     }
