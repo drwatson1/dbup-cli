@@ -28,12 +28,63 @@ namespace DbUp.Cli
                 some: x => 0,
                 none: error => { Console.WriteLine(error.Message); return 1; });
 
-        private Option<int, Error> RunStatusCommand(StatusOptions opts)
-        {
-            Console.WriteLine("RunStatusCommand");
-            return 0.Some<int, Error>();
-        }
+        private Option<int, Error> RunStatusCommand(StatusOptions opts) =>
+            ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
+                .Match(
+                    some: x =>
+                        ConfigurationHelper
+                            .SelectDbProvider(x.Provider, x.ConnectionString)
+                            .SelectJournal(x.JournalTo)
+                            .SelectTransaction(x.Transaction)
+                            .SelectLogOptions(x.LogToConsole, x.LogScriptOutput)
+                            .SelectScripts(x.Scripts)
+                        .Match(
+                            some: builder =>
+                            {
+                                var engine = builder.Build();
 
+                                var upgradeRequired = engine.IsUpgradeRequired();
+                                if (upgradeRequired)
+                                {
+                                    var scriptsToExecute = engine.GetScriptsToExecute();
+
+                                    Console.WriteLine("Database upgrade is required.");
+                                    Console.WriteLine($"You have {scriptsToExecute.Count} more scripts to execute.");
+
+                                    if (opts.NotExecuted)
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine("These scripts will be executed:");
+                                        scriptsToExecute.ForEach(s => Console.WriteLine($"    {s.Name}"));
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Database is up-to-date. Upgrade is not required.");
+                                }
+
+                                if ( opts.Executed )
+                                {
+                                    Console.WriteLine();
+                                    var executed = engine.GetExecutedScripts();
+                                    if (executed.Count == 0)
+                                    {
+                                        Console.WriteLine("It seems you have no scripts executed yet.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine("Already executed scripts:");
+                                        executed.ForEach(s => Console.WriteLine($"    {s}"));
+                                    }
+                                }
+
+                                return 0.Some<int, Error>();
+                            },
+                            none: error => Option.None<int, Error>(error)),
+                    none: error => Option.None<int, Error>(error));
+
+        // TODO: engine.MarkAsExecuted("")
         private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
             ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
                 .Match(
