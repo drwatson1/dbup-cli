@@ -46,8 +46,10 @@ namespace DbUp.Cli
                             {
                                 var engine = builder.Build();
 
+                                int result = 0;
                                 if (engine.IsUpgradeRequired())
                                 {
+                                    result = -1; // Indicates that the upgrade is required
                                     PrintGeneralUpgradeInformation(engine);
 
                                     if (opts.NotExecuted)
@@ -67,7 +69,7 @@ namespace DbUp.Cli
                                     PrintExecutedScripts(engine);
                                 }
 
-                                return 0.Some<int, Error>();
+                                return result.Some<int, Error>();
                             },
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
