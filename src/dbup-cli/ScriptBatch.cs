@@ -1,4 +1,6 @@
-﻿namespace DbUp.Cli
+﻿using System;
+
+namespace DbUp.Cli
 {
     public class ScriptBatch
     {
@@ -22,5 +24,10 @@
         public string Encoding { get; private set; }
 
         public static readonly ScriptBatch Default = new ScriptBatch();
+
+        internal void ExpandVariables()
+        {
+            Folder = Environment.ExpandEnvironmentVariables(Folder ?? "");
+        }
     }
 }

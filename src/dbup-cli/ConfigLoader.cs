@@ -54,13 +54,15 @@ namespace DbUp.Cli
                         migration.Scripts.Add(ScriptBatch.Default);
                     }
 
-                    // TODO: all script folders should exist
-                    NormalizeScriptFolders(path, migration.Scripts);
-
-                    if( !ValidateVarNames(migration.Vars, out var errMessage) )
+                    if (!ValidateVarNames(migration.Vars, out var errMessage))
                     {
                         return Option.None<Migration, Error>(Error.Create(errMessage));
                     }
+
+                    migration.ExpandVariables();
+
+                    // TODO: all script folders should exist
+                    NormalizeScriptFolders(path, migration.Scripts);
 
                     return migration.Some<Migration, Error>();
                 },

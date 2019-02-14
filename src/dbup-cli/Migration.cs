@@ -1,5 +1,7 @@
 ﻿using Optional;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DbUp.Cli
 {
@@ -13,8 +15,22 @@ namespace DbUp.Cli
         public bool LogToConsole { get; private set; } = true;
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
 
-        public IList<ScriptBatch> Scripts { get; private set; } = new List<ScriptBatch>();
+        public List<ScriptBatch> Scripts { get; private set; } = new List<ScriptBatch>();
 
         public Dictionary<string, string> Vars { get; private set; } = new Dictionary<string, string>();
+
+        internal void ExpandVariables()
+        {
+            ConnectionString = Environment.ExpandEnvironmentVariables(ConnectionString ?? "");
+            Scripts.ForEach(x => x.ExpandVariables());
+            
+            var dic = new Dictionary<string, string>();
+            foreach (var item in Vars)
+            {
+                dic.Add(item.Key, Environment.ExpandEnvironmentVariables(item.Value ?? ""));
+            }
+
+            Vars = dic;
+        }
     }
 }
