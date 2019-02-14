@@ -52,6 +52,7 @@ namespace DbUp.Cli
                             .SelectTransaction(x.Transaction)
                             .SelectLogOptions(Logger, false, false)
                             .SelectScripts(x.Scripts)
+                            .AddVariables(x.Vars)
                             .OverrideConnectionFactory(ConnectionFactory)
                         .Match(
                             some: builder =>
@@ -130,6 +131,7 @@ namespace DbUp.Cli
                             .SelectTransaction(x.Transaction)
                             .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
                             .SelectScripts(x.Scripts)
+                            .AddVariables(x.Vars)
                             .OverrideConnectionFactory(ConnectionFactory)
                         .Match(
                             some: builder =>

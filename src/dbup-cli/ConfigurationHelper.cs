@@ -3,6 +3,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 using Optional;
+using System.Collections.Generic;
 
 namespace DbUp.Cli
 {
@@ -64,8 +65,12 @@ namespace DbUp.Cli
                         return builder.Some<UpgradeEngineBuilder, Error>();
                     },
                     none: () => builderOrNone),
-                none: error => Option.None<UpgradeEngineBuilder, Error>(error)
-                );
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
+
+        public static Option<UpgradeEngineBuilder, Error> AddVariables(this Option<UpgradeEngineBuilder, Error> builderOrNone, Dictionary<string, string> vars) =>
+            builderOrNone.Match(
+                some: builder => builder.WithVariables(vars).Some<UpgradeEngineBuilder, Error>(),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
     }
 }

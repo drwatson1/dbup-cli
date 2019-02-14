@@ -1,0 +1,8 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  scripts:
+    -   folder: Vars
+  vars:
+    Invalid-Var-Name$: Var1Value

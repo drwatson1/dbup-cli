@@ -1,13 +1,16 @@
 dbUp:
-  version: 1            # should be 1
-  provider: sqlserver   # DB provider: sqlserver
-  connectionString: %CONNSTR% # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
-  transaction: Single   # Single (default) / PerScript / None
-  logScriptOutput: no   # yes / no (default)
-  logToConsole: yes     # yes (default) / no
+  version: 1                    # should be 1
+  provider: sqlserver           # DB provider: sqlserver
+  connectionString: %CONNSTR%   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
+  transaction: Single           # Single (default) / PerScript / None
+  logScriptOutput: no           # yes / no (default)
+  logToConsole: yes             # yes (default) / no
   scripts:
-    -   folder:         # absolute or relative (to this file) path to a folder with *.sql files
-        subFolders: no  # yes / no (default)
-        order: 100      # script group order, default 100
-        runAlways: no   # yes / no (default)
-        encoding: utf8  # scripts' encoding, default utf8
+    -   folder:                 # absolute or relative (to this file) path to a folder with *.sql files
+        subFolders: no          # yes / no (default)
+        order: 100              # script group order, default 100
+        runAlways: no           # yes / no (default)
+        encoding: utf8          # scripts' encoding, default utf8
+  vars:                         # Variables substitution. You can use these variables in your scripts as $variable_name$
+    # Var1: Value1
+    # Var2: Value2

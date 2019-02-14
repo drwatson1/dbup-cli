@@ -14,5 +14,7 @@ namespace DbUp.Cli
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
 
         public IList<ScriptBatch> Scripts { get; private set; } = new List<ScriptBatch>();
+
+        public Dictionary<string, string> Vars { get; private set; } = new Dictionary<string, string>();
     }
 }
