@@ -4,7 +4,9 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using Optional;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace DbUp.Cli
@@ -32,9 +34,9 @@ namespace DbUp.Cli
             Parser.Default
                 .ParseArguments<InitOptions, UpgradeOptions, StatusOptions>(args)
                 .MapResult(
-                    (InitOptions opts) => RunInitCommand(opts),
-                    (UpgradeOptions opts) => RunUpgradeCommand(opts),
-                    (StatusOptions opts) => RunStatusCommand(opts),
+                    (InitOptions opts) => WrapException(() => RunInitCommand(opts)),
+                    (UpgradeOptions opts) => WrapException(() => RunUpgradeCommand(opts)),
+                    (StatusOptions opts) => WrapException(() => RunStatusCommand(opts)),
                     (parserErrors) => Option.None<int, Error>(Error.Create("")))
             .Match(
                 some: x => 0,
@@ -60,12 +62,13 @@ namespace DbUp.Cli
                                 if (engine.IsUpgradeRequired())
                                 {
                                     result = -1; // Indicates that the upgrade is required
-                                    PrintGeneralUpgradeInformation(engine);
+                                    var scriptsToExecute = engine.GetScriptsToExecute().Select(s => s.Name).ToList();
+                                    PrintGeneralUpgradeInformation(scriptsToExecute);
 
                                     if (opts.NotExecuted)
                                     {
                                         Logger.WriteInformation("");
-                                        PrintScriptsToExecute(engine);
+                                        PrintScriptsToExecute(scriptsToExecute);
                                     }
                                 }
                                 else
@@ -84,20 +87,17 @@ namespace DbUp.Cli
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
 
-        private void PrintGeneralUpgradeInformation(Engine.UpgradeEngine engine)
+        private void PrintGeneralUpgradeInformation(List<string> scripts)
         {
-            var scriptsToExecute = engine.GetScriptsToExecute();
-
             Logger.WriteInformation("Database upgrade is required.");
-            Logger.WriteInformation($"You have {scriptsToExecute.Count} more scripts to execute.");
+            Logger.WriteInformation($"You have {scripts.Count} more scripts to execute.");
         }
 
-        private void PrintScriptsToExecute(Engine.UpgradeEngine engine)
+        private void PrintScriptsToExecute(List<string> scripts)
         {
             Logger.WriteInformation("These scripts will be executed:");
 
-            var scriptsToExecute = engine.GetScriptsToExecute();
-            scriptsToExecute.ForEach(s => Logger.WriteInformation($"    {s.Name}"));
+            scripts.ForEach(s => Logger.WriteInformation($"    {s}"));
         }
 
         private void PrintExecutedScripts(Engine.UpgradeEngine engine)
@@ -142,6 +142,18 @@ namespace DbUp.Cli
                             },
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
+
+        private Option<int, Error> WrapException(Func<Option<int, Error>> f)
+        {
+            try
+            {
+                return f();
+            }
+            catch(Exception ex)
+            {
+                return Option.None<int, Error>(Error.Create(ex.Message));
+            }
+        }
 
         private Option<int, Error> RunInitCommand(InitOptions opts)
         {

@@ -11,9 +11,7 @@ using FakeItEasy;
 
 namespace DbUp.Cli.Tests
 {
-
     // TODO: Create test for default dbup.yml file
-
     [TestClass]
     public class ConfigLoaderTests
     {
