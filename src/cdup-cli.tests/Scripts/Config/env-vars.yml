@@ -1,8 +1,8 @@
 dbUp:
   version: 1
   provider: sqlserver
-  connectionString: "%connstr%"
+  connectionString: $connstr$
   scripts:
-    -   folder: "%folder%"
+    -   folder: $folder$
   vars:
-    Var1: "%var1%"
+    Var1: $var1$

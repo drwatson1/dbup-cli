@@ -21,13 +21,13 @@ namespace DbUp.Cli
 
         internal void ExpandVariables()
         {
-            ConnectionString = Environment.ExpandEnvironmentVariables(ConnectionString ?? "");
-            Scripts.ForEach(x => x.ExpandVariables());
+            ConnectionString = StringUtils.ExpandEnvironmentVariables(ConnectionString ?? "");
+            Scripts.ForEach(x => x.Folder = StringUtils.ExpandEnvironmentVariables(x.Folder ?? ""));
             
             var dic = new Dictionary<string, string>();
             foreach (var item in Vars)
             {
-                dic.Add(item.Key, Environment.ExpandEnvironmentVariables(item.Value ?? ""));
+                dic.Add(item.Key, StringUtils.ExpandEnvironmentVariables(item.Value ?? ""));
             }
 
             Vars = dic;
