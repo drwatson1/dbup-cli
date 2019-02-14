@@ -50,13 +50,17 @@ namespace DbUp.Cli
                             .SelectDbProvider(x.Provider, x.ConnectionString)
                             .SelectJournal(x.JournalTo)
                             .SelectTransaction(x.Transaction)
-                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                            .SelectLogOptions(Logger, false, false)
                             .SelectScripts(x.Scripts)
                             .OverrideConnectionFactory(ConnectionFactory)
                         .Match(
                             some: builder =>
                             {
                                 var engine = builder.Build();
+                                if (!engine.TryConnect(out var message))
+                                {
+                                    return Option.None<int, Error>(Error.Create(message));
+                                }
 
                                 int result = 0;
                                 if (engine.IsUpgradeRequired())
@@ -131,6 +135,11 @@ namespace DbUp.Cli
                             some: builder =>
                             {
                                 var engine = builder.Build();
+                                if (!engine.TryConnect(out var message))
+                                {
+                                    return Option.None<int, Error>(Error.Create(message));
+                                }
+
                                 var result = engine.PerformUpgrade();
 
                                 if (result.Successful)
@@ -149,7 +158,7 @@ namespace DbUp.Cli
             {
                 return f();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Option.None<int, Error>(Error.Create(ex.Message));
             }
