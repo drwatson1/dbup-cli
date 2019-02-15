@@ -8,7 +8,7 @@ namespace DbUp.Cli
     /// <summary>
     /// Environment implementation to use in cli tool
     /// </summary>
-    class CliEnvironment: IEnvironment
+    public class CliEnvironment: IEnvironment
     {
         public bool DirectoryExists(string path) => Directory.Exists(path);
         public bool FileExists(string path) => File.Exists(path);
@@ -24,8 +24,6 @@ namespace DbUp.Cli
             {
                 return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path));
             }
-
-            // TODO: Wrap errors to Option
 
             try
             {

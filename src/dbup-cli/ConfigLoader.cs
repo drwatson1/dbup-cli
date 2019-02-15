@@ -49,9 +49,19 @@ namespace DbUp.Cli
                         return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, ex.Message));
                     }
 
+                    if (migration.Scripts == null)
+                    {
+                        migration.Scripts = new List<ScriptBatch>();
+                    }
+
                     if (migration.Scripts.Count == 0)
                     {
                         migration.Scripts.Add(ScriptBatch.Default);
+                    }
+
+                    if (migration.Vars == null)
+                    {
+                        migration.Vars = new Dictionary<string, string>();
                     }
 
                     if (!ValidateVarNames(migration.Vars, out var errMessage))
@@ -73,11 +83,12 @@ namespace DbUp.Cli
         static bool ValidateVarNames(Dictionary<string, string> vars, out string errMessage)
         {
             errMessage = null;
+
             foreach (var n in vars.Keys)
             {
-                if( !exp.IsMatch(n) )
+                if (!exp.IsMatch(n))
                 {
-                    if( errMessage == null )
+                    if (errMessage == null)
                     {
                         errMessage = "Found one or more variables with an invalid name. Variable name should contain only letters, digits, - and _.";
                         errMessage += Environment.NewLine;

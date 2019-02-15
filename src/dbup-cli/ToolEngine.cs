@@ -137,6 +137,17 @@ namespace DbUp.Cli
                             some: builder =>
                             {
                                 var engine = builder.Build();
+                                if( opts.Ensure )
+                                {
+                                    var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString);
+                                    if( !res.HasValue )
+                                    {
+                                        Error err = null;
+                                        res.MatchNone(error => err = error);
+                                        return Option.None<int, Error>(err);
+                                    }
+                                }
+
                                 if (!engine.TryConnect(out var message))
                                 {
                                     return Option.None<int, Error>(Error.Create(message));

@@ -15,9 +15,9 @@ namespace DbUp.Cli
         public bool LogToConsole { get; private set; } = true;
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
 
-        public List<ScriptBatch> Scripts { get; private set; } = new List<ScriptBatch>();
+        public List<ScriptBatch> Scripts { get; set; } = new List<ScriptBatch>();
 
-        public Dictionary<string, string> Vars { get; private set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Vars { get; set; } = new Dictionary<string, string>();
 
         internal void ExpandVariables()
         {

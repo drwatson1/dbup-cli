@@ -3,6 +3,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 using Optional;
+using System;
 using System.Collections.Generic;
 
 namespace DbUp.Cli
@@ -18,6 +19,25 @@ namespace DbUp.Cli
             }
 
             return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
+        }
+
+        public static Option<bool, Error> EnsureDb(IUpgradeLog logger, Provider provider, string connectionString)
+        {
+            try
+            {
+                switch (provider)
+                {
+                    case Provider.SqlServer:
+                        EnsureDatabase.For.SqlDatabase(connectionString, logger);
+                        return true.Some<bool, Error>();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Option.None<bool, Error>(Error.Create(ex.Message));
+            }
+
+            return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
         public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<Journal> journalOrNone) =>
