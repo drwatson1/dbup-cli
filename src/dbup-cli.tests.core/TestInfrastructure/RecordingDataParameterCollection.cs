@@ -1,12 +1,12 @@
+using DbUp.Engine.Output;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class RecordingDataParameterCollection : IDataParameterCollection
+    public class RecordingDataParameterCollection: IDataParameterCollection
     {
         readonly IUpgradeLog logger;
         readonly List<object> backingList;

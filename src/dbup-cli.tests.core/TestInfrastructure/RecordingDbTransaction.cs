@@ -1,10 +1,9 @@
 using System;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class RecordingDbTransaction : IDbTransaction
+    public class RecordingDbTransaction: IDbTransaction
     {
         readonly CaptureLogsLogger logger;
 

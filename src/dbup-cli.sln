@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-cli", "dbup-cli\dbup-c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cdup-cli.tests", "cdup-cli.tests\cdup-cli.tests.csproj", "{BB39F97F-A482-49E4-851E-FAC670561CEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbup-cli.integration-tests", "dbup-cli.integration-tests\dbup-cli.integration-tests.csproj", "{7E7DA3A5-AD27-4789-882A-D6C58924721B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbup-cli.tests.core", "dbup-cli.tests.core\dbup-cli.tests.core.csproj", "{8B42CF74-0B01-4A59-85F3-90515D079B6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB39F97F-A482-49E4-851E-FAC670561CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E7DA3A5-AD27-4789-882A-D6C58924721B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E7DA3A5-AD27-4789-882A-D6C58924721B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E7DA3A5-AD27-4789-882A-D6C58924721B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E7DA3A5-AD27-4789-882A-D6C58924721B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B42CF74-0B01-4A59-85F3-90515D079B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B42CF74-0B01-4A59-85F3-90515D079B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B42CF74-0B01-4A59-85F3-90515D079B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B42CF74-0B01-4A59-85F3-90515D079B6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

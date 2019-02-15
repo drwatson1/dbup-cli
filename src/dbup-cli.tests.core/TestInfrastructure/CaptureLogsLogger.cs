@@ -1,11 +1,11 @@
+using DbUp.Engine.Output;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DbUp.Engine.Output;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    public class CaptureLogsLogger : IUpgradeLog
+    public class CaptureLogsLogger: IUpgradeLog
     {
         readonly StringBuilder logBuilder = new StringBuilder();
         public List<string> InfoMessages { get; } = new List<string>();

@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class RecordingDbDataParameter : IDbDataParameter
+    public class RecordingDbDataParameter: IDbDataParameter
     {
         public DbType DbType { get; set; }
         public ParameterDirection Direction { get; set; }

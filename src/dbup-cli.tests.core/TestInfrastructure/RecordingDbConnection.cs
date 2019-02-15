@@ -1,11 +1,11 @@
+using DbUp.Engine;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class RecordingDbConnection : IDbConnection
+    public class RecordingDbConnection: IDbConnection
     {
         readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
         readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();

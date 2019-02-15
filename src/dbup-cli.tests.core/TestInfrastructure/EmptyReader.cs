@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class EmptyReader : IDataReader
+    public class EmptyReader: IDataReader
     {
         public bool GetBoolean(int i)
         {

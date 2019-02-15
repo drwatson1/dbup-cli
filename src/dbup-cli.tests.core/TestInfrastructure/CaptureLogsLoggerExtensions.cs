@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    static class CaptureLogsLoggerExtensions
+    static public class CaptureLogsLoggerExtensions
     {
         public static List<string> GetExecutedScripts(this CaptureLogsLogger logger)
         {

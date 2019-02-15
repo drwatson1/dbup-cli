@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DbUp.Engine.Transactions;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Transactions;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    class SubstitutedConnectionConnectionManager : DatabaseConnectionManager
+    public class SubstitutedConnectionConnectionManager: DatabaseConnectionManager
     {
         public SubstitutedConnectionConnectionManager(IDbConnection conn) : base(l => conn)
         {

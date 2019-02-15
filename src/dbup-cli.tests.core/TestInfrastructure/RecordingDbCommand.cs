@@ -1,12 +1,12 @@
+using DbUp.Engine;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using DbUp.Engine;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class RecordingDbCommand : IDbCommand
+    public class RecordingDbCommand: IDbCommand
     {
         readonly CaptureLogsLogger logger;
         readonly SqlScript[] runScripts;
@@ -124,7 +124,7 @@ namespace DbUp.Cli.Tests.TestInfrastructure
 
         public UpdateRowSource UpdatedRowSource { get; set; }
 
-        class TestDbException : DbException
+        class TestDbException: DbException
         {
         }
     }

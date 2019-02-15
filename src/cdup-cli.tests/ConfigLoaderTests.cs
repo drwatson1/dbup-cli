@@ -1,13 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentAssertions;
-using System.IO;
-using System;
-using System.Collections.Generic;
 using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
-using Optional;
-using System.Reflection;
 using FakeItEasy;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Optional;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace DbUp.Cli.Tests
 {
@@ -167,6 +166,22 @@ namespace DbUp.Cli.Tests
             configPath.HasValue.Should().BeTrue();
 
             configPath.MatchSome(x => x.Should().Be(@"d:\temp\scripts\dbup.yml"));
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldNotThrow_IfNoVarsPresent()
+        {
+            Action a = () => ConfigLoader.LoadMigration(GetConfigPath("no-vars.yml").Some<string, Error>());
+
+            a.Should().NotThrow();
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldNotThrow_IfNoScriptsPresent()
+        {
+            Action a = () => ConfigLoader.LoadMigration(GetConfigPath("no-scripts.yml").Some<string, Error>());
+
+            a.Should().NotThrow();
         }
     }
 }

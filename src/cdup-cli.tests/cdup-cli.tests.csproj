@@ -19,11 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\dbup-cli.tests.core\dbup-cli.tests.core.csproj" />
     <ProjectReference Include="..\dbup-cli\dbup-cli.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Scripts\Config\c001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Config\no-vars.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Config\invalid-vars.yml">
@@ -69,6 +73,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Default\002.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Config\no-scripts.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Default\SubFolder1\003.sql">

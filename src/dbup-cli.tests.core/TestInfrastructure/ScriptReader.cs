@@ -1,10 +1,10 @@
+using DbUp.Engine;
 using System;
 using System.Data;
-using DbUp.Engine;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    internal class ScriptReader : IDataReader
+    public class ScriptReader: IDataReader
     {
         readonly SqlScript[] runScripts;
         int currentIndex = -1;
@@ -154,7 +154,8 @@ namespace DbUp.Cli.Tests.TestInfrastructure
 
         public bool Read()
         {
-            if (runScripts == null) return false;
+            if (runScripts == null)
+                return false;
             currentIndex++;
             return runScripts.Length > currentIndex;
         }
