@@ -40,6 +40,25 @@ namespace DbUp.Cli
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
+        public static Option<bool, Error> DropDb(IUpgradeLog logger, Provider provider, string connectionString)
+        {
+            try
+            {
+                switch (provider)
+                {
+                    case Provider.SqlServer:
+                        DropDatabase.For.SqlDatabase(connectionString, logger, timeout: 60);
+                        return true.Some<bool, Error>();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Option.None<bool, Error>(Error.Create(ex.Message));
+            }
+
+            return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
+        }
+
         public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<Journal> journalOrNone) =>
             builderOrNone.Match(
                 some: builder =>

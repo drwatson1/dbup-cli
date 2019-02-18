@@ -32,10 +32,11 @@ namespace DbUp.Cli
 
         public int Run(params string[] args) =>
             Parser.Default
-                .ParseArguments<InitOptions, UpgradeOptions, StatusOptions>(args)
+                .ParseArguments<InitOptions, UpgradeOptions, DropOptions, StatusOptions>(args)
                 .MapResult(
                     (InitOptions opts) => WrapException(() => RunInitCommand(opts)),
                     (UpgradeOptions opts) => WrapException(() => RunUpgradeCommand(opts)),
+                    (DropOptions opts) => WrapException(() => RunDropCommand(opts)),
                     (StatusOptions opts) => WrapException(() => RunStatusCommand(opts)),
                     (parserErrors) => Option.None<int, Error>(Error.Create("")))
             .Match(
@@ -161,6 +162,30 @@ namespace DbUp.Cli
                                 }
 
                                 return Option.None<int, Error>(Error.Create(result.Error.Message));
+                            },
+                            none: error => Option.None<int, Error>(error)),
+                    none: error => Option.None<int, Error>(error));
+
+        private Option<int, Error> RunDropCommand(DropOptions opts) =>
+            ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
+                .Match(
+                    some: x =>
+                        ConfigurationHelper
+                            .SelectDbProvider(x.Provider, x.ConnectionString)
+                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                            .OverrideConnectionFactory(ConnectionFactory)
+                        .Match(
+                            some: builder =>
+                            {
+                                var res = ConfigurationHelper.DropDb(Logger, x.Provider, x.ConnectionString);
+                                if (!res.HasValue)
+                                {
+                                    Error err = null;
+                                    res.MatchNone(error => err = error);
+                                    return Option.None<int, Error>(err);
+                                }
+
+                                return Option.Some<int, Error>(0);
                             },
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));

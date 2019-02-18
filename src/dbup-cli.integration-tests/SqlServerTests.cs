@@ -109,7 +109,7 @@ namespace DbUp.Cli.IntegrationTests
         {
             var engine = new ToolEngine(Env, Logger);
 
-            var result = engine.Run("upgrade", "-e", GetConfigPath());
+            var result = engine.Run("upgrade", "--ensure", GetConfigPath());
             result.Should().Be(0);
 
             using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
@@ -119,6 +119,22 @@ namespace DbUp.Cli.IntegrationTests
                 var count = command.ExecuteScalar();
 
                 count.Should().Be(1);
+            }
+        }
+
+        [TestMethod]
+        public void SqlServer_Drop_ShouldDropADb()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            engine.Run("upgrade", "--ensure", GetConfigPath());
+            var result = engine.Run("drop", GetConfigPath());
+            result.Should().Be(0);
+            using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            {
+                Action a = () => connection.Open();
+                a.Should().Throw<SqlException>("Database DbUp should not exist");
             }
         }
 
