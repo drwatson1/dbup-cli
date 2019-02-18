@@ -28,7 +28,7 @@ namespace DbUp.Cli
                 switch (provider)
                 {
                     case Provider.SqlServer:
-                        EnsureDatabase.For.SqlDatabase(connectionString, logger);
+                        EnsureDatabase.For.SqlDatabase(connectionString, logger, timeout: 60);
                         return true.Some<bool, Error>();
                 }
             }
