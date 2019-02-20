@@ -5,15 +5,12 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Optional;
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
 namespace DbUp.Cli.Tests
 {
-    // TODO: Create test to handle exceptions in course of processing
-
     [TestClass]
     public class ToolEngineTests
     {
