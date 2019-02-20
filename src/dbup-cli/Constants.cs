@@ -4,6 +4,7 @@
     {
         public const string DefaultConfigFileName = "dbup.yml";
         public const string DefaultConfigFileResourceName = "DbUp.Cli.DefaultOptions.dbup.yml";
+        public const string DefaultDotEnvFileName = ".env";
 
         public static class ConsoleMessages
         {

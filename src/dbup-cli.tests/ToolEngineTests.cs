@@ -69,7 +69,7 @@ namespace DbUp.Cli.Tests
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists("")).WithAnyArguments().Returns(true);
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
@@ -84,12 +84,11 @@ namespace DbUp.Cli.Tests
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists("")).WithAnyArguments().Returns(true);
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
             var result = engine.Run("status", GetConfigPath("onescript.yml"));
-            result.Should().Be(0);
 
             Logger.InfoMessages.Last().Should().StartWith("You have 1 more scripts");
         }
@@ -99,12 +98,39 @@ namespace DbUp.Cli.Tests
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists("")).WithAnyArguments().Returns(true);
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
             var result = engine.Run("status", GetConfigPath("onescript.yml"), "-n");
-            result.Should().Be(0);
+
+            Logger.InfoMessages.Last().Should().EndWith("c001.sql");
+        }
+
+        [TestMethod]
+        public void StatusCommand_ShouldReturnMinusOne_IfThereAreTheScriptsToExecute()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("status", GetConfigPath("onescript.yml"), "-n");
+            result.Should().Be(-1);
+        }
+
+        [TestMethod]
+        public void StatusCommand_ShouldUseSpecifiedEnvFiles()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("status", GetConfigPath("Status/status.yml"), "-n", 
+                "--env", GetConfigPath("Status/file1.env"), GetConfigPath("Status/file2.env"));
 
             Logger.InfoMessages.Last().Should().EndWith("c001.sql");
         }

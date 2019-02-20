@@ -71,7 +71,7 @@ namespace DbUp.Cli.Tests
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists("")).WithAnyArguments().Returns(true);
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 

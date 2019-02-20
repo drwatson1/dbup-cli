@@ -40,56 +40,59 @@ namespace DbUp.Cli
                     (StatusOptions opts) => WrapException(() => RunStatusCommand(opts)),
                     (parserErrors) => Option.None<int, Error>(Error.Create("")))
             .Match(
-                some: x => 0,
+                some: x => x,
                 none: error => { Console.WriteLine(error.Message); return 1; });
 
         private Option<int, Error> RunStatusCommand(StatusOptions opts) =>
-            ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
+            ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
                 .Match(
-                    some: x =>
-                        ConfigurationHelper
-                            .SelectDbProvider(x.Provider, x.ConnectionString)
-                            .SelectJournal(x.JournalTo)
-                            .SelectTransaction(x.Transaction)
-                            .SelectLogOptions(Logger, false, false)
-                            .SelectScripts(x.Scripts)
-                            .AddVariables(x.Vars)
-                            .OverrideConnectionFactory(ConnectionFactory)
+                    some: _ => ConfigLoader.LoadMigration(ConfigLoader.GetFilePath(Environment, opts.File))
                         .Match(
-                            some: builder =>
-                            {
-                                var engine = builder.Build();
-                                if (!engine.TryConnect(out var message))
-                                {
-                                    return Option.None<int, Error>(Error.Create(message));
-                                }
-
-                                int result = 0;
-                                if (engine.IsUpgradeRequired())
-                                {
-                                    result = -1; // Indicates that the upgrade is required
-                                    var scriptsToExecute = engine.GetScriptsToExecute().Select(s => s.Name).ToList();
-                                    PrintGeneralUpgradeInformation(scriptsToExecute);
-
-                                    if (opts.NotExecuted)
+                            some: x =>
+                                ConfigurationHelper
+                                    .SelectDbProvider(x.Provider, x.ConnectionString)
+                                    .SelectJournal(x.JournalTo)
+                                    .SelectTransaction(x.Transaction)
+                                    .SelectLogOptions(Logger, false, false)
+                                    .SelectScripts(x.Scripts)
+                                    .AddVariables(x.Vars)
+                                    .OverrideConnectionFactory(ConnectionFactory)
+                                .Match(
+                                    some: builder =>
                                     {
-                                        Logger.WriteInformation("");
-                                        PrintScriptsToExecute(scriptsToExecute);
-                                    }
-                                }
-                                else
-                                {
-                                    Logger.WriteInformation("Database is up-to-date. Upgrade is not required.");
-                                }
+                                        var engine = builder.Build();
+                                        if (!engine.TryConnect(out var message))
+                                        {
+                                            return Option.None<int, Error>(Error.Create(message));
+                                        }
 
-                                if (opts.Executed)
-                                {
-                                    Logger.WriteInformation("");
-                                    PrintExecutedScripts(engine);
-                                }
+                                        int result = 0;
+                                        if (engine.IsUpgradeRequired())
+                                        {
+                                            result = -1; // Indicates that the upgrade is required
+                                            var scriptsToExecute = engine.GetScriptsToExecute().Select(s => s.Name).ToList();
+                                            PrintGeneralUpgradeInformation(scriptsToExecute);
 
-                                return result.Some<int, Error>();
-                            },
+                                            if (opts.NotExecuted)
+                                            {
+                                                Logger.WriteInformation("");
+                                                PrintScriptsToExecute(scriptsToExecute);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Logger.WriteInformation("Database is up-to-date. Upgrade is not required.");
+                                        }
+
+                                        if (opts.Executed)
+                                        {
+                                            Logger.WriteInformation("");
+                                            PrintExecutedScripts(engine);
+                                        }
+
+                                        return result.Some<int, Error>();
+                                    },
+                                    none: error => Option.None<int, Error>(error)),
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
 
@@ -123,70 +126,76 @@ namespace DbUp.Cli
 
         // TODO: engine.MarkAsExecuted("")
         private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
-            ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
-                .Match(
-                    some: x =>
-                        ConfigurationHelper
-                            .SelectDbProvider(x.Provider, x.ConnectionString)
-                            .SelectJournal(x.JournalTo)
-                            .SelectTransaction(x.Transaction)
-                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
-                            .SelectScripts(x.Scripts)
-                            .AddVariables(x.Vars)
-                            .OverrideConnectionFactory(ConnectionFactory)
+            ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
+                .Match( 
+                    some: _ => ConfigLoader.LoadMigration(ConfigLoader.GetFilePath(Environment, opts.File))
                         .Match(
-                            some: builder =>
-                            {
-                                var engine = builder.Build();
-                                if( opts.Ensure )
-                                {
-                                    var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString);
-                                    if( !res.HasValue )
+                            some: x =>
+                                ConfigurationHelper
+                                    .SelectDbProvider(x.Provider, x.ConnectionString)
+                                    .SelectJournal(x.JournalTo)
+                                    .SelectTransaction(x.Transaction)
+                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .SelectScripts(x.Scripts)
+                                    .AddVariables(x.Vars)
+                                    .OverrideConnectionFactory(ConnectionFactory)
+                                .Match(
+                                    some: builder =>
                                     {
-                                        Error err = null;
-                                        res.MatchNone(error => err = error);
-                                        return Option.None<int, Error>(err);
-                                    }
-                                }
+                                        var engine = builder.Build();
+                                        if (opts.Ensure)
+                                        {
+                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString);
+                                            if (!res.HasValue)
+                                            {
+                                                Error err = null;
+                                                res.MatchNone(error => err = error);
+                                                return Option.None<int, Error>(err);
+                                            }
+                                        }
 
-                                if (!engine.TryConnect(out var message))
-                                {
-                                    return Option.None<int, Error>(Error.Create(message));
-                                }
+                                        if (!engine.TryConnect(out var message))
+                                        {
+                                            return Option.None<int, Error>(Error.Create(message));
+                                        }
 
-                                var result = engine.PerformUpgrade();
+                                        var result = engine.PerformUpgrade();
 
-                                if (result.Successful)
-                                {
-                                    return Option.Some<int, Error>(0);
-                                }
+                                        if (result.Successful)
+                                        {
+                                            return Option.Some<int, Error>(0);
+                                        }
 
-                                return Option.None<int, Error>(Error.Create(result.Error.Message));
-                            },
+                                        return Option.None<int, Error>(Error.Create(result.Error.Message));
+                                    },
+                                    none: error => Option.None<int, Error>(error)),
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
 
         private Option<int, Error> RunDropCommand(DropOptions opts) =>
-            ConfigLoader.LoadMigration(ConfigLoader.GetConfigFilePath(Environment, opts.File))
+            ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
                 .Match(
-                    some: x =>
-                        ConfigurationHelper
-                            .SelectDbProvider(x.Provider, x.ConnectionString)
-                            .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
-                            .OverrideConnectionFactory(ConnectionFactory)
+                    some: _ => ConfigLoader.LoadMigration(ConfigLoader.GetFilePath(Environment, opts.File))
                         .Match(
-                            some: builder =>
-                            {
-                                var res = ConfigurationHelper.DropDb(Logger, x.Provider, x.ConnectionString);
-                                if (!res.HasValue)
-                                {
-                                    Error err = null;
-                                    res.MatchNone(error => err = error);
-                                    return Option.None<int, Error>(err);
-                                }
+                            some: x =>
+                                ConfigurationHelper
+                                    .SelectDbProvider(x.Provider, x.ConnectionString)
+                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .OverrideConnectionFactory(ConnectionFactory)
+                                .Match(
+                                    some: builder =>
+                                    {
+                                        var res = ConfigurationHelper.DropDb(Logger, x.Provider, x.ConnectionString);
+                                        if (!res.HasValue)
+                                        {
+                                            Error err = null;
+                                            res.MatchNone(error => err = error);
+                                            return Option.None<int, Error>(err);
+                                        }
 
-                                return Option.Some<int, Error>(0);
-                            },
+                                        return Option.Some<int, Error>(0);
+                                    },
+                                    none: error => Option.None<int, Error>(error)),
                             none: error => Option.None<int, Error>(error)),
                     none: error => Option.None<int, Error>(error));
 
@@ -206,7 +215,7 @@ namespace DbUp.Cli
         {
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.DefaultConfigFileResourceName)))
             {
-                return ConfigLoader.GetConfigFilePath(Environment, opts.File, false)
+                return ConfigLoader.GetFilePath(Environment, opts.File, false)
                     .Match(
                         some: path => Environment.FileExists(path)
                             ? Option.None<int, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path))

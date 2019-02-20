@@ -2,9 +2,9 @@
 
 namespace DbUp.Cli.CommandLineOptions
 {
-    abstract class OptionsBase
+    public abstract class OptionsBase
     {
-        [Value(0, Default = Constants.DefaultConfigFileName, Required = false, HelpText = "An absolute or relative path to a configuration file")]
+        [Value(0, Default = Constants.DefaultConfigFileName, Required = false, HelpText = "Path to a configuration file. The path can be absolute or relative against a current directory")]
         public string File { get; set; }
     }
 }

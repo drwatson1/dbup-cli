@@ -125,7 +125,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
 
-            var configPath = ConfigLoader.GetConfigFilePath(env, "dbup.yml");
+            var configPath = ConfigLoader.GetFilePath(env, "dbup.yml");
             configPath.HasValue.Should().BeTrue();
 
             configPath.MatchSome(x => x.Should().Be(@"c:\test\dbup.yml"));
@@ -138,7 +138,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(false);
 
-            var configPath = ConfigLoader.GetConfigFilePath(env, "dbup.yml");
+            var configPath = ConfigLoader.GetFilePath(env, "dbup.yml");
             configPath.HasValue.Should().BeFalse();
         }
 
@@ -149,7 +149,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test\scripts");
             A.CallTo(() => env.FileExists(@"c:\test\dbup.yml")).Returns(true);
 
-            var configPath = ConfigLoader.GetConfigFilePath(env, @"..\dbup.yml");
+            var configPath = ConfigLoader.GetFilePath(env, @"..\dbup.yml");
             configPath.HasValue.Should().BeTrue();
 
             configPath.MatchSome(x => x.Should().Be(@"c:\test\dbup.yml"));
@@ -162,7 +162,7 @@ namespace DbUp.Cli.Tests
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
             A.CallTo(() => env.FileExists(@"d:\temp\scripts\dbup.yml")).Returns(true);
 
-            var configPath = ConfigLoader.GetConfigFilePath(env, @"d:\temp\scripts\dbup.yml");
+            var configPath = ConfigLoader.GetFilePath(env, @"d:\temp\scripts\dbup.yml");
             configPath.HasValue.Should().BeTrue();
 
             configPath.MatchSome(x => x.Should().Be(@"d:\temp\scripts\dbup.yml"));

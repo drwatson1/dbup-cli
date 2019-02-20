@@ -5,6 +5,7 @@ using DbUp.Helpers;
 using Optional;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DbUp.Cli
 {
@@ -111,5 +112,43 @@ namespace DbUp.Cli
                 some: builder => builder.WithVariables(vars).Some<UpgradeEngineBuilder, Error>(),
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
+        public static Option<bool, Error> LoadEnvironmentVariables(IEnvironment environment, string configFilePath, IEnumerable<string> envFiles)
+        {
+            if (environment == null)
+                throw new ArgumentNullException(nameof(environment));
+            if (configFilePath == null)
+                throw new ArgumentNullException(nameof(configFilePath));
+
+            var defaultEnvFile = Path.Combine(environment.GetCurrentDirectory(), Constants.DefaultDotEnvFileName);
+            if (environment.FileExists(defaultEnvFile))
+            {
+                DotNetEnv.Env.Load(defaultEnvFile);
+            }
+
+            var configFileEnv = Path.Combine(new FileInfo(configFilePath).DirectoryName, Constants.DefaultDotEnvFileName);
+            if (environment.FileExists(configFileEnv))
+            {
+                DotNetEnv.Env.Load(configFileEnv);
+            }
+
+            if (envFiles != null)
+            {
+                foreach (var file in envFiles)
+                {
+                    Error error = null;
+                    ConfigLoader.GetFilePath(environment, file)
+                        .Match(
+                            some: path => DotNetEnv.Env.Load(path),
+                            none: err => error = err);
+
+                    if (error != null)
+                    {
+                        return Option.None<bool, Error>(error);
+                    }
+                }
+            }
+
+            return true.Some<bool, Error>();
+        }
     }
 }

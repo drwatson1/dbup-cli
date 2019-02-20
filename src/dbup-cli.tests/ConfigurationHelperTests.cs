@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DbUp.Cli;
 using FluentAssertions;
-using System.Linq;
 using System;
 using DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Builder;
 using Optional;
-using DbUp.Helpers;
 
 namespace DbUp.Cli.Tests
 {

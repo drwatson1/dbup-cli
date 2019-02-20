@@ -1,0 +1,11 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: connection string
+  scripts:
+    -   folder: folder
+  vars:
+    VarA: $varA$
+    VarB: $varB$
+    VarC: $varC$
+    VarD: $varD$

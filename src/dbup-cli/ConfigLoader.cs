@@ -12,7 +12,7 @@ namespace DbUp.Cli
 {
     public static class ConfigLoader
     {
-        public static Option<string, Error> GetConfigFilePath(IEnvironment environment, string configFilePath, bool fileShouldExist = true)
+        public static Option<string, Error> GetFilePath(IEnvironment environment, string configFilePath, bool fileShouldExist = true)
         {
             if (environment == null)
                 throw new ArgumentNullException(nameof(environment));
