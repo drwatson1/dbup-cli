@@ -1,0 +1,7 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  scripts:
+    -   folder: Encoding
+        encoding: windows 1251

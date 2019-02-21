@@ -183,5 +183,27 @@ namespace DbUp.Cli.Tests
 
             a.Should().NotThrow();
         }
+
+        [TestMethod]
+        public void LoadMigration_ShouldRespectScriptEncoding()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => 
+            { 
+                var res = File.Exists(x.Arguments[0] as string);
+                return res; 
+            });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("upgrade", GetConfigPath("encoding.yml"));
+            result.Should().Be(0);
+
+            Logger.Log.Should().Contain("print 'Var1Value'");
+            Logger.Log.Should().Contain("print 'Var2Value'");
+            Logger.Log.Should().Contain("print 'Var3 Value'");
+        }
+
     }
 }
