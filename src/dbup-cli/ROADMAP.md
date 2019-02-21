@@ -5,6 +5,8 @@
 [ ] Implement option MarkAsExecuted for upgrade command to mark scrips as executed without actual execution of the scripts
 [ ] Support input encoding of script files
 [ ] Script filters
+    [ ] Wildcards
+    [ ] Regex
 
 ## Other stuff
 
