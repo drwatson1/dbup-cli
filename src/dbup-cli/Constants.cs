@@ -15,6 +15,7 @@
             public static string InvalidTransaction => "Unsupported transaction value: {0}";
             public static string ScriptShouldPresent => "At least one script should be present";
             public static string ParsingError => "Parsing error: {0}";
+            public static string InvalidEncoding => "Invalid encoding for scripts' folder '{0}': {1}";
         }
     }
 }

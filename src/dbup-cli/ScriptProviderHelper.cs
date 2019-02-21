@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace DbUp.Cli
 {
@@ -27,12 +28,30 @@ namespace DbUp.Cli
                 RunGroupOrder = batch.Order
             };
 
-        // TODO: Support encoding and filters
-        public static FileSystemScriptOptions GetFileSystemScriptOptions(ScriptBatch batch) =>
-            new FileSystemScriptOptions()
+        // TODO: Support filters
+        public static Option<FileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch)
+        {
+            if (batch == null)
+                throw new ArgumentNullException(nameof(batch));
+            if (batch.Encoding == null)
+                throw new ArgumentNullException(nameof(batch.Encoding), "Encoding can't be null");
+
+            Encoding encoding = null;
+            try
             {
-                IncludeSubDirectories = batch.SubFolders
-            };
+                encoding = Encoding.GetEncoding(batch.Encoding);
+            }
+            catch (ArgumentException ex)
+            {
+                return Option.None<FileSystemScriptOptions, Error>(Error.Create(Constants.ConsoleMessages.InvalidEncoding, batch.Folder, ex.Message));
+            }
+
+            return new FileSystemScriptOptions()
+            {
+                IncludeSubDirectories = batch.SubFolders,
+                Encoding = encoding
+            }.Some<FileSystemScriptOptions, Error>();
+        }
 
         public static Option<UpgradeEngineBuilder, Error> SelectScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, IList<ScriptBatch> scripts)
         {
@@ -52,17 +71,28 @@ namespace DbUp.Cli
                 }
             }
 
-            builderOrNone.MatchSome(builder =>
-                    scripts.ToList()
-                        .ForEach(script =>
-                            builder.WithScripts(
-                                new FileSystemScriptProvider(
-                                    script.Folder,
-                                    GetFileSystemScriptOptions(script),
-                                    GetSqlScriptOptions(script))))
-            );
+            foreach (var script in scripts)
+            {
+                builderOrNone = builderOrNone.AddScripts(script);
+            }
 
             return builderOrNone;
         }
+
+        static Option<UpgradeEngineBuilder, Error> AddScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, ScriptBatch script) =>
+            builderOrNone.Match(
+                some: builder =>
+                    GetFileSystemScriptOptions(script).Match(
+                        some: options =>
+                        {
+                            builder.WithScripts(
+                                new FileSystemScriptProvider(
+                                    script.Folder,
+                                    options,
+                                    GetSqlScriptOptions(script)));
+                            return builder.Some<UpgradeEngineBuilder, Error>();
+                        },
+                        none: error => Option.None<UpgradeEngineBuilder, Error>(error)),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
     }
 }

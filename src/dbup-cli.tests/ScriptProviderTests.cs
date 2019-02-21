@@ -90,18 +90,20 @@ namespace DbUp.Cli.Tests
         public void ConfigurationHelper_GetFileSystemScriptOptions_ShouldSetIncludeSubDirectoriesToFalse_IfSubFoldersIsSetToFalse()
         {
             var batch = new ScriptBatch("", true, subFolders: false, 5, "");
-            var options = ScriptProviderHelper.GetFileSystemScriptOptions(batch);
-
-            options.IncludeSubDirectories.Should().BeFalse();
+            ScriptProviderHelper.GetFileSystemScriptOptions(batch).Match(
+                some: options => options.IncludeSubDirectories.Should().BeFalse(),
+                none: error => Assert.Fail(error.Message)
+                );
         }
 
         [TestMethod]
         public void ConfigurationHelper_GetFileSystemScriptOptions_ShouldSetIncludeSubDirectoriesToTrue_IfSubFoldersIsSetToTrue()
         {
             var batch = new ScriptBatch("", true, subFolders: true, 5, "");
-            var options = ScriptProviderHelper.GetFileSystemScriptOptions(batch);
-
-            options.IncludeSubDirectories.Should().BeTrue();
+            ScriptProviderHelper.GetFileSystemScriptOptions(batch).Match(
+                some: options => options.IncludeSubDirectories.Should().BeTrue(),
+                none: error => Assert.Fail(error.Message)
+                );
         }
 
         [TestMethod]

@@ -71,7 +71,6 @@ namespace DbUp.Cli
 
                     migration.ExpandVariables();
 
-                    // TODO: all script folders should exist
                     NormalizeScriptFolders(path, migration.Scripts);
 
                     return migration.Some<Migration, Error>();
@@ -103,7 +102,6 @@ namespace DbUp.Cli
 
         private static void NormalizeScriptFolders(string configFilePath, IList<ScriptBatch> scripts)
         {
-            // TODO: Check whether the folder exists
             foreach (var script in scripts)
             {
                 var folder = ScriptProviderHelper.GetFolder(Path.Combine(configFilePath, ".."), script.Folder);
