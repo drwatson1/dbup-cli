@@ -119,13 +119,13 @@ namespace DbUp.Cli
             if (configFilePath == null)
                 throw new ArgumentNullException(nameof(configFilePath));
 
-            var defaultEnvFile = Path.Combine(environment.GetCurrentDirectory(), Constants.DefaultDotEnvFileName);
+            var defaultEnvFile = Path.Combine(environment.GetCurrentDirectory(), Constants.Default.DotEnvFileName);
             if (environment.FileExists(defaultEnvFile))
             {
                 DotNetEnv.Env.Load(defaultEnvFile);
             }
 
-            var configFileEnv = Path.Combine(new FileInfo(configFilePath).DirectoryName, Constants.DefaultDotEnvFileName);
+            var configFileEnv = Path.Combine(new FileInfo(configFilePath).DirectoryName, Constants.Default.DotEnvFileName);
             if (environment.FileExists(configFileEnv))
             {
                 DotNetEnv.Env.Load(configFileEnv);

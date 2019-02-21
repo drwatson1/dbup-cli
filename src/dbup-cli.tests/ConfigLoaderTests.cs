@@ -44,9 +44,9 @@ namespace DbUp.Cli.Tests
                 x.Transaction.Should().Be(Transaction.Single);
 
                 x.Scripts.Should().HaveCount(1);
-                // TODO: x.Scripts[0].Encoding
+                x.Scripts[0].Encoding.Should().Be(Constants.Default.Encoding);
                 x.Scripts[0].Folder.Should().Be(new FileInfo(GetConfigPath("min.yml")).Directory.FullName);
-                x.Scripts[0].Order.Should().Be(100);
+                x.Scripts[0].Order.Should().Be(Constants.Default.Order);
                 x.Scripts[0].RunAlways.Should().BeFalse();
                 x.Scripts[0].SubFolders.Should().BeFalse();
             });

@@ -213,7 +213,7 @@ namespace DbUp.Cli
 
         private Option<int, Error> RunInitCommand(InitOptions opts)
         {
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.DefaultConfigFileResourceName)))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.Default.ConfigFileResourceName)))
             {
                 return ConfigLoader.GetFilePath(Environment, opts.File, false)
                     .Match(

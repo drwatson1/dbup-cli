@@ -20,8 +20,8 @@ namespace DbUp.Cli
         public string Folder { get; set; }
         public bool RunAlways { get; private set; }
         public bool SubFolders { get; private set; }
-        public int Order { get; private set; } = 100;   // Default value in DbUp
-        public string Encoding { get; private set; }
+        public int Order { get; private set; } = Constants.Default.Order;   // Default value in DbUp
+        public string Encoding { get; set; } = Constants.Default.Encoding;
 
         public static readonly ScriptBatch Default = new ScriptBatch();
     }

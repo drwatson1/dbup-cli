@@ -89,7 +89,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void ConfigurationHelper_GetFileSystemScriptOptions_ShouldSetIncludeSubDirectoriesToFalse_IfSubFoldersIsSetToFalse()
         {
-            var batch = new ScriptBatch("", true, subFolders: false, 5, "");
+            var batch = new ScriptBatch("", true, subFolders: false, 5, Constants.Default.Encoding);
             ScriptProviderHelper.GetFileSystemScriptOptions(batch).Match(
                 some: options => options.IncludeSubDirectories.Should().BeFalse(),
                 none: error => Assert.Fail(error.Message)
@@ -99,7 +99,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void ConfigurationHelper_GetFileSystemScriptOptions_ShouldSetIncludeSubDirectoriesToTrue_IfSubFoldersIsSetToTrue()
         {
-            var batch = new ScriptBatch("", true, subFolders: true, 5, "");
+            var batch = new ScriptBatch("", true, subFolders: true, 5, Constants.Default.Encoding);
             ScriptProviderHelper.GetFileSystemScriptOptions(batch).Match(
                 some: options => options.IncludeSubDirectories.Should().BeTrue(),
                 none: error => Assert.Fail(error.Message)
@@ -111,8 +111,8 @@ namespace DbUp.Cli.Tests
         {
             var scripts = new List<ScriptBatch>()
             {
-                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder1"), false, false, 0, null),
-                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder2"), false, false, 0, null),
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder1"), false, false, 0, Constants.Default.Encoding),
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "SubFolder2"), false, false, 0, Constants.Default.Encoding),
             };
 
             var upgradeEngineBuilder = DeployChanges.To

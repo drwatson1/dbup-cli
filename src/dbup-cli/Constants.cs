@@ -1,10 +1,15 @@
 ﻿namespace DbUp.Cli
 {
-    static class Constants
+    public static class Constants
     {
-        public const string DefaultConfigFileName = "dbup.yml";
-        public const string DefaultConfigFileResourceName = "DbUp.Cli.DefaultOptions.dbup.yml";
-        public const string DefaultDotEnvFileName = ".env";
+        public static class Default
+        {
+            public const string ConfigFileName = "dbup.yml";
+            public const string ConfigFileResourceName = "DbUp.Cli.DefaultOptions.dbup.yml";
+            public const string DotEnvFileName = ".env";
+            public const string Encoding = "utf-8";
+            public static int Order = 100;
+        }
 
         public static class ConsoleMessages
         {
