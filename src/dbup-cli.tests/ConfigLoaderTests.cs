@@ -200,10 +200,7 @@ namespace DbUp.Cli.Tests
             var result = engine.Run("upgrade", GetConfigPath("encoding.yml"));
             result.Should().Be(0);
 
-            Logger.Log.Should().Contain("print 'Var1Value'");
-            Logger.Log.Should().Contain("print 'Var2Value'");
-            Logger.Log.Should().Contain("print 'Var3 Value'");
+            Logger.Log.Should().Contain("print 'Превед, медвед'");
         }
-
     }
 }

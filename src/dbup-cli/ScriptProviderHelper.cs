@@ -41,9 +41,21 @@ namespace DbUp.Cli
             {
                 encoding = Encoding.GetEncoding(batch.Encoding);
             }
-            catch (ArgumentException ex)
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
+            catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
             {
-                return Option.None<FileSystemScriptOptions, Error>(Error.Create(Constants.ConsoleMessages.InvalidEncoding, batch.Folder, ex.Message));
+            }
+            if(encoding == null)
+            {
+                try
+                {
+                    encoding = CodePagesEncodingProvider.Instance.GetEncoding(batch.Encoding);
+                }
+                catch (ArgumentException ex)
+                {
+                    return Option.None<FileSystemScriptOptions, Error>(Error.Create(Constants.ConsoleMessages.InvalidEncoding, batch.Folder, ex.Message));
+                }
             }
 
             return new FileSystemScriptOptions()

@@ -13,3 +13,5 @@
     - folder where the config file located
     - file, specified in command line
 - task for TFS
+
+Encodings - https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding?view=netcore-2.1
