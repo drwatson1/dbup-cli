@@ -10,7 +10,9 @@ dbUp:
         subFolders: no          # yes / no (default)
         order: 100              # script group order, default 100
         runAlways: no           # yes / no (default)
-        encoding: utf8          # scripts' encoding, default utf8
+        encoding: utf-8         # scripts' encoding, default utf-8
+        filter:                 # Wildcard or regex filter. Regex should be surrounded by forward slashes - for example /\d2\.sql/. By default, all scripts are included
+        matchFullPath: no       # yes / no (default). If yes, then the filter is applied to a full file path
   vars:                         # Variables substitution. You can use these variables in your scripts as $variable_name$
     # Var1: Value1
     # Var2: Value2

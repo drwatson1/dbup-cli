@@ -1,0 +1,12 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  scripts:
+    -   folder: FilterWildcard
+        filter: c0?1.sql
+    -   folder: FilterRegex
+        filter: /d0a+1\.sql/
+    -   folder: FilterWithFullPath
+        filter: "*\\FilterWithFullPath\\e0?1.sql"
+        matchFullPath: yes

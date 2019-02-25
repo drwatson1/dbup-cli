@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DbUp.Cli
 {
@@ -28,7 +29,6 @@ namespace DbUp.Cli
                 RunGroupOrder = batch.Order
             };
 
-        // TODO: Support filters
         public static Option<FileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch)
         {
             if (batch == null)
@@ -61,8 +61,56 @@ namespace DbUp.Cli
             return new FileSystemScriptOptions()
             {
                 IncludeSubDirectories = batch.SubFolders,
-                Encoding = encoding
+                Encoding = encoding,
+                Filter = CreateFilter(batch.Filter, batch.MatchFullPath)
             }.Some<FileSystemScriptOptions, Error>();
+        }
+
+        public static Func<string, bool> CreateFilter(string filterString, bool matchFullPath = false)
+        {
+            if( string.IsNullOrWhiteSpace(filterString))
+            {
+                return null;
+            }
+
+            filterString = filterString.Trim();
+
+            if (filterString.StartsWith("/", StringComparison.Ordinal) && filterString.EndsWith("/", StringComparison.Ordinal) && filterString.Length >= 2)
+            {
+                // This is a regular expression
+
+                if(filterString.Length == 2)
+                {
+                    // equals to empty filter
+                    return s => true;
+                }
+
+                // We cannot use Trim('/') because we need to trim only one symbol on either side, but preserve all other symbols. 
+                // For example, '//script//' -> should be '/script/', not 'script'
+                filterString = filterString.Substring(1);
+                filterString = filterString.Substring(0, filterString.Length - 1);
+
+                filterString = $"^{filterString}$";
+            }
+            else
+            {
+                filterString = WildCardToRegular(filterString);
+            }
+
+            var regex = new Regex(filterString, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            return fullFilePath =>
+            {
+                var filename = matchFullPath ? fullFilePath : new FileInfo(fullFilePath).Name;
+                var res = regex.IsMatch(filename);
+
+                return res;
+            };
+        }
+
+        static string WildCardToRegular(string value)
+        {
+            return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
         }
 
         public static Option<UpgradeEngineBuilder, Error> SelectScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, IList<ScriptBatch> scripts)
