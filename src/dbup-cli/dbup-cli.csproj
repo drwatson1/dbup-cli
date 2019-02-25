@@ -10,13 +10,17 @@
     <LangVersion>latest</LangVersion>
     <Product>DbUp Command Line</Product>
     <Authors>Sergey Tregub</Authors>
-    <Version>0.1.0-alpha1</Version>
+    <Version>0.1.0</Version>
     <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
     <Company />
     <Copyright>Copyright (c) 2019 Sergey Tregub</Copyright>
     <PackageLicenseUrl>https://github.com/drwatson1/dbup-cli/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>dbup database migration</PackageTags>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dbup</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -2,7 +2,7 @@
 
 ## Features to implement
 
-[ ] Implement option MarkAsExecuted for upgrade command to mark scrips as executed without actual execution of the scripts
+[x] Implement option MarkAsExecuted for upgrade command to mark scrips as executed without actual execution of the scripts
 [x] Support input encoding of script files
 [x] Script filters
     [x] Wildcards
@@ -13,7 +13,7 @@
 [x] Create test for default dbup.yml file
 [x] Check the existence of script folder
 [x] Check a version of a config file
-[ ] Target the project as a tool
+[x] Target the project as a tool
 [ ] Publish an alpha version to NuGet.org and do some tests with it
 [ ] Add CI (travis or appveyor)
 [ ] Add CD (travis or appveyor) - publish NuGet
