@@ -125,7 +125,6 @@ namespace DbUp.Cli
             }
         }
 
-        // TODO: engine.MarkAsExecuted("")
         private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
             ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
                 .Match( 
