@@ -32,10 +32,11 @@ namespace DbUp.Cli
 
         public int Run(params string[] args) =>
             Parser.Default
-                .ParseArguments<InitOptions, UpgradeOptions, DropOptions, StatusOptions>(args)
+                .ParseArguments<InitOptions, UpgradeOptions, MarkAsExecutedOptions, DropOptions, StatusOptions>(args)
                 .MapResult(
                     (InitOptions opts) => WrapException(() => RunInitCommand(opts)),
                     (UpgradeOptions opts) => WrapException(() => RunUpgradeCommand(opts)),
+                    (MarkAsExecutedOptions opts) => WrapException(() => RunMarkAsExecutedCommand(opts)),
                     (DropOptions opts) => WrapException(() => RunDropCommand(opts)),
                     (StatusOptions opts) => WrapException(() => RunStatusCommand(opts)),
                     (parserErrors) => Option.None<int, Error>(Error.Create("")))
@@ -160,6 +161,53 @@ namespace DbUp.Cli
                                         }
 
                                         var result = engine.PerformUpgrade();
+
+                                        if (result.Successful)
+                                        {
+                                            return Option.Some<int, Error>(0);
+                                        }
+
+                                        return Option.None<int, Error>(Error.Create(result.Error.Message));
+                                    },
+                                    none: error => Option.None<int, Error>(error)),
+                            none: error => Option.None<int, Error>(error)),
+                    none: error => Option.None<int, Error>(error));
+
+        private Option<int, Error> RunMarkAsExecutedCommand(MarkAsExecutedOptions opts) =>
+            ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
+                .Match(
+                    some: _ => ConfigLoader.LoadMigration(ConfigLoader.GetFilePath(Environment, opts.File))
+                        .Match(
+                            some: x =>
+                                ConfigurationHelper
+                                    .SelectDbProvider(x.Provider, x.ConnectionString)
+                                    .SelectJournal(x.JournalTo)
+                                    .SelectTransaction(x.Transaction)
+                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .SelectScripts(x.Scripts)
+                                    .AddVariables(x.Vars)
+                                    .OverrideConnectionFactory(ConnectionFactory)
+                                .Match(
+                                    some: builder =>
+                                    {
+                                        var engine = builder.Build();
+                                        if (opts.Ensure)
+                                        {
+                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString);
+                                            if (!res.HasValue)
+                                            {
+                                                Error err = null;
+                                                res.MatchNone(error => err = error);
+                                                return Option.None<int, Error>(err);
+                                            }
+                                        }
+
+                                        if (!engine.TryConnect(out var message))
+                                        {
+                                            return Option.None<int, Error>(Error.Create(message));
+                                        }
+
+                                        var result = engine.MarkAsExecuted();
 
                                         if (result.Successful)
                                         {

@@ -131,5 +131,20 @@ namespace DbUp.Cli.Tests
 
             Logger.InfoMessages.Last().Should().EndWith("c001.sql");
         }
+
+        [TestMethod]
+        public void MarkAsExecutedCommand_WhenCalled_ShouldNotMakeAnyChangesInDb()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => { return File.Exists(x.Arguments[0] as string); });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+            var result = engine.Run("mark-as-executed", GetConfigPath("mark-as-executed.yml"));
+            result.Should().Be(0);
+
+            Logger.Log.Should().NotContain("print 'You should not see this message'");
+        }
+
     }
 }
