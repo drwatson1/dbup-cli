@@ -49,6 +49,11 @@ namespace DbUp.Cli
                         return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, ex.Message));
                     }
 
+                    if( migration.Version != "1" )
+                    {
+                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.NotSupportedConfigFileVersion, "1"));
+                    }
+
                     if (migration.Scripts == null)
                     {
                         migration.Scripts = new List<ScriptBatch>();

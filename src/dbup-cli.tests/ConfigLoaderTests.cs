@@ -10,7 +10,6 @@ using System.Reflection;
 
 namespace DbUp.Cli.Tests
 {
-    // TODO: Create test for default dbup.yml file
     [TestClass]
     public class ConfigLoaderTests
     {
@@ -30,8 +29,6 @@ namespace DbUp.Cli.Tests
             testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
         }
 
-        // TODO: Test for Migration.Version
-
         [TestMethod]
         public void LoadMigration_MinVersionOfYml_ShouldSetTheValidDefaultParameters()
         {
@@ -49,6 +46,39 @@ namespace DbUp.Cli.Tests
                 x.Scripts[0].Order.Should().Be(Constants.Default.Order);
                 x.Scripts[0].RunAlways.Should().BeFalse();
                 x.Scripts[0].SubFolders.Should().BeFalse();
+            });
+        }
+
+        [TestMethod]
+        public void LoadMigration_WhenLoadADefaultConfigFile_ShouldLoadItWithoutErrors()
+        {
+            var configFile = ToolEngine.GetDefaultConfigFile();
+            var configFilePath = Path.GetTempFileName();
+            File.WriteAllText(configFilePath, configFile);
+
+            try
+            {
+                var migration = ConfigLoader.LoadMigration(configFilePath.Some<string, Error>());
+
+                migration.MatchNone(err =>
+                {
+                    Assert.Fail(err.Message);
+                });
+            }
+            finally
+            {
+                File.Delete(configFilePath);
+            }
+        }
+
+        [TestMethod]
+        public void LoadMigration_WhenVersionOfConfigFileNotEqualsTo1_0_ShouldFail()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("wrongversion.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                Assert.Fail("At the time the '1' version only of config file should be supported");
             });
         }
 

@@ -1,0 +1,4 @@
+dbUp:
+  version: 2
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True

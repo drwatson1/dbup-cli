@@ -87,6 +87,9 @@
     <None Update="Scripts\Config\FilterWildcard\c001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Scripts\Config\wrongversion.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Scripts\Config\Status\file2.env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -13,6 +13,7 @@
 
         public static class ConsoleMessages
         {
+
             public static string FileAlreadyExists => "File already exists: {0}";
             public static string FileNotFound => "File is not found: {0}";
             public static string FolderNotFound => "Folder is not found: {0}";
@@ -21,6 +22,7 @@
             public static string ScriptShouldPresent => "At least one script should be present";
             public static string ParsingError => "Parsing error: {0}";
             public static string InvalidEncoding => "Invalid encoding for scripts' folder '{0}': {1}";
+            public static string NotSupportedConfigFileVersion => "The only supported version of a config file is '{0}'";
         }
     }
 }

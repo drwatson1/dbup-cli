@@ -212,17 +212,20 @@ namespace DbUp.Cli
         }
 
         private Option<int, Error> RunInitCommand(InitOptions opts)
+            => ConfigLoader.GetFilePath(Environment, opts.File, false)
+                .Match(
+                    some: path => Environment.FileExists(path)
+                        ? Option.None<int, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path))
+                        : Environment.WriteFile(path, GetDefaultConfigFile()).Match(
+                            some: x => 0.Some<int, Error>(),
+                            none: error => Option.None<int, Error>(error)),
+                    none: error => Option.None<int, Error>(error));
+
+        public static string GetDefaultConfigFile()
         {
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.Default.ConfigFileResourceName)))
             {
-                return ConfigLoader.GetFilePath(Environment, opts.File, false)
-                    .Match(
-                        some: path => Environment.FileExists(path)
-                            ? Option.None<int, Error>(Error.Create(Constants.ConsoleMessages.FileAlreadyExists, path))
-                            : Environment.WriteFile(path, reader.ReadToEnd()).Match(
-                                some: x => 0.Some<int, Error>(),
-                                none: error => Option.None<int, Error>(error)),
-                        none: error => Option.None<int, Error>(error));
+                return reader.ReadToEnd();
             }
         }
     }
