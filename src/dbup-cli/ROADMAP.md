@@ -12,8 +12,9 @@
 
 [ ] dbup init -> display information about successful file creation
 [ ] dbup status -x -n -> remove redundunt empty line
-[ ] dbup status --show-executed -> brief option alias can't be -e because it is already used by --env (-e) option
+[x] dbup status --show-executed -> brief option alias can't be -e because it is already used by --env (-e) option
 [ ] subFolders: yes -> Displays strange scripts' names: e.g. subfolder.005.sql
+[ ] Move logToConsole and logScriptOutput options to command line from configuration file
 
 ## Other stuff
 
