@@ -8,6 +8,13 @@
     [x] Wildcards
     [x] Regex
 
+## TODO List
+
+[ ] dbup init -> display information about successful file creation
+[ ] dbup status -x -n -> remove redundunt empty line
+[ ] dbup status --show-executed -> brief option alias can't be -e because it is already used by --env (-e) option
+[ ] subFolders: yes -> Displays strange scripts' names: e.g. subfolder.005.sql
+
 ## Other stuff
 
 [x] Create test for default dbup.yml file
