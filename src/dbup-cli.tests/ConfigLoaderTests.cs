@@ -36,7 +36,7 @@ namespace DbUp.Cli.Tests
 
             migration.MatchSome(x =>
             {
-                x.Transaction.Should().Be(Transaction.Single);
+                x.Transaction.Should().Be(Transaction.None);
 
                 x.Scripts.Should().HaveCount(1);
                 x.Scripts[0].Encoding.Should().Be(Constants.Default.Encoding);
