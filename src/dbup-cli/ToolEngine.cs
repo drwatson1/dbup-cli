@@ -16,6 +16,7 @@ namespace DbUp.Cli
         IEnvironment Environment { get; }
         IUpgradeLog Logger { get; }
         Option<IConnectionFactory> ConnectionFactory { get; }
+        Parser Parser;
 
         public ToolEngine(IEnvironment environment, IUpgradeLog logger, Option<IConnectionFactory> connectionFactory)
         {
@@ -28,10 +29,11 @@ namespace DbUp.Cli
         public ToolEngine(IEnvironment environment, IUpgradeLog logger)
             : this(environment, logger, Option.None<IConnectionFactory>())
         {
+            Parser = new Parser(cfg => cfg.CaseInsensitiveEnumValues = true);
         }
 
         public int Run(params string[] args) =>
-            Parser.Default
+            Parser
                 .ParseArguments<InitOptions, UpgradeOptions, MarkAsExecutedOptions, DropOptions, StatusOptions>(args)
                 .MapResult(
                     (InitOptions opts) => WrapException(() => RunInitCommand(opts)),
