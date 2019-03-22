@@ -1,17 +1,8 @@
-- read options from yml file
-- file can be in the current folder, can be specified in command line or load from std input
-- substitute environment variables in options' values
-- use any dbup provider
-- read options from environment variables or command line options
-- options order:
-    - file
-    - env var
-    - command line options
-- can be installed as a dotnet global tool
-- can use .env files
-    - current folder
-    - folder where the config file located
-    - file, specified in command line
-- task for TFS
+* Update a version
+* Open a console
+* Go to the `src\dbup-cli` folder
+* Run `dotnet pack -c Release` to create a NuGet package
+* Run `dotnet tool install --global --add-source ./nupkg dbup-cli`
 
-Encodings - https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding?view=netcore-2.1
+Uninstall:
+`dotnet tool uninstall --global dbup-cli`
