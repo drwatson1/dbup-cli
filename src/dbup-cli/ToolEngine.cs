@@ -54,7 +54,7 @@ namespace DbUp.Cli
                                     .SelectDbProvider(x.Provider, x.ConnectionString)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
-                                    .SelectLogOptions(Logger, false, false)
+                                    .SelectLogOptions(Logger, VerbosityLevel.Min)
                                     .SelectScripts(x.Scripts)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
@@ -135,7 +135,7 @@ namespace DbUp.Cli
                                     .SelectDbProvider(x.Provider, x.ConnectionString)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
-                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .SelectLogOptions(Logger, opts.Verbosity)
                                     .SelectScripts(x.Scripts)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
@@ -182,7 +182,7 @@ namespace DbUp.Cli
                                     .SelectDbProvider(x.Provider, x.ConnectionString)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
-                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .SelectLogOptions(Logger, opts.Verbosity)
                                     .SelectScripts(x.Scripts)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
@@ -227,7 +227,7 @@ namespace DbUp.Cli
                             some: x =>
                                 ConfigurationHelper
                                     .SelectDbProvider(x.Provider, x.ConnectionString)
-                                    .SelectLogOptions(Logger, x.LogToConsole, x.LogScriptOutput)
+                                    .SelectLogOptions(Logger, opts.Verbosity)
                                     .OverrideConnectionFactory(ConnectionFactory)
                                 .Match(
                                     some: builder =>

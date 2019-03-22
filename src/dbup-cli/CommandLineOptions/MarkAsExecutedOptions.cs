@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DbUp.Cli.CommandLineOptions
 {
     [Verb("mark-as-executed", HelpText = "Mark all scripts as executed")]
-    class MarkAsExecutedOptions: OptionsBase
+    class MarkAsExecutedOptions: VerbosityBase
     {
         [Option("ensure", HelpText = "Create database if it is not exists")]
         public bool Ensure { get; set; }

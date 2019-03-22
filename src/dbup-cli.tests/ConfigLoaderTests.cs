@@ -36,8 +36,6 @@ namespace DbUp.Cli.Tests
 
             migration.MatchSome(x =>
             {
-                x.LogScriptOutput.Should().BeFalse();
-                x.LogToConsole.Should().BeTrue();
                 x.Transaction.Should().Be(Transaction.Single);
 
                 x.Scripts.Should().HaveCount(1);
@@ -89,15 +87,6 @@ namespace DbUp.Cli.Tests
 
             migration.MatchSome(x => x.Provider.Should().Be(Provider.SqlServer));
             migration.MatchSome(x => x.ConnectionString.Should().Be(@"(localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True"));
-        }
-
-        [TestMethod]
-        public void LoadMigration_ShouldSetValidLogOptions()
-        {
-            var migration = ConfigLoader.LoadMigration(GetConfigPath("log.yml").Some<string, Error>());
-
-            migration.MatchSome(x => x.LogScriptOutput.Should().BeTrue());
-            migration.MatchSome(x => x.LogToConsole.Should().BeFalse());
         }
 
         [TestMethod]

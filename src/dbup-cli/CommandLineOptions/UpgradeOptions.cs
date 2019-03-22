@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DbUp.Cli.CommandLineOptions
 {
     [Verb("upgrade", HelpText = "Upgrade database")]
-    class UpgradeOptions: OptionsBase
+    class UpgradeOptions: VerbosityBase
     {
         [Option("ensure", HelpText = "Create a database if not exists")]
         public bool Ensure { get; set; }

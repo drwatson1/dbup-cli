@@ -1,4 +1,5 @@
 ﻿using DbUp.Builder;
+using DbUp.Cli.CommandLineOptions;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
@@ -83,15 +84,17 @@ namespace DbUp.Cli
                                     : Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.InvalidTransaction, tran)),
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
-        public static Option<UpgradeEngineBuilder, Error> SelectLogOptions(this Option<UpgradeEngineBuilder, Error> builderOrNone, IUpgradeLog logger, bool logToConsole, bool logScriptOutput) =>
+        /*, bool logToConsole, bool logScriptOutput*/
+
+        public static Option<UpgradeEngineBuilder, Error> SelectLogOptions(this Option<UpgradeEngineBuilder, Error> builderOrNone, IUpgradeLog logger, VerbosityLevel verbosity) =>
             builderOrNone
                 .Match(
-                    some: builder => logToConsole == true
+                    some: builder => verbosity != VerbosityLevel.Min
                             ? builder.LogTo(logger).Some<UpgradeEngineBuilder, Error>()
                             : builder.LogToNowhere().Some<UpgradeEngineBuilder, Error>(),
                     none: error => Option.None<UpgradeEngineBuilder, Error>(error))
                 .Match(
-                    some: builder => logScriptOutput == true
+                    some: builder => verbosity == VerbosityLevel.Detail
                             ? builder.LogScriptOutput().Some<UpgradeEngineBuilder, Error>()
                             : builderOrNone,
                     none: error => Option.None<UpgradeEngineBuilder, Error>(error));
