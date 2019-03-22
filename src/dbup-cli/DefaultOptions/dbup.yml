@@ -3,8 +3,6 @@ dbUp:
   provider: sqlserver           # DB provider: sqlserver
   connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
   transaction: None             # Single / PerScript / None (default)
-  logScriptOutput: no           # yes / no (default)
-  logToConsole: yes             # yes (default) / no
   scripts:
     -   folder:                 # absolute or relative (to this file) path to a folder with *.sql files
         subFolders: no          # yes / no (default)
