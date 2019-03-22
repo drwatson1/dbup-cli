@@ -8,19 +8,21 @@
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <LangVersion>latest</LangVersion>
-    <Product>DbUp Command Line</Product>
+    <Product>DbUp Command Line Interface</Product>
     <Authors>Sergey Tregub</Authors>
     <Version>1.0.0</Version>
     <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
     <Company />
     <Copyright>Copyright (c) 2019 Sergey Tregub</Copyright>
-    <PackageLicense>https://github.com/drwatson1/dbup-cli/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>dbup database migration sqlserver</PackageTags>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageReleaseNotes>Initial version (DbUp 4.2)</PackageReleaseNotes>
+    <Title>DbUp Command Line Interface</Title>
+    <Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to SQL Server databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
