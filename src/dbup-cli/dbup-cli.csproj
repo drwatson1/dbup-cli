@@ -10,7 +10,7 @@
     <LangVersion>latest</LangVersion>
     <Product>DbUp Command Line Interface</Product>
     <Authors>Sergey Tregub</Authors>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
     <Company />
     <Copyright>Copyright (c) 2019 Sergey Tregub</Copyright>
@@ -23,6 +23,7 @@
     <PackageReleaseNotes>Initial version (DbUp 4.2)</PackageReleaseNotes>
     <Title>DbUp Command Line Interface</Title>
     <Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to SQL Server databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
+    <PackageLicenseUrl>https://github.com/drwatson1/dbup-cli/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
