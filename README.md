@@ -51,4 +51,4 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
-|2019-03-21|1.0.0|Initial version (DbUp 4.2)
+|2019-03-25|1.0.1|Initial version (DbUp 4.2)
