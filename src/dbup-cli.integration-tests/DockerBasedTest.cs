@@ -1,5 +1,6 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -42,6 +43,13 @@ namespace DbUp.Cli.IntegrationTests
 
             try
             {
+                await DockerClient.Images.CreateImageAsync(
+                    new ImagesCreateParameters
+                    {
+                        FromImage = imageName
+                    },
+                    null, A.Fake<IProgress<JSONMessage>>());
+
                 var cont = await DockerClient.Containers.CreateContainerAsync(pars);
                 ContainerId = cont.ID;
                 var res = await DockerClient.Containers.StartContainerAsync(ContainerId, new ContainerStartParameters());
