@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.2" />
+    <PackageReference Include="FakeItEasy" Version="5.1.0" />
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+    <PackageReference Include="Npgsql" Version="4.0.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Scripts\PostgreSql\001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\PostgreSql\dbup.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Scripts\PostgreSql\001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
