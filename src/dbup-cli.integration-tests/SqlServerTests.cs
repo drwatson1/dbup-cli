@@ -7,6 +7,7 @@ using FluentAssertions;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace DbUp.Cli.IntegrationTests
 {
@@ -29,6 +30,8 @@ namespace DbUp.Cli.IntegrationTests
 
         string GetConfigPath(string name = "dbup.yml") => new DirectoryInfo(Path.Combine(GetBasePath(), name)).FullName;
 
+        Func<DbConnection> CreateConnection = () => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
+
         [TestInitialize]
         public async Task TestInitialize()
         {
@@ -40,14 +43,14 @@ namespace DbUp.Cli.IntegrationTests
                     "SA_PASSWORD=SaPwd2017"
                 },
                 "1433",
-                () => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017")
+                CreateConnection
                 );
         }
 
         [TestCleanup]
         public async Task TestCleanup()
         {
-            await DockerCleanup();
+            await DockerCleanup(CreateConnection, con => new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", con as SqlConnection));
         }
 
         [TestMethod]

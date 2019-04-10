@@ -83,9 +83,28 @@ namespace DbUp.Cli.IntegrationTests
             connected.Should().BeTrue("Server should be awailable to connect");
         }
 
-        protected async Task DockerCleanup()
+        protected async Task DockerCleanup(Func<DbConnection> createConnection, Func<DbConnection, DbCommand> createCommand)
         {
-            await DockerClient.Containers.StopContainerAsync(ContainerId, new ContainerStopParameters());
+            await DockerClient.Containers.StopContainerAsync(ContainerId, new ContainerStopParameters() { WaitBeforeKillSeconds = 1 });
+
+            var started = DateTime.Now;
+            while (DateTime.Now - started < TimeSpan.FromMinutes(2))
+            {
+                using (var connection = createConnection())
+                using (var command = createCommand(connection))
+                {
+                    try
+                    {
+                        await connection.OpenAsync();
+                        await command.ExecuteScalarAsync();
+                        await Task.Delay(1000);
+                    }
+                    catch
+                    {
+                        return;
+                    }
+                }
+            }
         }
     }
 }

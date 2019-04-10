@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Npgsql;
+using System.Data.Common;
 
 namespace DbUp.Cli.IntegrationTests
 {
@@ -30,24 +31,26 @@ namespace DbUp.Cli.IntegrationTests
 
         string GetConfigPath(string name = "dbup.yml") => new DirectoryInfo(Path.Combine(GetBasePath(), name)).FullName;
 
+        Func<DbConnection> CreateConnection = () => new NpgsqlConnection("Host=127.0.0.1;Database=postgres;Username=postgres;Password=PostgresPwd2019;Port=5432");
+
         [TestInitialize]
-        public async Task TestInitialize()
+        public Task TestInitialize()
         {
-            await DockerInitialize(
+            return DockerInitialize(
                 "postgres:11.2",
                 new List<string>()
                 {
                     "POSTGRES_PASSWORD=PostgresPwd2019"
                 },
                 "5432",
-                () => new NpgsqlConnection("Host=127.0.0.1;Database=postgres;Username=postgres;Password=PostgresPwd2019;Port=5432")
+                CreateConnection
                 );
         }
 
         [TestCleanup]
-        public async Task TestCleanup()
+        public Task TestCleanup()
         {
-            await DockerCleanup();
+            return DockerCleanup(CreateConnection, con => new NpgsqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", con as NpgsqlConnection));
         }
 
         [TestMethod]
@@ -93,8 +96,8 @@ namespace DbUp.Cli.IntegrationTests
             using (var connection = new NpgsqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
             using (var command = new NpgsqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
             {
-                Action a = () => connection.Open();
-                a.Should().Throw<PostgresException>("Database DbUp should not exist");
+                Action a = () => { connection.Open(); command.ExecuteScalar(); };
+                a.Should().Throw<Exception>("Database DbUp should not exist");
             }
         }
     }
