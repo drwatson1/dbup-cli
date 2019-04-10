@@ -1,4 +1,3 @@
-using DbUp.Cli;
 using DbUp.Cli.Tests.TestInfrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -6,20 +5,16 @@ using System.IO;
 using System.Reflection;
 using FluentAssertions;
 using System.Data.SqlClient;
-using Docker.DotNet;
-using Docker.DotNet.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DbUp.Cli.IntegrationTests
 {
     [TestClass]
-    public class SqlServerTests
+    public class SqlServerTests: DockerBasedTest
     {
         readonly CaptureLogsLogger Logger;
         readonly IEnvironment Env;
-        DockerClient DockerClient;
-        string ContainerId;
 
         public SqlServerTests()
         {
@@ -37,75 +32,26 @@ namespace DbUp.Cli.IntegrationTests
         [TestInitialize]
         public async Task TestInitialize()
         {
-            DockerClient = new DockerClientConfiguration(new Uri("npipe://./pipe/docker_engine")).CreateClient();
-            var pars = new CreateContainerParameters(new Config()
-            {
-                Image = "mcr.microsoft.com/mssql/server:2017-CU12-ubuntu",
-                ExposedPorts = new Dictionary<string, EmptyStruct>()
-                {
-                    { "1433", new EmptyStruct() }
-                },
-                Env = new List<string>()
+            await DockerInitialize(
+                "mcr.microsoft.com/mssql/server:2017-CU12-ubuntu",
+                new List<string>()
                 {
                     "ACCEPT_EULA=Y",
                     "SA_PASSWORD=SaPwd2017"
                 },
-                NetworkDisabled = false
-                
-            });
-
-            pars.HostConfig = new HostConfig()
-            {
-                AutoRemove = true,
-                PortBindings = new Dictionary<string, IList<PortBinding>>()
-                {
-                    { "1433", new List<PortBinding> { new PortBinding() { HostPort = "1433", HostIP = "127.0.0.1" } } }
-                }
-            };
-
-            try
-            {
-                var cont = await DockerClient.Containers.CreateContainerAsync(pars);
-                ContainerId = cont.ID;
-                var res = await DockerClient.Containers.StartContainerAsync(ContainerId, new ContainerStartParameters());
-                res.Should().BeTrue();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-
-            var started = DateTime.Now;
-            var connected = false;
-            while(DateTime.Now - started < TimeSpan.FromMinutes(1))
-            {
-                using (var connection = new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017"))
-                {
-                    try
-                    {
-                        connection.Open();
-                        connected = true;
-                        break;
-                    }
-                    catch
-                    {
-                        await Task.Delay(1000);
-                        continue;
-                    }
-                }
-            }
-
-            connected.Should().BeTrue("Server should be awailable to connect");
+                "1433",
+                () => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017")
+                );
         }
 
         [TestCleanup]
         public async Task TestCleanup()
         {
-            await DockerClient.Containers.StopContainerAsync(ContainerId, new ContainerStopParameters());
+            await DockerCleanup();
         }
 
         [TestMethod]
-        public void SqlServer_Ensure_ShouldCreateANewDb()
+        public void Ensure_CreateANewDb()
         {
             var engine = new ToolEngine(Env, Logger);
 
@@ -123,7 +69,7 @@ namespace DbUp.Cli.IntegrationTests
         }
 
         [TestMethod]
-        public void SqlServer_Drop_ShouldDropADb()
+        public void Drop_DropADb()
         {
             var engine = new ToolEngine(Env, Logger);
 
@@ -139,7 +85,7 @@ namespace DbUp.Cli.IntegrationTests
         }
 
         [TestMethod]
-        public void SqlServer_Database_ShouldNotExistBeforeTestRun()
+        public void DatabaseShouldNotExistBeforeTestRun()
         {
             using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
             using (var command = new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
