@@ -68,6 +68,8 @@ namespace DbUp.Cli.IntegrationTests
             }
         }
 
+        /*
+         // Drop database does not supported for PostgreSQL by DbUp
         [TestMethod]
         public void Drop_DropADb()
         {
@@ -83,6 +85,7 @@ namespace DbUp.Cli.IntegrationTests
                 a.Should().Throw<SqlException>("Database DbUp should not exist");
             }
         }
+        */
 
         [TestMethod]
         public void DatabaseShouldNotExistBeforeTestRun()
@@ -91,7 +94,7 @@ namespace DbUp.Cli.IntegrationTests
             using (var command = new NpgsqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
             {
                 Action a = () => connection.Open();
-                a.Should().Throw<SqlException>("Database DbUp should not exist");
+                a.Should().Throw<PostgresException>("Database DbUp should not exist");
             }
         }
     }

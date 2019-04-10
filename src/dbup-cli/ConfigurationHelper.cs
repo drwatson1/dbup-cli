@@ -18,6 +18,8 @@ namespace DbUp.Cli
             {
                 case Provider.SqlServer:
                     return DeployChanges.To.SqlDatabase(connectionString).Some<UpgradeEngineBuilder, Error>();
+                case Provider.PostgreSQL:
+                    return DeployChanges.To.PostgresqlDatabase(connectionString).Some<UpgradeEngineBuilder, Error>();
             }
 
             return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
@@ -31,6 +33,9 @@ namespace DbUp.Cli
                 {
                     case Provider.SqlServer:
                         EnsureDatabase.For.SqlDatabase(connectionString, logger, timeout: 60);
+                        return true.Some<bool, Error>();
+                    case Provider.PostgreSQL:
+                        EnsureDatabase.For.PostgresqlDatabase(connectionString, logger);
                         return true.Some<bool, Error>();
                 }
             }
@@ -51,6 +56,8 @@ namespace DbUp.Cli
                     case Provider.SqlServer:
                         DropDatabase.For.SqlDatabase(connectionString, logger, timeout: 60);
                         return true.Some<bool, Error>();
+                    case Provider.PostgreSQL:
+                        return Option.None<bool, Error>(Error.Create("PostgreSQL database provider does not support 'drop' command for now"));
                 }
             }
             catch (Exception ex)
