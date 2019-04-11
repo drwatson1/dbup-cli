@@ -26,3 +26,6 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SaPwd2017" --rm -p 1433:1433 -d mc
 ```
 
 The parameter `--rm` is needed to remove a started container automatically after it is stopped.
+
+## PostgreSQL
+

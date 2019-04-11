@@ -2,7 +2,8 @@
 {
     public enum Provider
     {
+        UnsupportedProfider,
         SqlServer,
-        UnsupportedProfider
+        PostgreSQL
     }
 }
