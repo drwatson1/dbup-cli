@@ -22,13 +22,13 @@
 [x] Check the existence of script folder
 [x] Check a version of a config file
 [x] Target the project as a tool
-[ ] Publish an alpha version to NuGet.org and do some tests with it
+[x] Publish an alpha version to NuGet.org and do some tests with it
 [ ] Add CI (travis or appveyor)
 [ ] Add CD (travis or appveyor) - publish NuGet
-[ ] Getting started page
-[ ] Wiki documentation
-[ ] Start page
-[ ] Publish version 1.0
+[x] Getting started page
+[x] Wiki documentation
+[x] Start page
+[x] Publish version 1.0
 [ ] Create a TFS pipeline task
 [ ] Wiki documentation/getting started for the TFS task
 [ ] Publish the extension to the marketplace
@@ -39,9 +39,12 @@
 
 v.1.1
 
-[ ] Backup a DB before upgrade
+[x] Support of PostgreSql
 
 v.1.2
 
-[ ] Support for PostgreSql
-[ ] Support for MySql
+[ ] Support of MySql
+
+v.Next
+
+[ ] Backup a DB before upgrade
