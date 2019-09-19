@@ -1,5 +1,7 @@
 # DbUp Command Line Interface
 
+[![NuGet](https://img.shields.io/nuget/v/DbUp-CLI.svg)](https://www.nuget.org/packages/dbup-cli)
+
 This project is inspired and based on [DbUp](https://dbup.readthedocs.io/en/latest/) project. That is how its authors describe their project:
 
 > DbUp is a .NET library that helps you to deploy changes to SQL Server databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date. [from official documentation](https://dbup.readthedocs.io/en/latest/)
