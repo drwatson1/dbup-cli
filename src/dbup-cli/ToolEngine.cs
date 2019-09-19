@@ -16,7 +16,13 @@ namespace DbUp.Cli
         IEnvironment Environment { get; }
         IUpgradeLog Logger { get; }
         Option<IConnectionFactory> ConnectionFactory { get; }
-        Parser ArgsParser = new Parser(cfg => cfg.CaseInsensitiveEnumValues = true);
+        Parser ArgsParser = new Parser(cfg =>
+        {
+            cfg.CaseInsensitiveEnumValues = true;
+            cfg.AutoHelp = true;
+            cfg.AutoVersion = true;
+            cfg.HelpWriter = Console.Out;
+        });
 
         public ToolEngine(IEnvironment environment, IUpgradeLog logger, Option<IConnectionFactory> connectionFactory)
         {
