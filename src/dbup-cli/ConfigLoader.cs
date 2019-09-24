@@ -19,7 +19,7 @@ namespace DbUp.Cli
             if (string.IsNullOrWhiteSpace(configFilePath))
                 throw new ArgumentException("Parameter can't be null or white space", nameof(configFilePath));
 
-            return new FileInfo(Path.IsPathFullyQualified(configFilePath)
+            return new FileInfo(Path.IsPathRooted(configFilePath)
                 ? configFilePath
                 : Path.Combine(environment.GetCurrentDirectory(), configFilePath)
             ).FullName.SomeWhen<string, Error>(x =>

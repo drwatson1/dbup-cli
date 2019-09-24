@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
     <RootNamespace>DbUp.Cli</RootNamespace>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
