@@ -330,3 +330,5 @@ ASALocalRun/
 .mfractor/
 
 .vscode/
+/build/*.exe
+/build/*.dll

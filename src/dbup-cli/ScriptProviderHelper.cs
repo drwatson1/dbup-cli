@@ -18,7 +18,7 @@ namespace DbUp.Cli
                 ? throw new ArgumentException("param can't be a null or whitespace", nameof(basePath))
                 : string.IsNullOrWhiteSpace(path)
                     ? basePath
-                    : Path.IsPathFullyQualified(path)
+                    : Path.IsPathRooted(path)
                         ? path
                         : Path.Combine(basePath, path);
 
