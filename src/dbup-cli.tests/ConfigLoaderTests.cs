@@ -37,6 +37,7 @@ namespace DbUp.Cli.Tests
             migration.MatchSome(x =>
             {
                 x.Transaction.Should().Be(Transaction.None);
+                x.ConnectionTimeoutSec.Should().Be(30);
 
                 x.Scripts.Should().HaveCount(1);
                 x.Scripts[0].Encoding.Should().Be(Constants.Default.Encoding);
@@ -67,6 +68,17 @@ namespace DbUp.Cli.Tests
             {
                 File.Delete(configFilePath);
             }
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldLoadAValidTimeout()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("timeout.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                x.ConnectionTimeoutSec.Should().Be(45);
+            });
         }
 
         [TestMethod]
