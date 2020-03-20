@@ -1,4 +1,4 @@
-SET BINDIR=..\src\dbup-cli\bin\Debug\net462
+SET BINDIR=..\src\dbup-cli\bin\Release\net462
 ILMerge.exe %BINDIR%\dbup-cli.exe /ndebug /out:dbup-cli.exe ^
 %BINDIR%\CommandLine.dll ^
 %BINDIR%\dbup-core.dll ^
