@@ -35,10 +35,16 @@
     <None Update="Scripts\PostgreSql\dbup.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\SqlServer\001.sql">
+    <None Update="Scripts\SqlServer\EmptyScript\001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\SqlServer\dbup.yml">
+    <None Update="Scripts\SqlServer\EmptyScript\dbup.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\SqlServer\Timeout\001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\SqlServer\Timeout\dbup.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

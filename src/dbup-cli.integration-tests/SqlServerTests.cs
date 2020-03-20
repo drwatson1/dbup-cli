@@ -25,10 +25,10 @@ namespace DbUp.Cli.IntegrationTests
             Environment.SetEnvironmentVariable("CONNSTR", "Data Source=127.0.0.1;Initial Catalog=DbUp;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
         }
 
-        string GetBasePath() =>
-            Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\Scripts\SqlServer");
+        string GetBasePath(string subPath = "EmptyScript") =>
+            Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\SqlServer\{subPath}");
 
-        string GetConfigPath(string name = "dbup.yml") => new DirectoryInfo(Path.Combine(GetBasePath(), name)).FullName;
+        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript") => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
 
         Func<DbConnection> CreateConnection = () => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
 
@@ -96,6 +96,15 @@ namespace DbUp.Cli.IntegrationTests
                 Action a = () => connection.Open();
                 a.Should().Throw<SqlException>("Database DbUp should not exist");
             }
+        }
+
+        [TestMethod]
+        public void UpgradeCommand_ShouldUseConnectionTimeoutForLongrunningQueries()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var r = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "Timeout"));
+            r.Should().Be(1);
         }
     }
 }
