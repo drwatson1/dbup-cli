@@ -10,17 +10,18 @@
     <LangVersion>latest</LangVersion>
     <Product>DbUp Command Line Interface</Product>
     <Authors>Sergey Tregub</Authors>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
     <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
     <Company />
-    <Copyright>Copyright (c) 2019 Sergey Tregub</Copyright>
+    <Copyright>Copyright (c) 2020 Sergey Tregub</Copyright>
     <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>dbup database migration sqlserver</PackageTags>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <PackageReleaseNotes>1.1.2 Minor fixes
+    <PackageReleaseNotes>1.2.0 Add a connectionTimeoutSec option to dbup.yml
+1.1.2 Minor fixes
 1.1.0 PostgreSQL support
 1.0.1 Initial version (DbUp 4.2)</PackageReleaseNotes>
     <Title>DbUp Command Line Interface</Title>
