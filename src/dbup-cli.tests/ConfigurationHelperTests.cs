@@ -44,7 +44,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void SelectDbProvider_ShouldReturnNone_IfAProviderIsNotSupported()
         {
-            var builder = ConfigurationHelper.SelectDbProvider(Provider.UnsupportedProfider, @"Data Source=(localdb)\dbup;Initial Catalog=dbup-tests;Integrated Security=True");
+            var builder = ConfigurationHelper.SelectDbProvider(Provider.UnsupportedProfider, @"Data Source=(localdb)\dbup;Initial Catalog=dbup-tests;Integrated Security=True", 60);
 
             builder.HasValue.Should().BeFalse();
         }
@@ -52,7 +52,7 @@ namespace DbUp.Cli.Tests
         [TestMethod]
         public void SelectDbProvider_ShouldReturnReturnAValidProvider_ForSqlServer()
         {
-            var builder = ConfigurationHelper.SelectDbProvider(Provider.SqlServer, @"Data Source=(localdb)\dbup;Initial Catalog=dbup-tests;Integrated Security=True");
+            var builder = ConfigurationHelper.SelectDbProvider(Provider.SqlServer, @"Data Source=(localdb)\dbup;Initial Catalog=dbup-tests;Integrated Security=True", 60);
             builder.MatchSome(b => b.Configure(c => c.ConnectionManager.Should().BeOfType(typeof(SqlConnectionManager))));
 
             builder.HasValue.Should().BeTrue();
