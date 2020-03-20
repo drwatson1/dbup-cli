@@ -23,16 +23,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Scripts\PostgreSql\001.sql">
+    <None Update="Scripts\PostgreSql\EmptyScript\001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\PostgreSql\dbup.yml">
+    <None Update="Scripts\PostgreSql\EmptyScript\dbup.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\PostgreSql\001.sql">
+    <None Update="Scripts\PostgreSql\EmptyScript\001.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\PostgreSql\dbup.yml">
+    <None Update="Scripts\PostgreSql\EmptyScript\dbup.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\PostgreSql\Timeout\001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\PostgreSql\Timeout\dbup.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\SqlServer\EmptyScript\001.sql">

@@ -26,10 +26,10 @@ namespace DbUp.Cli.IntegrationTests
             Environment.SetEnvironmentVariable("CONNSTR", "Host=127.0.0.1;Database=dbup;Username=postgres;Password=PostgresPwd2019;Port=5432");
         }
 
-        string GetBasePath() =>
-            Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\Scripts\PostgreSql");
+        string GetBasePath(string subPath = "EmptyScript") =>
+            Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\PostgreSql\{subPath}");
 
-        string GetConfigPath(string name = "dbup.yml") => new DirectoryInfo(Path.Combine(GetBasePath(), name)).FullName;
+        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript") => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
 
         Func<DbConnection> CreateConnection = () => new NpgsqlConnection("Host=127.0.0.1;Database=postgres;Username=postgres;Password=PostgresPwd2019;Port=5432");
 
@@ -100,5 +100,15 @@ namespace DbUp.Cli.IntegrationTests
                 a.Should().Throw<Exception>("Database DbUp should not exist");
             }
         }
+
+        [TestMethod]
+        public void UpgradeCommand_ShouldUseConnectionTimeoutForLongrunningQueries()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var r = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "Timeout"));
+            r.Should().Be(1);
+        }
+
     }
 }
