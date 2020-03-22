@@ -102,7 +102,7 @@ namespace DbUp.Cli.IntegrationTests
         }
 
         [TestMethod]
-        public void UpgradeCommand_ShouldUseConnectionTimeoutForLongrunningQueries()
+        public void UpgradeCommand_ShouldUseExecutionTimeoutForLongrunningQueries()
         {
             var engine = new ToolEngine(Env, Logger);
 

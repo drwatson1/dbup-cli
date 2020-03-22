@@ -12,31 +12,31 @@ namespace DbUp.Cli
 {
     public static class ConfigurationHelper
     {
-        public static Option<UpgradeEngineBuilder, Error> SelectDbProvider(Provider provider, string connectionString, int connectionTimeoutSec)
+        public static Option<UpgradeEngineBuilder, Error> SelectDbProvider(Provider provider, string connectionString, int executionTimeoutSec)
         {
             switch (provider)
             {
                 case Provider.SqlServer:
                     return DeployChanges.To.SqlDatabase(connectionString)
-                        .WithExecutionTimeout(TimeSpan.FromSeconds(connectionTimeoutSec))
+                        .WithExecutionTimeout(TimeSpan.FromSeconds(executionTimeoutSec))
                         .Some<UpgradeEngineBuilder, Error>();
                 case Provider.PostgreSQL:
                     return DeployChanges.To.PostgresqlDatabase(connectionString)
-                        .WithExecutionTimeout(TimeSpan.FromSeconds(connectionTimeoutSec))
+                        .WithExecutionTimeout(TimeSpan.FromSeconds(executionTimeoutSec))
                         .Some<UpgradeEngineBuilder, Error>();
             }
 
             return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
-        public static Option<bool, Error> EnsureDb(IUpgradeLog logger, Provider provider, string connectionString, int connectionTimeoutSec)
+        public static Option<bool, Error> EnsureDb(IUpgradeLog logger, Provider provider, string connectionString, int executionTimeoutSec)
         {
             try
             {
                 switch (provider)
                 {
                     case Provider.SqlServer:
-                        EnsureDatabase.For.SqlDatabase(connectionString, logger, timeout: connectionTimeoutSec);
+                        EnsureDatabase.For.SqlDatabase(connectionString, logger, timeout: executionTimeoutSec);
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:
                         EnsureDatabase.For.PostgresqlDatabase(connectionString, logger); // Postgres provider does not support timeout...
@@ -51,14 +51,14 @@ namespace DbUp.Cli
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
-        public static Option<bool, Error> DropDb(IUpgradeLog logger, Provider provider, string connectionString, int connectionTimeoutSec)
+        public static Option<bool, Error> DropDb(IUpgradeLog logger, Provider provider, string connectionString, int executionTimeoutSec)
         {
             try
             {
                 switch (provider)
                 {
                     case Provider.SqlServer:
-                        DropDatabase.For.SqlDatabase(connectionString, logger, timeout: connectionTimeoutSec);
+                        DropDatabase.For.SqlDatabase(connectionString, logger, timeout: executionTimeoutSec);
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:
                         return Option.None<bool, Error>(Error.Create("PostgreSQL database provider does not support 'drop' command for now"));

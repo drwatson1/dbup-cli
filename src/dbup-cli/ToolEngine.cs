@@ -58,7 +58,7 @@ namespace DbUp.Cli
                         .Match(
                             some: x =>
                                 ConfigurationHelper
-                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
+                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ExecutionTimeoutSec)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, VerbosityLevel.Min)
@@ -139,7 +139,7 @@ namespace DbUp.Cli
                         .Match(
                             some: x =>
                                 ConfigurationHelper
-                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
+                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ExecutionTimeoutSec)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
@@ -152,7 +152,7 @@ namespace DbUp.Cli
                                         var engine = builder.Build();
                                         if (opts.Ensure)
                                         {
-                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString, x.ConnectionTimeoutSec);
+                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString, x.ExecutionTimeoutSec);
                                             if (!res.HasValue)
                                             {
                                                 Error err = null;
@@ -186,7 +186,7 @@ namespace DbUp.Cli
                         .Match(
                             some: x =>
                                 ConfigurationHelper
-                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
+                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ExecutionTimeoutSec)
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
@@ -199,7 +199,7 @@ namespace DbUp.Cli
                                         var engine = builder.Build();
                                         if (opts.Ensure)
                                         {
-                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString, x.ConnectionTimeoutSec);
+                                            var res = ConfigurationHelper.EnsureDb(Logger, x.Provider, x.ConnectionString, x.ExecutionTimeoutSec);
                                             if (!res.HasValue)
                                             {
                                                 Error err = null;
@@ -233,13 +233,13 @@ namespace DbUp.Cli
                         .Match(
                             some: x =>
                                 ConfigurationHelper
-                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
+                                    .SelectDbProvider(x.Provider, x.ConnectionString, x.ExecutionTimeoutSec)
                                     .SelectLogOptions(Logger, opts.Verbosity)
                                     .OverrideConnectionFactory(ConnectionFactory)
                                 .Match(
                                     some: builder =>
                                     {
-                                        var res = ConfigurationHelper.DropDb(Logger, x.Provider, x.ConnectionString, x.ConnectionTimeoutSec);
+                                        var res = ConfigurationHelper.DropDb(Logger, x.Provider, x.ConnectionString, x.ExecutionTimeoutSec);
                                         if (!res.HasValue)
                                         {
                                             Error err = null;

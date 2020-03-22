@@ -2,7 +2,7 @@ dbUp:
   version: 1                    # should be 1
   provider: sqlserver           # DB provider: sqlserver
   connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
-  connectionTimeoutSec: 30      # Connection timeout in seconds
+  executionTimeoutSec: 30       # Execution timeout in seconds
   transaction: None             # Single / PerScript / None (default)
   scripts:
     -   folder:                 # absolute or relative (to this file) path to a folder with *.sql files

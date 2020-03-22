@@ -54,7 +54,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
-|2020-03-20|1.2.0|Add a connectionTimeoutSec option
+|2020-03-20|1.2.0|Add an executionTimeoutSec option
 |2019-08-27|1.1.2|Minor fixes
 |2019-04-11|1.1.0|PostgreSQL support
 |2019-03-25|1.0.1|Initial version (DbUp 4.2)

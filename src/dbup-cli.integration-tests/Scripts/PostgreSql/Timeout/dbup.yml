@@ -2,4 +2,4 @@ dbUp:
   version: 1                    # should be 1
   provider: postgresql          # DB provider: sqlserver
   connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
-  connectionTimeoutSec: 10      # Connection timeout in seconds
+  executionTimeoutSec: 10       # Connection timeout in seconds

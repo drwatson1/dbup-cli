@@ -9,7 +9,7 @@ namespace DbUp.Cli
         public string Version { get; private set; }
         public Provider Provider { get; private set; }
         public string ConnectionString { get; private set; }
-        public int ConnectionTimeoutSec { get; private set; } = 30;
+        public int ExecutionTimeoutSec { get; private set; } = 30;
         public Transaction Transaction { get; private set; } = Transaction.None;
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
 

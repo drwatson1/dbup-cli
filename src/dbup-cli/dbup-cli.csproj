@@ -20,7 +20,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <PackageReleaseNotes>1.2.0 Add a connectionTimeoutSec option to dbup.yml
+    <PackageReleaseNotes>1.2.0 Add an executionTimeoutSec option to dbup.yml
 1.1.2 Minor fixes
 1.1.0 PostgreSQL support
 1.0.1 Initial version (DbUp 4.2)</PackageReleaseNotes>
