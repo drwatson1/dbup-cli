@@ -35,7 +35,7 @@ namespace DbUp.Cli
                     var input = new StringReader(File.ReadAllText(path, Encoding.UTF8));
 
                     var deserializer = new DeserializerBuilder()
-                        .WithNamingConvention(new CamelCaseNamingConvention())
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
                         .Build();
 
                     Migration migration = null;
