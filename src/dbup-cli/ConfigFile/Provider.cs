@@ -4,6 +4,7 @@
     {
         UnsupportedProfider,
         SqlServer,
-        PostgreSQL
+        PostgreSQL,
+        MySQL
     }
 }
