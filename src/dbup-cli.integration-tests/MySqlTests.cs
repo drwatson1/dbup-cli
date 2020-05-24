@@ -40,8 +40,13 @@ namespace DbUp.Cli.IntegrationTests
         [TestInitialize]
         public async Task TestInitialize()
         {
+            /*
+             * Before the first run, download the image:
+             * docker pull mysql:8.0.20
+             * */
+
             await DockerInitialize(
-                "mysql:latest",
+                "mysql:8.0.20",
                 new List<string>()
                 {
                     $"MYSQL_ROOT_PASSWORD={Pwd}"
@@ -65,8 +70,8 @@ namespace DbUp.Cli.IntegrationTests
             var result = engine.Run("upgrade", "--ensure", GetConfigPath());
             result.Should().Be(0);
 
-            using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
             {
                 connection.Open();
                 var count = command.ExecuteScalar();
@@ -83,8 +88,8 @@ namespace DbUp.Cli.IntegrationTests
             engine.Run("upgrade", "--ensure", GetConfigPath());
             var result = engine.Run("drop", GetConfigPath());
             result.Should().Be(0);
-            using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
             {
                 Action a = () => connection.Open();
                 a.Should().Throw<SqlException>($"Database {DbName} should not exist");
@@ -94,8 +99,8 @@ namespace DbUp.Cli.IntegrationTests
         [TestMethod]
         public void DatabaseShouldNotExistBeforeTestRun()
         {
-            using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new SqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
             {
                 Action a = () => connection.Open();
                 a.Should().Throw<SqlException>($"Database {DbName} should not exist");

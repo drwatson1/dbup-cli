@@ -36,6 +36,11 @@ namespace DbUp.Cli.IntegrationTests
         [TestInitialize]
         public Task TestInitialize()
         {
+            /*
+             * Before the first run, download the image:
+             * docker pull postgres:11.2
+             * */
+
             return DockerInitialize(
                 "postgres:11.2",
                 new List<string>()

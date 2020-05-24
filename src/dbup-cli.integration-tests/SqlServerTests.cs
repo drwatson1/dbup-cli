@@ -35,6 +35,11 @@ namespace DbUp.Cli.IntegrationTests
         [TestInitialize]
         public async Task TestInitialize()
         {
+            /*
+             * Before the first run, download the image:
+             * docker pull mcr.microsoft.com/mssql/server:2017-CU12-ubuntu
+             * */
+
             await DockerInitialize(
                 "mcr.microsoft.com/mssql/server:2017-CU12-ubuntu",
                 new List<string>()
