@@ -82,11 +82,11 @@ namespace DbUp.Cli
                 },
                 none: error => Option.None<Migration, Error>(error));
 
-        readonly static Regex exp = new Regex("^[a-z0-9_-]+$", RegexOptions.IgnoreCase);
-
         static bool ValidateVarNames(Dictionary<string, string> vars, out string errMessage)
         {
             errMessage = null;
+
+            Regex exp = new Regex("^[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
             foreach (var n in vars.Keys)
             {
