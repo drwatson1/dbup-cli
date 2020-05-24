@@ -25,6 +25,6 @@ namespace DbUp.Cli
         public string Filter { get; private set; }
         public bool MatchFullPath { get; private set; }
 
-        public static readonly ScriptBatch Default = new ScriptBatch();
+        public static ScriptBatch Default => new ScriptBatch();
     }
 }
