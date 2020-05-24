@@ -72,8 +72,7 @@ namespace DbUp.Cli
                     case Provider.PostgreSQL:
                         return Option.None<bool, Error>(Error.Create("PostgreSQL database provider does not support 'drop' command for now"));
                     case Provider.MySQL:
-                        DropDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
-                        return true.Some<bool, Error>();
+                        return Option.None<bool, Error>(Error.Create("MySQL database provider does not support 'drop' command for now"));
                 }
             }
             catch (Exception ex)

@@ -59,7 +59,7 @@ namespace DbUp.Cli.IntegrationTests
         [TestCleanup]
         public async Task TestCleanup()
         {
-            await DockerCleanup(CreateConnection, con => new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", con as MySqlConnection));
+            await DockerCleanup(CreateConnection, con => new MySqlCommand("select count(*) from schemaversions where scriptname = '001.sql'", con as MySqlConnection));
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace DbUp.Cli.IntegrationTests
             result.Should().Be(0);
 
             using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var command = new MySqlCommand("select count(*) from schemaversions where scriptname = '001.sql'", connection))
             {
                 connection.Open();
                 var count = command.ExecuteScalar();
@@ -80,6 +80,8 @@ namespace DbUp.Cli.IntegrationTests
             }
         }
 
+        /*
+         * // Don't supported
         [TestMethod]
         public void Drop_DropADb()
         {
@@ -89,21 +91,22 @@ namespace DbUp.Cli.IntegrationTests
             var result = engine.Run("drop", GetConfigPath());
             result.Should().Be(0);
             using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var command = new MySqlCommand("select count(*) from schemaversions where scriptname = '001.sql'", connection))
             {
                 Action a = () => connection.Open();
                 a.Should().Throw<SqlException>($"Database {DbName} should not exist");
             }
         }
+        */
 
         [TestMethod]
         public void DatabaseShouldNotExistBeforeTestRun()
         {
             using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new MySqlCommand("select count(*) from SchemaVersions where scriptname = '001.sql'", connection))
+            using (var command = new MySqlCommand("select count(*) from schemaversions where scriptname = '001.sql'", connection))
             {
                 Action a = () => connection.Open();
-                a.Should().Throw<SqlException>($"Database {DbName} should not exist");
+                a.Should().Throw<MySqlException>($"Database {DbName} should not exist");
             }
         }
 
