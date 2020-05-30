@@ -49,11 +49,13 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 * MS SQL Server
 * PostgreSQL
+* MySQL
 
 ## Release Notes
 
 |Date|Version|Description|
 |-|-|-|
+|2020-05-30|1.3.0|Support of MySQL, improve stability of integration tests
 |2020-03-20|1.2.0|Add a connectionTimeoutSec option
 |2019-08-27|1.1.2|Minor fixes
 |2019-04-11|1.1.0|PostgreSQL support
