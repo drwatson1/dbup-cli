@@ -41,10 +41,15 @@ v.1.1
 
 [x] Support of PostgreSql
 
-v.1.2
+v.1.3
 
-[ ] Support of MySql
+[x] Support of MySql
 
 v.Next
 
-[ ] Backup a DB before upgrade
+[ ] Drop database for PostgreSQL and MySQL
+[ ] Backup a database
+[ ] Automatic backup a database before upgrade
+[ ] Support of Sqlite
+[ ] Build with .Net Core 3.1
+[ ] Automate build and release
