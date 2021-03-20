@@ -12,7 +12,7 @@ namespace DbUp.Cli
         public int ConnectionTimeoutSec { get; private set; } = 30;
         public Transaction Transaction { get; private set; } = Transaction.None;
         public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
-
+        public NamingOptions Naming { get; private set; } = NamingOptions.Default;
         public List<ScriptBatch> Scripts { get; set; } = new List<ScriptBatch>();
 
         public Dictionary<string, string> Vars { get; set; } = new Dictionary<string, string>();

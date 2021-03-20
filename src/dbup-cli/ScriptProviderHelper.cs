@@ -29,7 +29,7 @@ namespace DbUp.Cli
                 RunGroupOrder = batch.Order
             };
 
-        public static Option<CustomFileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch)
+        public static Option<CustomFileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch, NamingOptions naming)
         {
             if (batch == null)
                 throw new ArgumentNullException(nameof(batch));
@@ -62,7 +62,10 @@ namespace DbUp.Cli
             {
                 IncludeSubDirectories = batch.SubFolders,
                 Encoding = encoding,
-                Filter = CreateFilter(batch.Filter, batch.MatchFullPath)
+                Filter = CreateFilter(batch.Filter, batch.MatchFullPath),
+                UseOnlyFilenameForScriptName = naming.UseOnlyFileName,
+                PrefixScriptNameWithBaseFolderName = naming.IncludeBaseFolderName,
+                Prefix = naming.Prefix
             }.Some<CustomFileSystemScriptOptions, Error>();
         }
 
@@ -113,7 +116,7 @@ namespace DbUp.Cli
             return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
         }
 
-        public static Option<UpgradeEngineBuilder, Error> SelectScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, IList<ScriptBatch> scripts)
+        public static Option<UpgradeEngineBuilder, Error> SelectScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, IList<ScriptBatch> scripts, NamingOptions naming)
         {
             if (scripts == null)
                 throw new ArgumentNullException(nameof(scripts));
@@ -133,16 +136,16 @@ namespace DbUp.Cli
 
             foreach (var script in scripts)
             {
-                builderOrNone = builderOrNone.AddScripts(script);
+                builderOrNone = builderOrNone.AddScripts(script, naming ?? NamingOptions.Default);
             }
 
             return builderOrNone;
         }
 
-        static Option<UpgradeEngineBuilder, Error> AddScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, ScriptBatch script) =>
+        static Option<UpgradeEngineBuilder, Error> AddScripts(this Option<UpgradeEngineBuilder, Error> builderOrNone, ScriptBatch script, NamingOptions naming) =>
             builderOrNone.Match(
                 some: builder =>
-                    GetFileSystemScriptOptions(script).Match(
+                    GetFileSystemScriptOptions(script, naming).Match(
                         some: options =>
                         {
                             builder.WithScripts(

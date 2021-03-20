@@ -62,7 +62,7 @@ namespace DbUp.Cli
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, VerbosityLevel.Min)
-                                    .SelectScripts(x.Scripts)
+                                    .SelectScripts(x.Scripts, x.Naming)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
                                 .Match(
@@ -143,7 +143,7 @@ namespace DbUp.Cli
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
-                                    .SelectScripts(x.Scripts)
+                                    .SelectScripts(x.Scripts, x.Naming)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
                                 .Match(
@@ -190,7 +190,7 @@ namespace DbUp.Cli
                                     .SelectJournal(x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
-                                    .SelectScripts(x.Scripts)
+                                    .SelectScripts(x.Scripts, x.Naming)
                                     .AddVariables(x.Vars)
                                     .OverrideConnectionFactory(ConnectionFactory)
                                 .Match(

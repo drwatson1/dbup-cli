@@ -1,7 +1,7 @@
 dbUp:
   version: 1                    # should be 1
   provider: sqlserver           # DB provider: sqlserver
-  connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
+  connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=dbup;Integrated Security=True" for sqlserver
   connectionTimeoutSec: 30      # Connection timeout in seconds
   transaction: None             # Single / PerScript / None (default)
   scripts:
@@ -12,6 +12,10 @@ dbUp:
         encoding: utf-8         # scripts' encoding, default utf-8
         filter:                 # Wildcard or regex filter. Regex should be surrounded by forward slashes - for example /\d2\.sql/. By default, all scripts are included
         matchFullPath: no       # yes / no (default). If yes, then the filter is applied to a full file path
+  naming:
+    useOnlyFileName: no         # Use only file name as script name. No by default
+    includeBaseFolderName: no   # Start script name from base folder name. No by default
+    prefix:                     # Add prefix to script name. Empty string by default
   vars:                         # Variables substitution. You can use these variables in your scripts as $variable_name$
     # Var1: Value1
     # Var2: Value2
