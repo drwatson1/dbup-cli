@@ -29,7 +29,7 @@ namespace DbUp.Cli
                 RunGroupOrder = batch.Order
             };
 
-        public static Option<FileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch)
+        public static Option<CustomFileSystemScriptOptions, Error> GetFileSystemScriptOptions(ScriptBatch batch)
         {
             if (batch == null)
                 throw new ArgumentNullException(nameof(batch));
@@ -54,16 +54,16 @@ namespace DbUp.Cli
                 }
                 catch (ArgumentException ex)
                 {
-                    return Option.None<FileSystemScriptOptions, Error>(Error.Create(Constants.ConsoleMessages.InvalidEncoding, batch.Folder, ex.Message));
+                    return Option.None<CustomFileSystemScriptOptions, Error>(Error.Create(Constants.ConsoleMessages.InvalidEncoding, batch.Folder, ex.Message));
                 }
             }
 
-            return new FileSystemScriptOptions()
+            return new CustomFileSystemScriptOptions()
             {
                 IncludeSubDirectories = batch.SubFolders,
                 Encoding = encoding,
                 Filter = CreateFilter(batch.Filter, batch.MatchFullPath)
-            }.Some<FileSystemScriptOptions, Error>();
+            }.Some<CustomFileSystemScriptOptions, Error>();
         }
 
         public static Func<string, bool> CreateFilter(string filterString, bool matchFullPath = false)
@@ -146,7 +146,7 @@ namespace DbUp.Cli
                         some: options =>
                         {
                             builder.WithScripts(
-                                new FileSystemScriptProvider(
+                                new CustomFileSystemScriptProvider(
                                     script.Folder,
                                     options,
                                     GetSqlScriptOptions(script)));
