@@ -1,0 +1,8 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  naming:
+    useOnlyFileName: yes
+    includeBaseFolderName: yes
+    prefix: scriptpreffix

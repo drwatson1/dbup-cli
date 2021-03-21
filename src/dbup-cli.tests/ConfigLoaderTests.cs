@@ -1,4 +1,4 @@
-using DbUp.Cli.Tests.TestInfrastructure;
+Ôªøusing DbUp.Cli.Tests.TestInfrastructure;
 using DbUp.Engine.Transactions;
 using FakeItEasy;
 using FluentAssertions;
@@ -45,6 +45,10 @@ namespace DbUp.Cli.Tests
                 x.Scripts[0].Order.Should().Be(Constants.Default.Order);
                 x.Scripts[0].RunAlways.Should().BeFalse();
                 x.Scripts[0].SubFolders.Should().BeFalse();
+
+                x.Naming.UseOnlyFileName.Should().BeFalse();
+                x.Naming.IncludeBaseFolderName.Should().BeFalse();
+                x.Naming.Prefix.Should().BeNullOrEmpty();
             });
         }
 
@@ -231,7 +235,20 @@ namespace DbUp.Cli.Tests
             var result = engine.Run("upgrade", GetConfigPath("encoding.yml"));
             result.Should().Be(0);
 
-            Logger.Log.Should().Contain("print 'œÂ‚Â‰, ÏÂ‰‚Â‰'");
+            Logger.Log.Should().Contain("print '–ü—Ä–µ–≤–µ–¥, –º–µ–¥–≤–µ–¥'");
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldSetValidNamingOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("naming.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                x.Naming.UseOnlyFileName.Should().BeTrue();
+                x.Naming.IncludeBaseFolderName.Should().BeTrue();
+                x.Naming.Prefix.Should().Be("scriptpreffix");
+            });
         }
     }
 }
