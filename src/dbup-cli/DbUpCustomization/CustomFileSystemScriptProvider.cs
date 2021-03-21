@@ -54,15 +54,20 @@ namespace DbUp.Cli
 
         string GetScriptName(string basePath, string filename)
         {
+            var prefixedFilename = filename;
             if (options.PrefixScriptNameWithBaseFolderName)
             {
                 var dir = new DirectoryInfo(basePath);
-                return $"{dir.Name}.{filename}";
+                prefixedFilename = $"{dir.Name}.{filename}";
             }
-            else
+
+            var prefix = options.Prefix?.Trim();
+            if ( !string.IsNullOrEmpty(prefix) )
             {
-                return filename;
+                prefixedFilename = prefix + prefixedFilename;
             }
+
+            return prefixedFilename;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace DbUp.Cli.Tests
         {
             var batch = new ScriptBatch("", true, subFolders: true, 5, Constants.Default.Encoding);
 
-            var naminOptions = new NamingOptions(true, false, null);
+            var naminOptions = new NamingOptions(useOnlyFileName: true, false, null);
 
             ScriptProviderHelper.GetFileSystemScriptOptions(batch, naminOptions).Match(
                 some: options => options.UseOnlyFilenameForScriptName.Should().BeTrue(),
@@ -45,7 +45,7 @@ namespace DbUp.Cli.Tests
         {
             var batch = new ScriptBatch("", true, subFolders: true, 5, Constants.Default.Encoding);
 
-            var naminOptions = new NamingOptions(false, true, null);
+            var naminOptions = new NamingOptions(false, includeBaseFolderName: true, null);
 
             ScriptProviderHelper.GetFileSystemScriptOptions(batch, naminOptions).Match(
                 some: options => options.PrefixScriptNameWithBaseFolderName.Should().BeTrue(),
@@ -100,7 +100,7 @@ namespace DbUp.Cli.Tests
                 new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
             };
 
-            var namingOptions = new NamingOptions(true, false, null);
+            var namingOptions = new NamingOptions(useOnlyFileName: true, false, null);
 
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
@@ -126,7 +126,7 @@ namespace DbUp.Cli.Tests
                 new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
             };
 
-            var namingOptions = new NamingOptions(false, true, null);
+            var namingOptions = new NamingOptions(false, includeBaseFolderName: true, null);
 
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
@@ -152,7 +152,7 @@ namespace DbUp.Cli.Tests
                 new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
             };
 
-            var namingOptions = new NamingOptions(true, true, null);
+            var namingOptions = new NamingOptions(useOnlyFileName: true, includeBaseFolderName: true, null);
 
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
@@ -168,6 +168,84 @@ namespace DbUp.Cli.Tests
             var executedScripts = Logger.GetExecutedScripts();
 
             executedScripts[0].Should().Be("Naming.001.sql");
+        }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_Prefix_Set_ShoudUseValidScriptName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(false, false, "prefix_");
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("prefix_SubFolder.001.sql");
+        }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_Prefix_Set_ShoudTrimPrefixAndUseValidScriptName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(false, false, " prefix_ ");
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("prefix_SubFolder.001.sql");
+        }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_IncludeBaseFolderName_And_Prefix_Set_ShoudUsePrefixBeforeFolderName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(false, includeBaseFolderName: true, "prefix_");
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("prefix_Naming.SubFolder.001.sql");
         }
     }
 }
