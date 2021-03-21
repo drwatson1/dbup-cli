@@ -7,6 +7,7 @@
             public const string ConfigFileName = "dbup.yml";
             public const string ConfigFileResourceName = "DbUp.Cli.DefaultOptions.dbup.yml";
             public const string DotEnvFileName = ".env";
+            public const string DotEnvLocalFileName = ".env.local";
             public const string Encoding = "utf-8";
             public static int Order = 100;
         }
