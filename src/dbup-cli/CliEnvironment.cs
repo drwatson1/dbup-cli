@@ -27,7 +27,8 @@ namespace DbUp.Cli
 
             try
             {
-                File.WriteAllText(path, content, Encoding.UTF8);
+                Encoding utf8WithoutBom = new UTF8Encoding(false);
+                File.WriteAllText(path, content, utf8WithoutBom);
                 return true.Some<bool, Error>();
             }
             catch (Exception ex)
