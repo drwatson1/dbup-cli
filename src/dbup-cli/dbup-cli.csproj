@@ -10,24 +10,19 @@
     <LangVersion>latest</LangVersion>
     <Product>DbUp Command Line Interface</Product>
     <Authors>Sergey Tregub</Authors>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
     <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
     <Company />
-    <Copyright>Copyright (c) 2020 Sergey Tregub</Copyright>
+    <Copyright>Copyright (c) 2021 Sergey Tregub</Copyright>
     <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>dbup database migration sqlserver postgresql mysql</PackageTags>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dbup</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <PackageReleaseNotes>
-		1.3.0 Support of MySQL, improve stability of integration tests
-		1.2.0 Add a connectionTimeoutSec option to dbup.yml
-		1.1.2 Minor fixes
-		1.1.0 PostgreSQL support
-		1.0.1 Initial version (DbUp 4.2)</PackageReleaseNotes>
+    <PackageReleaseNotes>Add script naming options</PackageReleaseNotes>
     <Title>DbUp Command Line Interface</Title>
-    <Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to SQL Server databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
+    <Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
