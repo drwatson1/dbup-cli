@@ -67,27 +67,55 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
-        public void Naming_EngineWithDefaultNamingSettings_ShouldUseSubFolderNameWithFileNameAsScriptName()
+        public void ScriptNamingScheme_WithDefaultNamingSettings_ShouldUseDefaultNamingScheme()
         {
             var scripts = new List<ScriptBatch>()
             {
                 new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
             };
 
+            var namingOptions = NamingOptions.Default;
+
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase("testconn")
                 .OverrideConnectionFactory(testConnectionFactory)
                 .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
-                .SelectScripts(scripts, NamingOptions.Default);
+                .SelectScripts(scripts, namingOptions);
 
             upgradeEngineBuilder.MatchSome(x =>
             {
                 x.Build().PerformUpgrade();
             });
 
-            var excutedScripts = Logger.GetExecutedScripts();
+            var executedScripts = Logger.GetExecutedScripts();
 
-            excutedScripts[0].Should().Be("SubFolder.001.sql");
+            executedScripts[0].Should().Be("SubFolder.001.sql");
+        }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_UseOnlyFileName_Set_ShoudUseValidScriptName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(true, false, null);
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("001.sql");
         }
     }
 }
