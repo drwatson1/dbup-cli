@@ -15,7 +15,7 @@ dbUp:
   naming:
     useOnlyFileName: no         # Use only file name as script name. No by default
     includeBaseFolderName: no   # Start script name from base folder name. No by default
-    prefix:                     # Add prefix to script name. Empty string by default
+    prefix:                     # Add prefix to the script name. Empty string by default
   vars:                         # Variables substitution. You can use these variables in your scripts as $variable_name$
     # Var1: Value1
     # Var2: Value2
