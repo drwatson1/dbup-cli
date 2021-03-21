@@ -9,6 +9,18 @@ namespace DbUp.Cli
         public string Prefix { get; private set; }
 
         public static readonly Option<NamingOptions> None = Option.None<NamingOptions>();
+
+        public NamingOptions(bool useOnlyFileName, bool includeBaseFolderName, string prefix)
+        {
+            UseOnlyFileName = useOnlyFileName;
+            IncludeBaseFolderName = includeBaseFolderName;
+            Prefix = prefix;
+        }
+
+        public NamingOptions()
+        {
+        }
+
         public static NamingOptions Default => new NamingOptions();
     }
 }

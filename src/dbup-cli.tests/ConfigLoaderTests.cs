@@ -237,5 +237,18 @@ namespace DbUp.Cli.Tests
 
             Logger.Log.Should().Contain("print 'Превед, медвед'");
         }
+
+        [TestMethod]
+        public void LoadMigration_ShouldSetValidNamingOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("naming.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                x.Naming.UseOnlyFileName.Should().BeTrue();
+                x.Naming.IncludeBaseFolderName.Should().BeTrue();
+                x.Naming.Prefix.Should().Be("scriptpreffix");
+            });
+        }
     }
 }
