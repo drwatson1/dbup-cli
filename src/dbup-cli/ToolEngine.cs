@@ -16,7 +16,7 @@ namespace DbUp.Cli
         IEnvironment Environment { get; }
         IUpgradeLog Logger { get; }
         Option<IConnectionFactory> ConnectionFactory { get; }
-        Parser ArgsParser = new Parser(cfg =>
+        readonly Parser ArgsParser = new Parser(cfg =>
         {
             cfg.CaseInsensitiveEnumValues = true;
             cfg.AutoHelp = true;
