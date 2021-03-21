@@ -117,5 +117,57 @@ namespace DbUp.Cli.Tests
 
             executedScripts[0].Should().Be("001.sql");
         }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_IncludeBaseFolderName_Set_ShoudUseValidScriptName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(false, true, null);
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("Naming.SubFolder.001.sql");
+        }
+
+        [TestMethod]
+        public void ScriptNamingScheme_With_IncludeBaseFolderName_And_UseOnlyFileName_Set_ShoudUseValidScriptName()
+        {
+            var scripts = new List<ScriptBatch>()
+            {
+                new ScriptBatch(ScriptProviderHelper.GetFolder(GetBasePath(), "Naming"), false, true, 0, Constants.Default.Encoding)
+            };
+
+            var namingOptions = new NamingOptions(true, true, null);
+
+            var upgradeEngineBuilder = DeployChanges.To
+                .SqlDatabase("testconn")
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(Logger).Some<UpgradeEngineBuilder, Error>()
+                .SelectScripts(scripts, namingOptions);
+
+            upgradeEngineBuilder.MatchSome(x =>
+            {
+                x.Build().PerformUpgrade();
+            });
+
+            var executedScripts = Logger.GetExecutedScripts();
+
+            executedScripts[0].Should().Be("Naming.001.sql");
+        }
     }
 }

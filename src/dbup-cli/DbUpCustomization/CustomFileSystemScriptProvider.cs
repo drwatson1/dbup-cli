@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -53,7 +54,15 @@ namespace DbUp.Cli
 
         string GetScriptName(string basePath, string filename)
         {
-            return filename;
+            if (options.PrefixScriptNameWithBaseFolderName)
+            {
+                var dir = new DirectoryInfo(basePath);
+                return $"{dir.Name}.{filename}";
+            }
+            else
+            {
+                return filename;
+            }
         }
     }
 }
