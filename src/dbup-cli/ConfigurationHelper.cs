@@ -144,16 +144,30 @@ namespace DbUp.Cli
             if (configFilePath == null)
                 throw new ArgumentNullException(nameof(configFilePath));
 
+            // .env file  in a current folder
             var defaultEnvFile = Path.Combine(environment.GetCurrentDirectory(), Constants.Default.DotEnvFileName);
             if (environment.FileExists(defaultEnvFile))
             {
                 DotNetEnv.Env.Load(defaultEnvFile);
             }
+            // .env.local file  in a current folder
+            var defaultEnvLocalFile = Path.Combine(environment.GetCurrentDirectory(), Constants.Default.DotEnvLocalFileName);
+            if (environment.FileExists(defaultEnvLocalFile))
+            {
+                DotNetEnv.Env.Load(defaultEnvLocalFile);
+            }
 
+            // .env file next to a dbup.yml
             var configFileEnv = Path.Combine(new FileInfo(configFilePath).DirectoryName, Constants.Default.DotEnvFileName);
             if (environment.FileExists(configFileEnv))
             {
                 DotNetEnv.Env.Load(configFileEnv);
+            }
+            // .env.local file next to a dbup.yml
+            var configFileEnvLocal = Path.Combine(new FileInfo(configFilePath).DirectoryName, Constants.Default.DotEnvLocalFileName);
+            if (environment.FileExists(configFileEnvLocal))
+            {
+                DotNetEnv.Env.Load(configFileEnvLocal);
             }
 
             if (envFiles != null)

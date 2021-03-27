@@ -1,4 +1,4 @@
-# How to add support of a new database
+# How to add a new database
 
 1. Add a corresponding DbUp NuGet-package. Typically they are named as `dbup-<db-name>`, for example `dbup-mysql`
 1. Add a new provider name to the Provider enum in the `ConfigFile/Provider` file
