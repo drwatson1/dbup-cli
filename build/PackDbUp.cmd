@@ -15,6 +15,7 @@ ILMerge.exe %BINDIR%\dbup-cli.exe /ndebug /out:dbup-cli.exe ^
 %BINDIR%\MySql.Data.dll ^
 %BINDIR%\Npgsql.dll ^
 %BINDIR%\Optional.dll ^
+%BINDIR%\Sprache.dll ^
 %BINDIR%\System.AppContext.dll ^
 %BINDIR%\System.Console.dll ^
 %BINDIR%\System.Diagnostics.DiagnosticSource.dll ^
