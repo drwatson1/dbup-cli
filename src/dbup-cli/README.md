@@ -4,7 +4,7 @@
 * Update a version
 * Open a console
 * Go to the `src\dbup-cli` folder
-* Run `dotnet pack -c Release -p:TargetFrameworks=netcoreapp2.1`
+* Run `dotnet pack -c Release`
 * Run `dotnet tool install --global --add-source ./nupkg dbup-cli`
 
 Uninstall:
@@ -15,7 +15,7 @@ Uninstall:
 * Update a version
 * Open a console
 * Go to the `src\dbup-cli` folder
-* Run `dotnet build -c Release -p:TargetFrameworks=net462`
+* Run `dotnet build -c Release -p:GlobalTool=false`
 
 You will get an exe and a bunch of dlls in the `src\dbup-cli\bin\Release\net462` folder.
 Optionally, you can pack them into one executable, see `build` folder for instructions.
