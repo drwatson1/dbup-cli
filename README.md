@@ -39,6 +39,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
     * [Filter](https://github.com/drwatson1/dbup-cli/wiki/Home#filter)
     * [Always Executed Scripts](https://github.com/drwatson1/dbup-cli/wiki/Home#always-executed-scripts)
     * [Encoding](https://github.com/drwatson1/dbup-cli/wiki/Home#encoding)
+    * [Naming](https://github.com/drwatson1/dbup-cli/wiki#naming)
   * [Variables in the Scripts](https://github.com/drwatson1/dbup-cli/wiki/Home#variables-in-the-scripts)
   * [Environment Variables](https://github.com/drwatson1/dbup-cli/wiki/Home#environment-variables)
   * [Using .env Files](https://github.com/drwatson1/dbup-cli/wiki/Home#using-env-files)
