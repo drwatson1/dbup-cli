@@ -56,8 +56,9 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
-|2020-03-28|1.5.0|Add support of .Net Core 3.1 and .Net 5.0
-|2020-03-27|1.4.0|Add script naming options<BR>Load .env.local after .env
+|2021-10-03|1.6.0|Add a 'journalTo' option to dbup.yml
+|2021-03-28|1.5.0|Add support of .Net Core 3.1 and .Net 5.0
+|2021-03-27|1.4.0|Add script naming options<BR>Load .env.local after .env
 |2020-05-30|1.3.0|Support of MySQL, improve stability of integration tests
 |2020-03-20|1.2.0|Add a connectionTimeoutSec option
 |2019-08-27|1.1.2|Minor fixes
