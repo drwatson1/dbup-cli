@@ -19,3 +19,6 @@ dbUp:
   vars:                         # Variables substitution. You can use these variables in your scripts as $variable_name$
     # Var1: Value1
     # Var2: Value2
+#  journalTo:                   # Use 'journalTo: null' if you want to execute scripts every time when upgrade is run,
+#    schema: "schemaName"       # or specify a custom schema name
+#    table: "tableName"         # and a custom table name to store DB schema versions. By default, the table name is "SchemaVersions"
