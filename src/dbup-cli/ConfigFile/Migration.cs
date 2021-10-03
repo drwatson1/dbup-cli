@@ -11,7 +11,7 @@ namespace DbUp.Cli
         public string ConnectionString { get; private set; }
         public int ConnectionTimeoutSec { get; private set; } = 30;
         public Transaction Transaction { get; private set; } = Transaction.None;
-        public Option<Journal> JournalTo { get; private set; } = Journal.Default.Some();
+        public Journal JournalTo { get; private set; } = Journal.Default;
         public NamingOptions Naming { get; private set; } = NamingOptions.Default;
         public List<ScriptBatch> Scripts { get; set; } = new List<ScriptBatch>();
 
@@ -21,7 +21,7 @@ namespace DbUp.Cli
         {
             ConnectionString = StringUtils.ExpandEnvironmentVariables(ConnectionString ?? "");
             Scripts.ForEach(x => x.Folder = StringUtils.ExpandEnvironmentVariables(x.Folder ?? ""));
-            
+
             var dic = new Dictionary<string, string>();
             foreach (var item in Vars)
             {
