@@ -1,0 +1,7 @@
+dbUp:
+  version: 1                    # should be 1
+  provider: sqlserver           # DB provider: sqlserver
+  connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\dbup;Initial Catalog=MyDb;Integrated Security=True" for sqlserver
+  journalTo:
+    schema: "dbo"
+    table: "testTable"

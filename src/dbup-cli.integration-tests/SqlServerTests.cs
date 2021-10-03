@@ -12,7 +12,7 @@ using System.Data.Common;
 namespace DbUp.Cli.IntegrationTests
 {
     [TestClass]
-    public class SqlServerTests: DockerBasedTest
+    public class SqlServerTests : DockerBasedTest
     {
         readonly CaptureLogsLogger Logger;
         readonly IEnvironment Env;
@@ -25,12 +25,14 @@ namespace DbUp.Cli.IntegrationTests
             Environment.SetEnvironmentVariable("CONNSTR", "Data Source=127.0.0.1;Initial Catalog=DbUp;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
         }
 
-        string GetBasePath(string subPath = "EmptyScript") =>
-            Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\SqlServer\{subPath}");
+        string GetBasePath(string subPath = "EmptyScript")
+            => Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\SqlServer\{subPath}");
 
-        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript") => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
+        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript")
+            => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
 
-        Func<DbConnection> CreateConnection = () => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
+        Func<DbConnection> CreateConnection = ()
+            => new SqlConnection("Data Source=127.0.0.1;Persist Security Info=True;User ID=sa;Password=SaPwd2017");
 
         [TestInitialize]
         public async Task TestInitialize()
@@ -110,6 +112,24 @@ namespace DbUp.Cli.IntegrationTests
 
             var r = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "Timeout"));
             r.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void UpgradeCommand_ShouldUseASpecifiedJournal()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var result = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "JournalTableScript"));
+            result.Should().Be(0);
+
+            using (var connection = new SqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new SqlCommand("select count(*) from dbo.testTable where scriptname = '001.sql'", connection))
+            {
+                connection.Open();
+                var count = command.ExecuteScalar();
+
+                count.Should().Be(1);
+            }
         }
     }
 }

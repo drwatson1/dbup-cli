@@ -83,7 +83,7 @@ namespace DbUp.Cli
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
-        public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Journal journal) =>
+        public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Provider provider, Journal journal) =>
             builderOrNone.Match(
                 some: builder =>
                 {
@@ -93,7 +93,22 @@ namespace DbUp.Cli
                     }
                     else if (!journal.IsDefault)
                     {
-                        return builder.JournalToSqlTable(journal.Schema, journal.Table).Some<UpgradeEngineBuilder, Error>();
+                        switch (provider)
+                        {
+                            case Provider.SqlServer:
+                                builder.JournalToSqlTable(journal.Schema, journal.Table);
+                                break;
+                            case Provider.MySQL:
+                                builder.Configure(c => c.Journal = new MySql.MySqlTableJournal(() => c.ConnectionManager, () => c.Log, journal.Schema, journal.Table));
+                                break;
+                            case Provider.PostgreSQL:
+                                builder.JournalToPostgresqlTable(journal.Schema, journal.Table);
+                                break;
+                            default:
+                                return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"JournalTo does not support a provider {provider}"));
+                        }
+
+                        return builder.Some<UpgradeEngineBuilder, Error>();
                     }
                     else
                     {

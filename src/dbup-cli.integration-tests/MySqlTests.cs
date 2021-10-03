@@ -14,7 +14,7 @@ using MySql.Data.MySqlClient;
 namespace DbUp.Cli.IntegrationTests
 {
     [TestClass]
-    public class MySqlTests: DockerBasedTest
+    public class MySqlTests : DockerBasedTest
     {
         readonly CaptureLogsLogger Logger;
         readonly IEnvironment Env;
@@ -30,12 +30,14 @@ namespace DbUp.Cli.IntegrationTests
             Environment.SetEnvironmentVariable("CONNSTR", $"Server=127.0.0.1;Database={DbName};Uid=root;Pwd={Pwd};");
         }
 
-        string GetBasePath(string subPath = "EmptyScript") =>
-            Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\MySQL\{subPath}");
+        string GetBasePath(string subPath = "EmptyScript")
+            => Path.Combine(Assembly.GetExecutingAssembly().Location, $@"..\Scripts\MySQL\{subPath}");
 
-        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript") => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
+        string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript")
+            => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
 
-        Func<DbConnection> CreateConnection = () => new MySqlConnection($"Server=127.0.0.1;Uid=root;Pwd={Pwd};");
+        Func<DbConnection> CreateConnection = ()
+            => new MySqlConnection($"Server=127.0.0.1;Uid=root;Pwd={Pwd};");
 
         [TestInitialize]
         public async Task TestInitialize()
@@ -117,6 +119,24 @@ namespace DbUp.Cli.IntegrationTests
 
             var r = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "Timeout"));
             r.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void UpgradeCommand_ShouldUseASpecifiedJournal()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var result = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "JournalTableScript"));
+            result.Should().Be(0);
+
+            using (var connection = new MySqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new MySqlCommand("select count(*) from DbUp.testTable where scriptname = '001.sql'", connection))
+            {
+                connection.Open();
+                var count = command.ExecuteScalar();
+
+                count.Should().Be(1);
+            }
         }
     }
 }

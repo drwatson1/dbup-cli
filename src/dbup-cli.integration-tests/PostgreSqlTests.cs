@@ -115,5 +115,24 @@ namespace DbUp.Cli.IntegrationTests
             r.Should().Be(1);
         }
 
+
+        [TestMethod]
+        public void UpgradeCommand_ShouldUseASpecifiedJournal()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var result = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "JournalTableScript"));
+            result.Should().Be(0);
+
+            using (var connection = new NpgsqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
+            using (var command = new NpgsqlCommand("select count(*) from public.\"testTable\" where scriptname = '001.sql'", connection))
+            {
+                connection.Open();
+                var count = command.ExecuteScalar();
+
+                count.Should().Be(1);
+            }
+        }
+
     }
 }
