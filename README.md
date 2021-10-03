@@ -43,6 +43,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
   * [Variables in the Scripts](https://github.com/drwatson1/dbup-cli/wiki/Home#variables-in-the-scripts)
   * [Environment Variables](https://github.com/drwatson1/dbup-cli/wiki/Home#environment-variables)
   * [Using .env Files](https://github.com/drwatson1/dbup-cli/wiki/Home#using-env-files)
+  * [Custom journal table name](https://github.com/drwatson1/dbup-cli/wiki/Home#custom-journal-table-name)
 * [Command Line Options Reference](https://github.com/drwatson1/dbup-cli/wiki/Command-Line-Options)
 * [Original DbUp Documentation](https://dbup.readthedocs.io/en/latest/)
 
