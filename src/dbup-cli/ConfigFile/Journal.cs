@@ -8,12 +8,7 @@ namespace DbUp.Cli
         public string Table { get; private set; }
 
         public static Journal Default => new Journal();
-        public static bool IsDefault(Journal journal)
-        {
-            return journal.Schema == null && journal.Table == null;
-        }
-
-        public static readonly Option<Journal> None = Option.None<Journal>();
+        public bool IsDefault => Schema == null && Table == null;
 
         public Journal(string schema, string table)
         {
@@ -21,7 +16,7 @@ namespace DbUp.Cli
             Table = table;
         }
 
-        private Journal()
+        public Journal()
         {
         }
     }

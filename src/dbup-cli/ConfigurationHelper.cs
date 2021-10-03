@@ -83,15 +83,38 @@ namespace DbUp.Cli
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
         }
 
-        public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Option<Journal> journalOrNone) =>
+        public static Option<UpgradeEngineBuilder, Error> SelectJournal(this Option<UpgradeEngineBuilder, Error> builderOrNone, Provider provider, Journal journal) =>
             builderOrNone.Match(
                 some: builder =>
-                    journalOrNone.Match(
-                        some: journal =>
-                            DbUp.Cli.Journal.IsDefault(journal) == false
-                                ? builder.JournalToSqlTable(journal.Schema, journal.Table).Some<UpgradeEngineBuilder, Error>()
-                                : builderOrNone,
-                        none: () => builder.JournalTo(new NullJournal()).Some<UpgradeEngineBuilder, Error>()),
+                {
+                    if (journal == null)
+                    {
+                        return builder.JournalTo(new NullJournal()).Some<UpgradeEngineBuilder, Error>();
+                    }
+                    else if (!journal.IsDefault)
+                    {
+                        switch (provider)
+                        {
+                            case Provider.SqlServer:
+                                builder.JournalToSqlTable(journal.Schema, journal.Table);
+                                break;
+                            case Provider.MySQL:
+                                builder.Configure(c => c.Journal = new MySql.MySqlTableJournal(() => c.ConnectionManager, () => c.Log, journal.Schema, journal.Table));
+                                break;
+                            case Provider.PostgreSQL:
+                                builder.JournalToPostgresqlTable(journal.Schema, journal.Table);
+                                break;
+                            default:
+                                return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"JournalTo does not support a provider {provider}"));
+                        }
+
+                        return builder.Some<UpgradeEngineBuilder, Error>();
+                    }
+                    else
+                    {
+                        return builder.Some<UpgradeEngineBuilder, Error>();
+                    }
+                },
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
         public static Option<UpgradeEngineBuilder, Error> SelectTransaction(this Option<UpgradeEngineBuilder, Error> builderOrNone, Transaction tran) =>
@@ -105,8 +128,6 @@ namespace DbUp.Cli
                                     ? builder.WithTransaction().Some<UpgradeEngineBuilder, Error>()
                                     : Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.InvalidTransaction, tran)),
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
-
-        /*, bool logToConsole, bool logScriptOutput*/
 
         public static Option<UpgradeEngineBuilder, Error> SelectLogOptions(this Option<UpgradeEngineBuilder, Error> builderOrNone, IUpgradeLog logger, VerbosityLevel verbosity) =>
             builderOrNone

@@ -68,7 +68,7 @@ namespace DbUp.Cli.Tests
         {
             upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
                 .SelectJournal(
-                    new Journal("test_scheme", "test_SchemaVersion").Some()
+                    Provider.SqlServer, new Journal("test_scheme", "test_SchemaVersion")
                 );
 
             upgradeEngineBuilder.Build().PerformUpgrade();
@@ -80,7 +80,7 @@ namespace DbUp.Cli.Tests
         public void PerformUpgrade_ShouldUseDefaultVersionsTable_IfDefaultJournalIsPassed()
         {
             upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
-                .SelectJournal(Journal.Default.Some());
+                .SelectJournal(Provider.SqlServer, Journal.Default);
 
             upgradeEngineBuilder.Build().PerformUpgrade();
 
@@ -91,7 +91,7 @@ namespace DbUp.Cli.Tests
         public void SelectJournal_ShouldSelectNullJournal_IfNoneValueIsPassed()
         {
             upgradeEngineBuilder.Some<UpgradeEngineBuilder, Error>()
-                .SelectJournal(Option.None<Journal>());
+                .SelectJournal(Provider.SqlServer, null);
 
             upgradeEngineBuilder.Build().PerformUpgrade();
             logger.InfoMessages.Should().NotContain(x => x.StartsWith("Creating the ", StringComparison.Ordinal));

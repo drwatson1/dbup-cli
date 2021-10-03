@@ -224,10 +224,10 @@ namespace DbUp.Cli.Tests
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
-            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x => 
-            { 
+            A.CallTo(() => env.FileExists("")).WithAnyArguments().ReturnsLazily(x =>
+            {
                 var res = File.Exists(x.Arguments[0] as string);
-                return res; 
+                return res;
             });
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
@@ -248,6 +248,30 @@ namespace DbUp.Cli.Tests
                 x.Naming.UseOnlyFileName.Should().BeTrue();
                 x.Naming.IncludeBaseFolderName.Should().BeTrue();
                 x.Naming.Prefix.Should().Be("scriptpreffix");
+            });
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldSetValidJournalToOptions()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("journalTo.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                x.JournalTo.Should().NotBeNull();
+                x.JournalTo.Schema.Should().Be("test-schema");
+                x.JournalTo.Table.Should().Be("test-table");
+            });
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldSetValidJournalToNull()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("journalTo-null.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                x.JournalTo.Should().BeNull();
             });
         }
     }

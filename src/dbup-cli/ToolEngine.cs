@@ -59,7 +59,7 @@ namespace DbUp.Cli
                             some: x =>
                                 ConfigurationHelper
                                     .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
-                                    .SelectJournal(x.JournalTo)
+                                    .SelectJournal(x.Provider, x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, VerbosityLevel.Min)
                                     .SelectScripts(x.Scripts, x.Naming)
@@ -134,13 +134,13 @@ namespace DbUp.Cli
 
         private Option<int, Error> RunUpgradeCommand(UpgradeOptions opts) =>
             ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
-                .Match( 
+                .Match(
                     some: _ => ConfigLoader.LoadMigration(ConfigLoader.GetFilePath(Environment, opts.File))
                         .Match(
                             some: x =>
                                 ConfigurationHelper
                                     .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
-                                    .SelectJournal(x.JournalTo)
+                                    .SelectJournal(x.Provider, x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
                                     .SelectScripts(x.Scripts, x.Naming)
@@ -187,7 +187,7 @@ namespace DbUp.Cli
                             some: x =>
                                 ConfigurationHelper
                                     .SelectDbProvider(x.Provider, x.ConnectionString, x.ConnectionTimeoutSec)
-                                    .SelectJournal(x.JournalTo)
+                                    .SelectJournal(x.Provider, x.JournalTo)
                                     .SelectTransaction(x.Transaction)
                                     .SelectLogOptions(Logger, opts.Verbosity)
                                     .SelectScripts(x.Scripts, x.Naming)
