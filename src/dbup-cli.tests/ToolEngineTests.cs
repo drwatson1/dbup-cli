@@ -126,7 +126,7 @@ namespace DbUp.Cli.Tests
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
-            var result = engine.Run("status", GetConfigPath("Status/status.yml"), "-n", 
+            var result = engine.Run("status", GetConfigPath("Status/status.yml"), "-n",
                 "--env", GetConfigPath("Status/file1.env"), GetConfigPath("Status/file2.env"));
 
             Logger.InfoMessages.Last().Should().EndWith("c001.sql");
@@ -146,5 +146,23 @@ namespace DbUp.Cli.Tests
             Logger.Log.Should().NotContain("print 'You should not see this message'");
         }
 
+        [TestMethod]
+        public void Run_ShouldReturnNoneZero_InCaseOfAnyErrors()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(A<string>.Ignored)).ReturnsLazily(x =>
+            {
+                var arg = x.Arguments[0] as string;
+                var r = File.Exists(arg);
+                return r;
+            });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("upgrade", GetConfigPath("single-script-error.yml"));
+
+            result.Should().Be(1);
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace DbUp.Cli.Tests.TestInfrastructure
 {
-    public class RecordingDbCommand: IDbCommand
+    public class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
         readonly SqlScript[] runScripts;
@@ -51,10 +51,15 @@ namespace DbUp.Cli.Tests.TestInfrastructure
             logger.WriteDbOperation($"Execute non query command: {CommandText}");
 
             if (CommandText == "error")
+            {
                 ThrowError();
+            }
 
             if (nonQueryResults.ContainsKey(CommandText))
+            {
                 return nonQueryResults[CommandText]();
+            }
+
             return 0;
         }
 
@@ -68,7 +73,9 @@ namespace DbUp.Cli.Tests.TestInfrastructure
             logger.WriteDbOperation($"Execute reader command: {CommandText}");
 
             if (CommandText == "error")
+            {
                 ThrowError();
+            }
 
             // Reading SchemaVersions
             if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
@@ -124,7 +131,7 @@ namespace DbUp.Cli.Tests.TestInfrastructure
 
         public UpdateRowSource UpdatedRowSource { get; set; }
 
-        class TestDbException: DbException
+        class TestDbException : DbException
         {
         }
     }
