@@ -134,5 +134,13 @@ namespace DbUp.Cli.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public void UpgradeCommand_ShouldReturnNoneZero_WhenScriptFails()
+        {
+            var engine = new ToolEngine(Env, Logger);
+
+            var r = engine.Run("upgrade", "--ensure", GetConfigPath("dbup.yml", "ScriptWithError"));
+            r.Should().Be(1);
+        }
     }
 }

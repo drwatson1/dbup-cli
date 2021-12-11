@@ -147,7 +147,7 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
-        public void Run_ShouldReturnNoneZero_InCaseOfAnyErrors()
+        public void Run_ShouldReturnNoneZero_InCaseOfAnyErrorsInASingleScript()
         {
             var env = A.Fake<IEnvironment>();
             A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
@@ -161,6 +161,25 @@ namespace DbUp.Cli.Tests
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
             var result = engine.Run("upgrade", GetConfigPath("single-script-error.yml"));
+
+            result.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void Run_ShouldReturnNoneZero_InCaseOfAnyErrorsInTheFirstScript()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(A<string>.Ignored)).ReturnsLazily(x =>
+            {
+                var arg = x.Arguments[0] as string;
+                var r = File.Exists(arg);
+                return r;
+            });
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("upgrade", GetConfigPath("two-scripts-error.yml"));
 
             result.Should().Be(1);
         }
