@@ -46,10 +46,29 @@ namespace DbUp.Cli
                     (MarkAsExecutedOptions opts) => WrapException(() => RunMarkAsExecutedCommand(opts)),
                     (DropOptions opts) => WrapException(() => RunDropCommand(opts)),
                     (StatusOptions opts) => WrapException(() => RunStatusCommand(opts)),
-                    (parserErrors) => Option.None<int, Error>(Error.Create("")))
+                    (parseErrors) => WrapException(() => ParseErrors(parseErrors)))
             .Match(
                 some: x => x,
                 none: error => { Console.WriteLine(error.Message); return 1; });
+
+        private Option<int, Error> ParseErrors(IEnumerable<CommandLine.Error> parseErrors)
+        {
+            foreach (var err in parseErrors)
+            {
+                if (err.StopsProcessing)
+                {
+                    // Autoimplemented verbs and params
+                    switch (err.Tag)
+                    {
+                        case ErrorType.VersionRequestedError:
+                        case ErrorType.HelpRequestedError:
+                        case ErrorType.HelpVerbRequestedError:
+                            return Option.Some<int, Error>(0);
+                    }
+                }
+            }
+            return Option.None<int, Error>(Error.Create(""));
+        }
 
         private Option<int, Error> RunStatusCommand(StatusOptions opts) =>
             ConfigurationHelper.LoadEnvironmentVariables(Environment, opts.File, opts.EnvFiles)
