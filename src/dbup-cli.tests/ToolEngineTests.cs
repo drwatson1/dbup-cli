@@ -62,6 +62,17 @@ namespace DbUp.Cli.Tests
         }
 
         [TestMethod]
+        public void VersionCommand_ShouldReturnZero()
+        {
+            var env = A.Fake<IEnvironment>();
+            var engine = new ToolEngine(env, A.Fake<IUpgradeLog>());
+
+            var exit_code = engine.Run("version");
+
+            exit_code.Should().Be(0);
+        }
+
+        [TestMethod]
         public void StatusCommand_ShouldPrintGeneralInformation_IfNoScriptsToExecute()
         {
             var env = A.Fake<IEnvironment>();
@@ -126,7 +137,7 @@ namespace DbUp.Cli.Tests
 
             var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
 
-            var result = engine.Run("status", GetConfigPath("Status/status.yml"), "-n", 
+            var result = engine.Run("status", GetConfigPath("Status/status.yml"), "-n",
                 "--env", GetConfigPath("Status/file1.env"), GetConfigPath("Status/file2.env"));
 
             Logger.InfoMessages.Last().Should().EndWith("c001.sql");
