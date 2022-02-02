@@ -22,6 +22,14 @@ namespace DbUp.Cli
                     return DeployChanges.To.SqlDatabase(connectionString)
                         .WithExecutionTimeout(timeout)
                         .Some<UpgradeEngineBuilder, Error>();
+                case Provider.AzureSql:
+                    var useAzureSqlIntegratedSecurity = !(connectionString.Contains("Password", StringComparison.InvariantCultureIgnoreCase) ||
+                                      connectionString.Contains("Integrated Security", StringComparison.InvariantCultureIgnoreCase) ||
+                                      connectionString.Contains("Trusted_Connection", StringComparison.InvariantCultureIgnoreCase));
+
+                    return DeployChanges.To.SqlDatabase(connectionString, null, useAzureSqlIntegratedSecurity)
+                        .WithExecutionTimeout(timeout)
+                        .Some<UpgradeEngineBuilder, Error>();
                 case Provider.PostgreSQL:
                     return DeployChanges.To.PostgresqlDatabase(connectionString)
                         .WithExecutionTimeout(timeout)
@@ -42,6 +50,7 @@ namespace DbUp.Cli
                 switch (provider)
                 {
                     case Provider.SqlServer:
+                    case Provider.AzureSql:
                         EnsureDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:
@@ -67,6 +76,7 @@ namespace DbUp.Cli
                 switch (provider)
                 {
                     case Provider.SqlServer:
+                    case Provider.AzureSql:
                         DropDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:

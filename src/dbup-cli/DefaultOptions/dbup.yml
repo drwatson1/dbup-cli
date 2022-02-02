@@ -1,6 +1,6 @@
 dbUp:
   version: 1                    # should be 1
-  provider: sqlserver           # DB provider: sqlserver
+  provider: sqlserver           # DB provider: sqlserver, postgresql, mysql, azuresql
   connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=dbup;Integrated Security=True" for sqlserver
   connectionTimeoutSec: 30      # Connection timeout in seconds
   transaction: None             # Single / PerScript / None (default)

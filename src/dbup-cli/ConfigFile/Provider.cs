@@ -5,6 +5,7 @@
         UnsupportedProfider,
         SqlServer,
         PostgreSQL,
-        MySQL
+        MySQL,
+        AzureSql
     }
 }
