@@ -1,67 +1,67 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Condition="'$(GlobalTool)' != false">
-    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-    <PackAsTool>true</PackAsTool>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(GlobalTool)' == false">
-    <TargetFrameworks>net462</TargetFrameworks>
-    <PackAsTool>false</PackAsTool>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(GlobalTool)' != false">
+		<TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+		<PackAsTool>true</PackAsTool>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>DbUp.Cli</RootNamespace>
-    <ToolCommandName>dbup</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
-    <LangVersion>latest</LangVersion>
-    <Product>DbUp Command Line Interface</Product>
-    <Authors>Sergey Tregub</Authors>
-    <Version>1.6.2</Version>
-    <RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
-    <Company />
-    <Copyright>Copyright (c) 2022 Sergey Tregub</Copyright>
-    <PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>dbup database migration sqlserver postgresql mysql</PackageTags>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>dbup</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
-    <PackageReleaseNotes>PostgreSQL SCRAM authentication support interim fix</PackageReleaseNotes>
-    <Title>DbUp Command Line Interface</Title>
-    <Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(GlobalTool)' == false">
+		<TargetFrameworks>net462</TargetFrameworks>
+		<PackAsTool>false</PackAsTool>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>DbUp.Cli</RootNamespace>
+		<ToolCommandName>dbup</ToolCommandName>
+		<PackageOutputPath>./nupkg</PackageOutputPath>
+		<LangVersion>latest</LangVersion>
+		<Product>DbUp Command Line Interface</Product>
+		<Authors>Sergey Tregub</Authors>
+		<Version>1.6.3</Version>
+		<RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
+		<Company />
+		<Copyright>Copyright (c) 2022 Sergey Tregub</Copyright>
+		<PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
+		<RepositoryType>GitHub</RepositoryType>
+		<PackageTags>dbup database migration sqlserver postgresql mysql</PackageTags>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>dbup</ToolCommandName>
+		<PackageOutputPath>./nupkg</PackageOutputPath>
+		<PackageReleaseNotes>Support of AzureSQL integrated security</PackageReleaseNotes>
+		<Title>DbUp Command Line Interface</Title>
+		<Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
+		<PackageLicenseUrl></PackageLicenseUrl>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="DefaultOptions\dbup.yml" />
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="DefaultOptions\dbup.yml" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="DefaultOptions\dbup.yml" />
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="dbup-core" Version="4.5.0" />
-    <PackageReference Include="dbup-mysql" Version="4.5.0" />
-    <PackageReference Include="dbup-postgresql" Version="4.5.0" />
-    <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
-    <PackageReference Include="DotNetEnv" Version="2.1.1" />
-    <PackageReference Include="Npgsql" Version="3.2.7" />
-    <PackageReference Include="Optional" Version="4.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
-    <PackageReference Include="YamlDotNet" Version="9.1.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="DefaultOptions\dbup.yml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommandLineParser" Version="2.8.0" />
+		<PackageReference Include="dbup-core" Version="4.5.0" />
+		<PackageReference Include="dbup-mysql" Version="4.5.0" />
+		<PackageReference Include="dbup-postgresql" Version="4.5.0" />
+		<PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+		<PackageReference Include="DotNetEnv" Version="2.1.1" />
+		<PackageReference Include="Npgsql" Version="3.2.7" />
+		<PackageReference Include="Optional" Version="4.0.0" />
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+		<PackageReference Include="YamlDotNet" Version="9.1.4" />
+	</ItemGroup>
 
 </Project>
