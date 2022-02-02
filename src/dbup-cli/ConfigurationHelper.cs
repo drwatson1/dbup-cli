@@ -23,9 +23,10 @@ namespace DbUp.Cli
                         .WithExecutionTimeout(timeout)
                         .Some<UpgradeEngineBuilder, Error>();
                 case Provider.AzureSql:
-                    var useAzureSqlIntegratedSecurity = !(connectionString.Contains("Password", StringComparison.InvariantCultureIgnoreCase) ||
-                                      connectionString.Contains("Integrated Security", StringComparison.InvariantCultureIgnoreCase) ||
-                                      connectionString.Contains("Trusted_Connection", StringComparison.InvariantCultureIgnoreCase));
+                    // Use IndexOf to make the code compatible with .NetFramework 4.6
+                    var useAzureSqlIntegratedSecurity = !(connectionString.IndexOf("Password", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                                      connectionString.IndexOf("Integrated Security", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                                      connectionString.IndexOf("Trusted_Connection", StringComparison.InvariantCultureIgnoreCase) >= 0);
 
                     return DeployChanges.To.SqlDatabase(connectionString, null, useAzureSqlIntegratedSecurity)
                         .WithExecutionTimeout(timeout)
