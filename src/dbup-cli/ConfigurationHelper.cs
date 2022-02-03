@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using DbUp.Cli.CommandLineOptions;
+using DbUp.Cli.DbUpCustomization;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
@@ -12,6 +13,14 @@ namespace DbUp.Cli
 {
     public static class ConfigurationHelper
     {
+        private static bool UseAzureSqlIntegratedSecurity(string connectionString)
+        {
+            // Use IndexOf to make the code compatible with .NetFramework 4.6
+            return !(connectionString.IndexOf("Password", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                                          connectionString.IndexOf("Integrated Security", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                                          connectionString.IndexOf("Trusted_Connection", StringComparison.InvariantCultureIgnoreCase) >= 0);
+        }
+
         public static Option<UpgradeEngineBuilder, Error> SelectDbProvider(Provider provider, string connectionString, int connectionTimeoutSec)
         {
             var timeout = TimeSpan.FromSeconds(connectionTimeoutSec);
@@ -23,12 +32,7 @@ namespace DbUp.Cli
                         .WithExecutionTimeout(timeout)
                         .Some<UpgradeEngineBuilder, Error>();
                 case Provider.AzureSql:
-                    // Use IndexOf to make the code compatible with .NetFramework 4.6
-                    var useAzureSqlIntegratedSecurity = !(connectionString.IndexOf("Password", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                                      connectionString.IndexOf("Integrated Security", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                                      connectionString.IndexOf("Trusted_Connection", StringComparison.InvariantCultureIgnoreCase) >= 0);
-
-                    return DeployChanges.To.SqlDatabase(connectionString, null, useAzureSqlIntegratedSecurity)
+                    return DeployChanges.To.SqlDatabase(connectionString, null, UseAzureSqlIntegratedSecurity(connectionString))
                         .WithExecutionTimeout(timeout)
                         .Some<UpgradeEngineBuilder, Error>();
                 case Provider.PostgreSQL:
@@ -51,8 +55,17 @@ namespace DbUp.Cli
                 switch (provider)
                 {
                     case Provider.SqlServer:
-                    case Provider.AzureSql:
                         EnsureDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        return true.Some<bool, Error>();
+                    case Provider.AzureSql:
+                        if (UseAzureSqlIntegratedSecurity(connectionString))
+                        {
+                            EnsureDatabase.For.AzureSqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        }
+                        else
+                        {
+                            EnsureDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        }
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:
                         EnsureDatabase.For.PostgresqlDatabase(connectionString, logger); // Postgres provider does not support timeout...
@@ -77,8 +90,17 @@ namespace DbUp.Cli
                 switch (provider)
                 {
                     case Provider.SqlServer:
-                    case Provider.AzureSql:
                         DropDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        return true.Some<bool, Error>();
+                    case Provider.AzureSql:
+                        if (UseAzureSqlIntegratedSecurity(connectionString))
+                        {
+                            DropDatabase.For.AzureSqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        }
+                        else
+                        {
+                            DropDatabase.For.SqlDatabase(connectionString, logger, connectionTimeoutSec);
+                        }
                         return true.Some<bool, Error>();
                     case Provider.PostgreSQL:
                         return Option.None<bool, Error>(Error.Create("PostgreSQL database provider does not support 'drop' command for now"));
