@@ -58,6 +58,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
+|2022-02-06|1.6.4|Support of drop and ensure for Azure SQL
 |2022-02-02|1.6.3|Support of AzureSQL integrated sequrity
 |2022-01-30|1.6.2|PostgreSQL SCRAM authentication support interim fix
 |2022-01-29|1.6.1|BUGFIX: 'version' and '--version' should return exit code 0
