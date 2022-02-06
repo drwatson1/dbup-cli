@@ -113,7 +113,16 @@ namespace DbUp.Cli.DbUpCustomization
                 if (!DatabaseExists(connection, databaseName))
                     return;
 
-                var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
+                // Actually we should call ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                // before DROP as for the SQL Server,
+                // but it does not work with the following error message:
+                // 
+                // ODBC error: State: 42000: Error: 1468 Message:'[Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The operation cannot be performed on database "MYNEWDB" because it is involved in a database mirroring session or an availability group. Some operations are not allowed on a database that is participating in a database mirroring session or in an availability group.'.
+                // ALTER DATABASE statement failed.
+                //
+                // Experiment shows that DROP works fine even the other user is connected.
+                // So single user mode is not necessary for Azure SQL
+                var dropDatabaseCommand = new SqlCommand($"DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
                 using (var command = dropDatabaseCommand)
                 {
                     command.ExecuteNonQuery();
