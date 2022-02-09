@@ -95,9 +95,9 @@ namespace DbUp.Cli.Tests
             var result = engine.Run("upgrade", GetConfigPath("disable-vars.yml"));
             result.Should().Be(0);
 
-            Logger.Log.Should().NotContain("print 'Var1Value'");
-            Logger.Log.Should().NotContain("print 'Var2Value'");
-            Logger.Log.Should().NotContain("print 'Var3 Value'");
+            Logger.Log.Should().Contain("print '$Var1$'");
+            Logger.Log.Should().Contain("print '$Var2$'");
+            Logger.Log.Should().Contain("print '$Var_3-1$'");
         }
     }
 }
