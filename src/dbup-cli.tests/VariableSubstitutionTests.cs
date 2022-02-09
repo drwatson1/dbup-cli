@@ -82,5 +82,22 @@ namespace DbUp.Cli.Tests
             Logger.Log.Should().Contain("print 'Var2Value'");
             Logger.Log.Should().Contain("print 'Var3 Value'");
         }
+
+        [TestMethod]
+        public void LoadMigration_ShouldNotSubstituteVariablesToScript()
+        {
+            var env = A.Fake<IEnvironment>();
+            A.CallTo(() => env.GetCurrentDirectory()).Returns(@"c:\test");
+            A.CallTo(() => env.FileExists(A<string>.Ignored)).ReturnsLazily(x => File.Exists(x.Arguments[0] as string));
+
+            var engine = new ToolEngine(env, Logger, (testConnectionFactory as IConnectionFactory).Some());
+
+            var result = engine.Run("upgrade", GetConfigPath("disable-vars.yml"));
+            result.Should().Be(0);
+
+            Logger.Log.Should().NotContain("print 'Var1Value'");
+            Logger.Log.Should().NotContain("print 'Var2Value'");
+            Logger.Log.Should().NotContain("print 'Var3 Value'");
+        }
     }
 }

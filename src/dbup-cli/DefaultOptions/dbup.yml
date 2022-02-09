@@ -3,6 +3,7 @@ dbUp:
   provider: sqlserver           # DB provider: sqlserver, postgresql, mysql, azuresql
   connectionString: $CONNSTR$   # Connection string to DB. For example, "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=dbup;Integrated Security=True" for sqlserver
   connectionTimeoutSec: 30      # Connection timeout in seconds
+  disableVars: no               # yes / no (default). If yes, then the variable substitution is disabled
   transaction: None             # Single / PerScript / None (default)
   scripts:
     -   folder:                 # absolute or relative (to this file) path to a folder with *.sql files

@@ -186,10 +186,11 @@ namespace DbUp.Cli
                     none: () => builderOrNone),
                 none: error => Option.None<UpgradeEngineBuilder, Error>(error));
 
-        public static Option<UpgradeEngineBuilder, Error> AddVariables(this Option<UpgradeEngineBuilder, Error> builderOrNone, Dictionary<string, string> vars) =>
+        public static Option<UpgradeEngineBuilder, Error> AddVariables(this Option<UpgradeEngineBuilder, Error> builderOrNone, Dictionary<string, string> vars, bool disableVars) =>
             builderOrNone.Match(
-                some: builder => builder.WithVariables(vars).Some<UpgradeEngineBuilder, Error>(),
-                none: error => Option.None<UpgradeEngineBuilder, Error>(error));
+                some: builder => (disableVars ? builder.WithVariablesDisabled() : builder.WithVariables(vars)).Some<UpgradeEngineBuilder, Error>(),
+                none: error => Option.None<UpgradeEngineBuilder, Error>(error)
+            );
 
         public static Option<bool, Error> LoadEnvironmentVariables(IEnvironment environment, string configFilePath, IEnumerable<string> envFiles)
         {

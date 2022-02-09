@@ -38,6 +38,7 @@ namespace DbUp.Cli.Tests
             {
                 x.Transaction.Should().Be(Transaction.None);
                 x.ConnectionTimeoutSec.Should().Be(30);
+                x.DisableVars.Should().Be(false);
 
                 x.Scripts.Should().HaveCount(1);
                 x.Scripts[0].Encoding.Should().Be(Constants.Default.Encoding);

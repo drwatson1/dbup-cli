@@ -1,0 +1,11 @@
+dbUp:
+  version: 1
+  provider: sqlserver
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
+  scripts:
+    -   folder: Vars
+  disableVars: yes
+  vars:
+    Var1: Var1Value
+    Var2: Var2Value
+    Var_3-1: Var3 Value
