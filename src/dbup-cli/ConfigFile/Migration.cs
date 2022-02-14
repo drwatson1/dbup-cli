@@ -10,6 +10,7 @@ namespace DbUp.Cli
         public Provider Provider { get; private set; }
         public string ConnectionString { get; private set; }
         public int ConnectionTimeoutSec { get; private set; } = 30;
+        public bool DisableVars { get; private set; } = false;
         public Transaction Transaction { get; private set; } = Transaction.None;
         public Journal JournalTo { get; private set; } = Journal.Default;
         public NamingOptions Naming { get; private set; } = NamingOptions.Default;
