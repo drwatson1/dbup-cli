@@ -29,6 +29,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 * [Installation](https://github.com/drwatson1/dbup-cli/wiki/Home#installation)
 * [Getting Started](https://github.com/drwatson1/dbup-cli/wiki/Home#getting-started)
+* [Supported DB Providers](https://github.com/drwatson1/dbup-cli/Home#supported-db-providers)
 * [Configuration File](https://github.com/drwatson1/dbup-cli/wiki/Home#configuration-file)
   * [Required Options](https://github.com/drwatson1/dbup-cli/wiki/Home#required-options)
   * [Transaction Related Options](https://github.com/drwatson1/dbup-cli/wiki/Home#transaction-related-options)
