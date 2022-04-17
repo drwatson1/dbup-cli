@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net6.0</TargetFrameworks>
     <RootNamespace>DbUp.Cli.IntegrationTests</RootNamespace>
 
     <IsPackable>false</IsPackable>
