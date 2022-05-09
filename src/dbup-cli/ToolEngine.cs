@@ -180,19 +180,9 @@ namespace DbUp.Cli
                                             }
                                         }
 
-                                        if (!engine.TryConnect(out var message))
-                                        {
-                                            return Option.None<int, Error>(Error.Create(message));
-                                        }
-
                                         var result = engine.PerformUpgrade();
 
-                                        if (result.Successful)
-                                        {
-                                            return Option.Some<int, Error>(0);
-                                        }
-
-                                        return Option.None<int, Error>(Error.Create(result.Error.Message));
+                                        return new ResultBuilder().FromUpgradeResult(result);
                                     },
                                     none: error => Option.None<int, Error>(error)),
                             none: error => Option.None<int, Error>(error)),

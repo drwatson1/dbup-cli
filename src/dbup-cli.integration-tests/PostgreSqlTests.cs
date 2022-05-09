@@ -23,7 +23,7 @@ namespace DbUp.Cli.IntegrationTests
             Env = new CliEnvironment();
             Logger = new CaptureLogsLogger();
 
-            Environment.SetEnvironmentVariable("CONNSTR", "Host=127.0.0.1;Database=dbup;Username=postgres;Password=PostgresPwd2019;Port=5432");
+            Environment.SetEnvironmentVariable("CONNSTR", "Host=127.0.0.1;Database=dbup;Username=postgres;Password=PostgresPwd2019;Port=5432;Timeout=60;CommandTimeout=60");
         }
 
         string GetBasePath(string subPath = "EmptyScript") =>
@@ -31,7 +31,7 @@ namespace DbUp.Cli.IntegrationTests
 
         string GetConfigPath(string name = "dbup.yml", string subPath = "EmptyScript") => new DirectoryInfo(Path.Combine(GetBasePath(subPath), name)).FullName;
 
-        Func<DbConnection> CreateConnection = () => new NpgsqlConnection("Host=127.0.0.1;Database=postgres;Username=postgres;Password=PostgresPwd2019;Port=5432");
+        Func<DbConnection> CreateConnection = () => new NpgsqlConnection("Host=127.0.0.1;Database=postgres;Username=postgres;Password=PostgresPwd2019;Port=5432;Timeout=60;CommandTimeout=60");
 
         [TestInitialize]
         public Task TestInitialize()
@@ -115,7 +115,6 @@ namespace DbUp.Cli.IntegrationTests
             r.Should().Be(1);
         }
 
-
         [TestMethod]
         public void UpgradeCommand_ShouldUseASpecifiedJournal()
         {
@@ -125,7 +124,7 @@ namespace DbUp.Cli.IntegrationTests
             result.Should().Be(0);
 
             using (var connection = new NpgsqlConnection(Environment.GetEnvironmentVariable("CONNSTR")))
-            using (var command = new NpgsqlCommand("select count(*) from public.\"testTable\" where scriptname = '001.sql'", connection))
+            using (var command = new NpgsqlCommand("select count(*) from public.journal where scriptname = '001.sql'", connection))
             {
                 connection.Open();
                 var count = command.ExecuteScalar();
