@@ -18,7 +18,7 @@
 		<LangVersion>latest</LangVersion>
 		<Product>DbUp Command Line Interface</Product>
 		<Authors>Sergey Tregub</Authors>
-		<Version>1.6.5</Version>
+		<Version>1.6.6</Version>
 		<RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
 		<Company />
 		<Copyright>Copyright (c) 2022 Sergey Tregub</Copyright>
@@ -28,11 +28,12 @@
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>dbup</ToolCommandName>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
-		<PackageReleaseNotes>Support of DisableVars</PackageReleaseNotes>
+		<PackageReleaseNotes>Add support of .Net 6</PackageReleaseNotes>
 		<Title>DbUp Command Line Interface</Title>
 		<Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -44,6 +45,10 @@
 		<None Include="..\..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 
