@@ -59,6 +59,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
+|2022-05-10|1.6.6|Add support of .Net 6
 |2022-02-14|1.6.5|Support of DisableVars
 |2022-02-06|1.6.4|Support of drop and ensure for Azure SQL
 |2022-02-02|1.6.3|Support of AzureSQL integrated sequrity

@@ -77,7 +77,7 @@ namespace DbUp.Cli
             }
             catch (Exception ex)
             {
-                return Option.None<bool, Error>(Error.Create(ex.Message));
+                return Option.None<bool, Error>(Error.Create("EnsureDb failed: {0}", ex.Message));
             }
 
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
@@ -110,7 +110,7 @@ namespace DbUp.Cli
             }
             catch (Exception ex)
             {
-                return Option.None<bool, Error>(Error.Create(ex.Message));
+                return Option.None<bool, Error>(Error.Create("DropDb failed: {0}", ex.Message));
             }
 
             return Option.None<bool, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
