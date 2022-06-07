@@ -147,7 +147,7 @@ namespace DbUp.Cli
                                 builder.JournalToPostgresqlTable(journal.Schema, journal.Table);
                                 break;
                             case Provider.CockroachDB:
-                                builder.JournalToPostgresqlTable(journal.Schema, journal.Table);
+                                builder.JournalToCockroachDbTable(journal.Schema, journal.Table);
                                 break;
                             default:
                                 return Option.None<UpgradeEngineBuilder, Error>(Error.Create($"JournalTo does not support a provider {provider}"));
