@@ -32,9 +32,18 @@ namespace DbUp.Cli
                         .WithExecutionTimeout(timeout)
                         .Some<UpgradeEngineBuilder, Error>();
                 case Provider.AzureSql:
-                    return DeployChanges.To.SqlDatabase(connectionString, null, UseAzureSqlIntegratedSecurity(connectionString))
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
+                    if (UseAzureSqlIntegratedSecurity(connectionString))
+                    {
+                        return DeployChanges.To.AzureSqlDatabaseWithIntegratedSecurity(connectionString, null)
+                            .WithExecutionTimeout(timeout)
+                            .Some<UpgradeEngineBuilder, Error>();
+                    }
+                    else
+                    {
+                        return DeployChanges.To.SqlDatabase(connectionString, null)
+                            .WithExecutionTimeout(timeout)
+                            .Some<UpgradeEngineBuilder, Error>();
+                    }
                 case Provider.PostgreSQL:
                     return DeployChanges.To.PostgresqlDatabase(connectionString)
                         .WithExecutionTimeout(timeout)

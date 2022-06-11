@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup Condition="'$(GlobalTool)' != false">
-		<TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
 		<PackAsTool>true</PackAsTool>
 	</PropertyGroup>
 
@@ -57,17 +57,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommandLineParser" Version="2.8.0" />
-		<PackageReference Include="dbup-core" Version="4.5.0" />
-		<PackageReference Include="dbup-mysql" Version="4.5.0" />
-		<PackageReference Include="dbup-postgresql" Version="4.5.0" />
-		<PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="dbup-core" Version="4.6.3" />
+		<PackageReference Include="dbup-mysql" Version="4.6.0" />
+		<PackageReference Include="dbup-postgresql" Version="4.6.3" />
+		<PackageReference Include="dbup-sqlserver" Version="4.6.0" />
 		<PackageReference Include="dbup-cockroachdb" Version="1.0.4" />
-		<PackageReference Include="DotNetEnv" Version="2.1.1" />
-		<PackageReference Include="Npgsql" Version="3.2.7" />
+		<PackageReference Include="DotNetEnv" Version="2.3.0" />
+		<PackageReference Include="Npgsql" Version="6.0.4" />
 		<PackageReference Include="Optional" Version="4.0.0" />
-		<PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
-		<PackageReference Include="YamlDotNet" Version="9.1.4" />
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+		<PackageReference Include="YamlDotNet" Version="11.2.1" />
 	</ItemGroup>
 
 </Project>
