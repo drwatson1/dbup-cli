@@ -18,7 +18,12 @@ namespace DbUp.Cli.IntegrationTests
         DockerClient DockerClient;
         string ContainerId;
 
-        protected async Task DockerInitialize(string imageName, List<string> environmentVariables, string port, Func<DbConnection> createConnection)
+        protected Task DockerInitialize(string imageName, List<string> environmentVariables, string port, Func<DbConnection> createConnection)
+        {
+            return DockerInitialize(imageName, environmentVariables, new List<string>(), port, createConnection);
+        }
+
+        protected async Task DockerInitialize(string imageName, List<string> environmentVariables, List<string> cmd, string port, Func<DbConnection> createConnection)
         {
             DockerClient = new DockerClientConfiguration(new Uri(DockerEngineUri)).CreateClient();
             var pars = new CreateContainerParameters(new Config()
@@ -29,7 +34,8 @@ namespace DbUp.Cli.IntegrationTests
                     { port, new EmptyStruct() }
                 },
                 Env = environmentVariables,
-                NetworkDisabled = false
+                NetworkDisabled = false, 
+                Cmd = cmd
             });
 
             pars.HostConfig = new HostConfig()
@@ -101,6 +107,7 @@ namespace DbUp.Cli.IntegrationTests
                     }
                     catch
                     {
+                        await Task.Delay(1000);
                         return;
                     }
                 }
