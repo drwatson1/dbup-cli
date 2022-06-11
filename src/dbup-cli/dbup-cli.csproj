@@ -18,17 +18,17 @@
 		<LangVersion>latest</LangVersion>
 		<Product>DbUp Command Line Interface</Product>
 		<Authors>Sergey Tregub</Authors>
-		<Version>1.6.6</Version>
+		<Version>1.7.0</Version>
 		<RepositoryUrl>https://github.com/drwatson1/dbup-cli</RepositoryUrl>
 		<Company />
 		<Copyright>Copyright (c) 2022 Sergey Tregub</Copyright>
 		<PackageProjectUrl>https://github.com/drwatson1/dbup-cli</PackageProjectUrl>
 		<RepositoryType>GitHub</RepositoryType>
-		<PackageTags>dbup database migration sqlserver postgresql mysql</PackageTags>
+		<PackageTags>dbup database migration sqlserver postgresql mysql cockroachdb</PackageTags>
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>dbup</ToolCommandName>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
-		<PackageReleaseNotes>Add support of .Net 6</PackageReleaseNotes>
+		<PackageReleaseNotes>CockroachDB support, thanks to @lbguilherme</PackageReleaseNotes>
 		<Title>DbUp Command Line Interface</Title>
 		<Description>Command line tool, that can be installed as a .Net global tool, that helps you to deploy changes to databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.</Description>
 		<PackageLicenseUrl></PackageLicenseUrl>
@@ -62,6 +62,7 @@
 		<PackageReference Include="dbup-mysql" Version="4.5.0" />
 		<PackageReference Include="dbup-postgresql" Version="4.5.0" />
 		<PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+		<PackageReference Include="dbup-cockroachdb" Version="1.0.4" />
 		<PackageReference Include="DotNetEnv" Version="2.1.1" />
 		<PackageReference Include="Npgsql" Version="3.2.7" />
 		<PackageReference Include="Optional" Version="4.0.0" />

@@ -8,6 +8,7 @@ ILMerge.exe %BINDIR%\dbup-cli.exe /ndebug /out:dbup-cli.exe ^
 %BINDIR%\dbup-mysql.dll ^
 %BINDIR%\dbup-postgresql.dll ^
 %BINDIR%\dbup-sqlserver.dll ^
+%BINDIR%\dbup-cockroachdb.dll ^
 %BINDIR%\DotNetEnv.dll ^
 %BINDIR%\Microsoft.Azure.Services.AppAuthentication.dll ^
 %BINDIR%\Microsoft.IdentityModel.Clients.ActiveDirectory.dll ^
