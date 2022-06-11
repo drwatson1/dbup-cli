@@ -62,6 +62,7 @@
 		<PackageReference Include="dbup-mysql" Version="4.5.0" />
 		<PackageReference Include="dbup-postgresql" Version="4.5.0" />
 		<PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+		<PackageReference Include="dbup-cockroachdb" Version="1.0.4" />
 		<PackageReference Include="DotNetEnv" Version="2.1.1" />
 		<PackageReference Include="Npgsql" Version="3.2.7" />
 		<PackageReference Include="Optional" Version="4.0.0" />
