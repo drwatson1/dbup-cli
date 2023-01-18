@@ -11,7 +11,7 @@
    * Pack the utility to a single exe-file: go to the `build` folder and run `PackDbUp.cmd`. See the `build/readme.md` for additional instructions
 1. Update Release Notes on the project main [README](https://github.com/drwatson1/dbup-cli/blob/master/README.md) page.
 1. Update Wiki-pages if needed
-1. Publish NuGet-package. Dont't remember to add additional documentation from the main [README](https://github.com/drwatson1/dbup-cli/blob/master/README.md) page.
+1. Publish NuGet-package. Don't remember to add additional documentation from the main [README](https://github.com/drwatson1/dbup-cli/blob/master/README.md) page.
 1. Commit and push all changes
 1. Merge the branch to the  master
 1. Create a new release on GitHub. Don't remember to add the standalone utility for .NetFramework 4.6.2 from `build` folder and the NuGet-package
