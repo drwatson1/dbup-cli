@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+	  <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
 	  <RootNamespace>DbUp.Cli.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
@@ -40,6 +40,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Config\DotEnv-VarsOverride\CurrentFolder\.env">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Config\invalid-transaction.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Config\journalTo-null.yml">
@@ -97,6 +100,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Config\FilterWildcard\c001.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\Config\invalid-provider.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\Config\naming.yml">

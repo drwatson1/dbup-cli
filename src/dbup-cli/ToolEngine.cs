@@ -16,7 +16,7 @@ namespace DbUp.Cli
         IEnvironment Environment { get; }
         IUpgradeLog Logger { get; }
         Option<IConnectionFactory> ConnectionFactory { get; }
-        readonly Parser ArgsParser = new Parser(cfg =>
+        readonly Parser ArgsParser = new(cfg =>
         {
             cfg.CaseInsensitiveEnumValues = true;
             cfg.AutoHelp = true;
@@ -286,10 +286,9 @@ namespace DbUp.Cli
 
         public static string GetDefaultConfigFile()
         {
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.Default.ConfigFileResourceName)))
-            {
-                return reader.ReadToEnd();
-            }
+            using var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.Default.ConfigFileResourceName));
+
+            return reader.ReadToEnd();
         }
     }
 }

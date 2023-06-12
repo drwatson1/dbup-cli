@@ -23,7 +23,7 @@ namespace DbUp.Cli
                         : Path.Combine(basePath, path);
 
         public static SqlScriptOptions GetSqlScriptOptions(ScriptBatch batch) =>
-            new SqlScriptOptions()
+            new()
             {
                 ScriptType = batch.RunAlways ? Support.ScriptType.RunAlways : Support.ScriptType.RunOnce,
                 RunGroupOrder = batch.Order
@@ -41,9 +41,7 @@ namespace DbUp.Cli
             {
                 encoding = Encoding.GetEncoding(batch.Encoding);
             }
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
             {
             }
             if(encoding == null)

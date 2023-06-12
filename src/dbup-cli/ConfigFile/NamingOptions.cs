@@ -21,6 +21,6 @@ namespace DbUp.Cli
         {
         }
 
-        public static NamingOptions Default => new NamingOptions();
+        public static NamingOptions Default => new();
     }
 }

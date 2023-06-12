@@ -275,5 +275,27 @@ namespace DbUp.Cli.Tests
                 x.JournalTo.Should().BeNull();
             });
         }
+
+        [TestMethod]
+        public void LoadMigration_ShouldPrintReadableError_WhenProviderIsInvalid()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("invalid-provider.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                Assert.Fail("Invalid provider in the configuration file should not be parsed");
+            });
+        }
+
+        [TestMethod]
+        public void LoadMigration_ShouldPrintReadableError_WhenTransactionIsInvalid()
+        {
+            var migration = ConfigLoader.LoadMigration(GetConfigPath("invalid-transaction.yml").Some<string, Error>());
+
+            migration.MatchSome(x =>
+            {
+                Assert.Fail("Invalid transaction in the configuration file should not be parsed");
+            });
+        }
     }
 }

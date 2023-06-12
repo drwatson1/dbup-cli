@@ -21,7 +21,7 @@
             public static string UnsupportedProvider => "Unsupported provider: {0}";
             public static string InvalidTransaction => "Unsupported transaction value: {0}";
             public static string ScriptShouldPresent => "At least one script should be present";
-            public static string ParsingError => "Parsing error: {0}";
+            public static string ParsingError => "Configuration file error: {0}";
             public static string InvalidEncoding => "Invalid encoding for scripts' folder '{0}': {1}";
             public static string NotSupportedConfigFileVersion => "The only supported version of a config file is '{0}'";
         }

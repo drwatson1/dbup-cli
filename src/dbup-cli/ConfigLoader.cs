@@ -44,30 +44,25 @@ namespace DbUp.Cli
                     {
                         migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
                     }
-                    catch (SyntaxErrorException ex)
+                    catch (YamlException ex)
                     {
-                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, ex.Message));
-                    }
+                        var msg =  (ex.InnerException != null ? ex.InnerException.Message + " " : "") + ex.Message;
+                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, msg));
+                    }   
 
                     if( migration.Version != "1" )
                     {
                         return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.NotSupportedConfigFileVersion, "1"));
                     }
 
-                    if (migration.Scripts == null)
-                    {
-                        migration.Scripts = new List<ScriptBatch>();
-                    }
+                    migration.Scripts ??= new List<ScriptBatch>();
 
                     if (migration.Scripts.Count == 0)
                     {
                         migration.Scripts.Add(ScriptBatch.Default);
                     }
 
-                    if (migration.Vars == null)
-                    {
-                        migration.Vars = new Dictionary<string, string>();
-                    }
+                    migration.Vars ??= new Dictionary<string, string>();
 
                     if (!ValidateVarNames(migration.Vars, out var errMessage))
                     {
@@ -86,7 +81,7 @@ namespace DbUp.Cli
         {
             errMessage = null;
 
-            Regex exp = new Regex("^[a-z0-9_-]+$", RegexOptions.IgnoreCase);
+            Regex exp = new("^[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
             foreach (var n in vars.Keys)
             {

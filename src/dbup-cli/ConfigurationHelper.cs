@@ -25,31 +25,25 @@ namespace DbUp.Cli
         {
             var timeout = TimeSpan.FromSeconds(connectionTimeoutSec);
 
-            switch (provider)
+            return provider switch
             {
-                case Provider.SqlServer:
-                    return DeployChanges.To.SqlDatabase(connectionString)
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
-                case Provider.AzureSql:
-                    return DeployChanges.To.SqlDatabase(connectionString, null, UseAzureSqlIntegratedSecurity(connectionString))
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
-                case Provider.PostgreSQL:
-                    return DeployChanges.To.PostgresqlDatabase(connectionString)
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
-                case Provider.MySQL:
-                    return DeployChanges.To.MySqlDatabase(connectionString)
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
-                case Provider.CockroachDB:
-                    return DeployChanges.To.CockroachDbDatabase(connectionString)
-                        .WithExecutionTimeout(timeout)
-                        .Some<UpgradeEngineBuilder, Error>();
-            }
-
-            return Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString()));
+                Provider.SqlServer => DeployChanges.To.SqlDatabase(connectionString)
+                                        .WithExecutionTimeout(timeout)
+                                        .Some<UpgradeEngineBuilder, Error>(),
+                Provider.AzureSql => DeployChanges.To.SqlDatabase(connectionString, null, UseAzureSqlIntegratedSecurity(connectionString))
+                                        .WithExecutionTimeout(timeout)
+                                        .Some<UpgradeEngineBuilder, Error>(),
+                Provider.PostgreSQL => DeployChanges.To.PostgresqlDatabase(connectionString)
+                                        .WithExecutionTimeout(timeout)
+                                        .Some<UpgradeEngineBuilder, Error>(),
+                Provider.MySQL => DeployChanges.To.MySqlDatabase(connectionString)
+                                        .WithExecutionTimeout(timeout)
+                                        .Some<UpgradeEngineBuilder, Error>(),
+                Provider.CockroachDB => DeployChanges.To.CockroachDbDatabase(connectionString)
+                                        .WithExecutionTimeout(timeout)
+                                        .Some<UpgradeEngineBuilder, Error>(),
+                _ => Option.None<UpgradeEngineBuilder, Error>(Error.Create(Constants.ConsoleMessages.UnsupportedProvider, provider.ToString())),
+            };
         }
 
         public static Option<bool, Error> EnsureDb(IUpgradeLog logger, Provider provider, string connectionString, int connectionTimeoutSec)
@@ -102,7 +96,7 @@ namespace DbUp.Cli
                     case Provider.AzureSql:
                         if (UseAzureSqlIntegratedSecurity(connectionString))
                         {
-                            DropDatabase.For.AzureSqlDatabase(connectionString, logger, connectionTimeoutSec);
+                            DropDatabase.For.AzureSqlDatabase(connectionString, logger);
                         }
                         else
                         {
