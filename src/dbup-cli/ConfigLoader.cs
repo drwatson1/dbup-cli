@@ -44,10 +44,11 @@ namespace DbUp.Cli
                     {
                         migration = deserializer.Deserialize<ConfigFile>(input).DbUp;
                     }
-                    catch (SyntaxErrorException ex)
+                    catch (YamlException ex)
                     {
-                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, ex.Message));
-                    }
+                        var msg =  (ex.InnerException != null ? ex.InnerException.Message + " " : "") + ex.Message;
+                        return Option.None<Migration, Error>(Error.Create(Constants.ConsoleMessages.ParsingError, msg));
+                    }   
 
                     if( migration.Version != "1" )
                     {

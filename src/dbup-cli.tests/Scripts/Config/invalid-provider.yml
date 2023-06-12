@@ -1,0 +1,4 @@
+dbUp:
+  version: 1
+  provider: postgre1
+  connectionString: (localdb)\dbup;Initial Catalog=DbUpTest;Integrated Security=True
