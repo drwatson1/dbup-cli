@@ -12,7 +12,7 @@ namespace DbUp.Cli
     {
         readonly string directoryPath;
         readonly CustomFileSystemScriptOptions options;
-        FileSystemScriptProvider scriptProvider;
+        readonly FileSystemScriptProvider scriptProvider;
 
         ///<summary>
         ///</summary>

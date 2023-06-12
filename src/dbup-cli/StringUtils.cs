@@ -19,7 +19,7 @@ namespace DbUp.Cli
                 return name;
 
             int len = name.Length;
-            int off2 = 0;
+            int off2;
             if (off1 == len - 1 || (off2 = name.IndexOf(marker, off1 + 1)) == -1)
                 return name;
 

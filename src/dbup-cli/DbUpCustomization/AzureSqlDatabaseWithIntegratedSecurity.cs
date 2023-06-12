@@ -37,60 +37,58 @@ namespace DbUp.Cli.DbUpCustomization
         {
             GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
-            using (var connection = new SqlConnection(masterConnectionString))
+            using var connection = new SqlConnection(masterConnectionString);
+            connection.AccessToken = GetAccessToken();
+            try
             {
-                connection.AccessToken = GetAccessToken();
-                try
-                {
-                    connection.Open();
-                }
-                catch (SqlException)
-                {
-                    // Failed to connect to master, lets try direct  
-                    if (DatabaseExistsIfConnectedToDirectly(logger, connectionString, databaseName))
-                        return;
-
-                    throw;
-                }
-
-                if (DatabaseExists(connection, databaseName))
+                connection.Open();
+            }
+            catch (SqlException)
+            {
+                // Failed to connect to master, lets try direct  
+                if (DatabaseExistsIfConnectedToDirectly(logger, connectionString, databaseName))
                     return;
 
-                var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
-                var sqlCommandText = $@"create database [{databaseName}]{collationString}";
-
-                switch (azureDatabaseEdition)
-                {
-                    case AzureDatabaseEdition.None:
-                        sqlCommandText += ";";
-                        break;
-                    case AzureDatabaseEdition.Basic:
-                        sqlCommandText += " ( EDITION = ''basic'' );";
-                        break;
-                    case AzureDatabaseEdition.Standard:
-                        sqlCommandText += " ( EDITION = ''standard'' );";
-                        break;
-                    case AzureDatabaseEdition.Premium:
-                        sqlCommandText += " ( EDITION = ''premium'' );";
-                        break;
-                }
-
-                // Create the database...
-                using (var command = new SqlCommand(sqlCommandText, connection)
-                {
-                    CommandType = CommandType.Text
-                })
-                {
-                    if (timeout >= 0)
-                    {
-                        command.CommandTimeout = timeout;
-                    }
-
-                    command.ExecuteNonQuery();
-                }
-
-                logger.WriteInformation(@"Created database {0}", databaseName);
+                throw;
             }
+
+            if (DatabaseExists(connection, databaseName))
+                return;
+
+            var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
+            var sqlCommandText = $@"create database [{databaseName}]{collationString}";
+
+            switch (azureDatabaseEdition)
+            {
+                case AzureDatabaseEdition.None:
+                    sqlCommandText += ";";
+                    break;
+                case AzureDatabaseEdition.Basic:
+                    sqlCommandText += " ( EDITION = ''basic'' );";
+                    break;
+                case AzureDatabaseEdition.Standard:
+                    sqlCommandText += " ( EDITION = ''standard'' );";
+                    break;
+                case AzureDatabaseEdition.Premium:
+                    sqlCommandText += " ( EDITION = ''premium'' );";
+                    break;
+            }
+
+            // Create the database...
+            using (var command = new SqlCommand(sqlCommandText, connection)
+            {
+                CommandType = CommandType.Text
+            })
+            {
+                if (timeout >= 0)
+                {
+                    command.CommandTimeout = timeout;
+                }
+
+                command.ExecuteNonQuery();
+            }
+
+            logger.WriteInformation(@"Created database {0}", databaseName);
         }
 
         /// <summary>
@@ -101,35 +99,33 @@ namespace DbUp.Cli.DbUpCustomization
         /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
         /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
         /// <returns></returns>
-        public static void AzureSqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+        public static void AzureSqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger)
         {
             GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
-            using (var connection = new SqlConnection(masterConnectionString))
+            using var connection = new SqlConnection(masterConnectionString);
+            connection.AccessToken = GetAccessToken();
+
+            connection.Open();
+            if (!DatabaseExists(connection, databaseName))
+                return;
+
+            // Actually we should call ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+            // before DROP as for the SQL Server,
+            // but it does not work with the following error message:
+            // 
+            // ODBC error: State: 42000: Error: 1468 Message:'[Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The operation cannot be performed on database "MYNEWDB" because it is involved in a database mirroring session or an availability group. Some operations are not allowed on a database that is participating in a database mirroring session or in an availability group.'.
+            // ALTER DATABASE statement failed.
+            //
+            // Experiment shows that DROP works fine even the other user is connected.
+            // So single user mode is not necessary for Azure SQL
+            var dropDatabaseCommand = new SqlCommand($"DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
+            using (var command = dropDatabaseCommand)
             {
-                connection.AccessToken = GetAccessToken();
-
-                connection.Open();
-                if (!DatabaseExists(connection, databaseName))
-                    return;
-
-                // Actually we should call ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                // before DROP as for the SQL Server,
-                // but it does not work with the following error message:
-                // 
-                // ODBC error: State: 42000: Error: 1468 Message:'[Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The operation cannot be performed on database "MYNEWDB" because it is involved in a database mirroring session or an availability group. Some operations are not allowed on a database that is participating in a database mirroring session or in an availability group.'.
-                // ALTER DATABASE statement failed.
-                //
-                // Experiment shows that DROP works fine even the other user is connected.
-                // So single user mode is not necessary for Azure SQL
-                var dropDatabaseCommand = new SqlCommand($"DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
-                using (var command = dropDatabaseCommand)
-                {
-                    command.ExecuteNonQuery();
-                }
-
-                logger.WriteInformation("Dropped database {0}", databaseName);
+                command.ExecuteNonQuery();
             }
+
+            logger.WriteInformation("Dropped database {0}", databaseName);
         }
 
         static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
@@ -165,32 +161,27 @@ namespace DbUp.Cli.DbUpCustomization
             );
 
             // check to see if the database already exists..
-            using (var command = new SqlCommand(sqlCommandText, connection)
+            using var command = new SqlCommand(sqlCommandText, connection)
             {
                 CommandType = CommandType.Text
-            })
+            };
+            var results = (int?)command.ExecuteScalar();
 
-            {
-                var results = (int?)command.ExecuteScalar();
-
-                if (results.HasValue && results.Value == 1)
-                    return true;
-                else
-                    return false;
-            }
+            if (results.HasValue && results.Value == 1)
+                return true;
+            else
+                return false;
         }
 
         static bool DatabaseExistsIfConnectedToDirectly(IUpgradeLog logger, string connectionString, string databaseName)
         {
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                {
-                    connection.AccessToken = GetAccessToken();
+                using var connection = new SqlConnection(connectionString);
+                connection.AccessToken = GetAccessToken();
 
-                    connection.Open();
-                    return DatabaseExists(connection, databaseName);
-                }
+                connection.Open();
+                return DatabaseExists(connection, databaseName);
             }
             catch
             {
