@@ -60,6 +60,7 @@ The tool has almost all the features the DbUp has, but without a single line of 
 
 |Date|Version|Description|
 |-|-|-|
+|2024-01-18|1.9.0|Add support of .Net 8.0
 |2023-06-12|1.8.1|Improve error reporting
 |2023-01-18|1.8.0|Add support of .Net 7.0
 |2022-06-11|1.7.0|Add support of CockroachDB, thanks to @lbguilherme
